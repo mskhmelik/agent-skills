@@ -11,20 +11,22 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 
 ## How it works
 
-- **OneDrive** auto-syncs skills across devices (Windows + macOS)
+- **File sync** keeps the `skills/` folder up to date across devices (Windows + macOS)
 - **GitHub** provides version history and public sharing
-- **Private skills** stay in the same folder but are listed in `.gitignore` — they sync via OneDrive but never reach GitHub
+- **Private skills** stay in the same folder but are listed in `.gitignore` — they sync to your devices but never reach GitHub
 
 ## Setup on a new machine
 
+Clone or sync this repo somewhere on your machine, then run the setup script for your OS:
+
 **macOS:**
 ```bash
-bash ~/OneDrive/5_projects/agent-skills/setup/setup.sh
+bash ~/path/to/agent-skills/setup/setup.sh
 ```
 
 **Windows:**
 ```powershell
-& "$env:USERPROFILE\OneDrive\5_projects\agent-skills\setup\setup.ps1"
+& "$env:USERPROFILE\path\to\agent-skills\setup\setup.ps1"
 ```
 
 This creates junctions/symlinks from `~/.claude/skills` and `~/.cursor/skills` to this repo's `skills/` folder.

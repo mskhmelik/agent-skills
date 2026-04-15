@@ -8,8 +8,8 @@
 #
 # Edit ONEDRIVE below if needed, then: bash setup.sh
 
-ONEDRIVE="${HOME}/OneDrive"
-# ONEDRIVE="${HOME}/Library/CloudStorage/OneDrive-Personal"   # uncomment if needed
+ONEDRIVE="${HOME}/Library/CloudStorage/OneDrive-Personal"
+# ONEDRIVE="${HOME}/OneDrive"   # older macOS OneDrive client
 
 SKILLS="${ONEDRIVE}/5_projects/agent-skills/skills"
 

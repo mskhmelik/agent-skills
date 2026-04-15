@@ -7,6 +7,7 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 | Skill | Description | Claude | Cursor | Tags |
 |-------|-------------|:------:|:------:|------|
 | [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube video transcript as plain text | ✓ | — | personal, productivity |
+| [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | ✓ | ✓ | security, meta |
 
 ## How it works
 

@@ -103,7 +103,18 @@ Tell the user:
 - Full path of the saved file
 - Line count
 
-## Step 7: Skill evaluation
+## Step 7: Offer a summary
+
+Use `AskUserQuestion` to ask:
+
+> "Would you like a summary of this video?"
+> - Header: "Summary"
+> - Option 1: "Yes — summarize it" (Recommended)
+> - Option 2: "No thanks"
+
+If the user says **yes**, read the saved transcript file and produce a summary. Adapt the format to the content and structure of the video — use whatever combination of prose, headers, tables, or numbered/unnumbered lists best fits how the material is organized. Avoid forcing a rigid template. Aim for the level of detail and styling that would be genuinely useful for someone who wants to understand the video without watching it. Use numbered lists only when order or sequence matters; otherwise prefer prose or contextually appropriate structure.
+
+## Step 9: Skill evaluation
 
 At the very end, use `AskUserQuestion` to ask:
 

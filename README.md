@@ -7,7 +7,6 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 | Skill | Description | Claude | Cursor | Tags |
 |-------|-------------|:------:|:------:|------|
 | [caveman](skills/caveman/SKILL.md) | Ultra-compressed communication mode — drops filler/articles/pleasantries, keeps full technical accuracy (~75% token reduction) | ✓ | ✓ | meta, productivity |
-| [code-smart](skills/code-smart/SKILL.md) | Behavioral guidelines to reduce common LLM coding mistakes (Karpathy-style) | ✓ | ✓ | coding, meta |
 | [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube video transcript as plain text | ✓ | — | personal, productivity |
 | [linkedin-connect](skills/linkedin-connect/SKILL.md) | Find external attendees from recent calendar meetings and send LinkedIn connection requests | ✓ | — | personal, productivity |
 | [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | ✓ | ✓ | security, meta |

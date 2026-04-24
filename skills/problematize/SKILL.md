@@ -4,7 +4,7 @@ description: >
   Run a deep problem investigation interview using Rob Fitzpatrick's Mom Test methodology before jumping to solutions.
   Use this skill when the user types /problematize, says "understand the problem before building", "let's investigate the problem first", "problematize this", or wants to establish a shared problem foundation before ideating or designing.
   Also trigger when a user describes a problem they want to solve and jumps straight to asking for solutions — pause and suggest running /problematize first.
-  The skill concludes with a structured handoff artifact that /solutionize can pick up.
+  The skill concludes with a structured handoff artifact saved to problem-summary.md that /solutionize and /to-prd can pick up.
 ---
 
 # /problematize
@@ -176,7 +176,28 @@ Only include examples that were specific and real. Do not include hypotheticals 
 Be honest here. Thin signal is worse than acknowledged gaps. If something couldn't be established, say so plainly — /solutionize needs to know where assumptions are being made.
 ```
 
-After presenting the summary, say: "Ready to run /solutionize when you are."
+After presenting the summary:
+
+1. Save the full Problem Summary to `problem-summary.md` in the current working directory, overwriting any previous version.
+2. Tell the user: "Saved to `problem-summary.md`. Ready to run /solutionize when you are."
+
+---
+
+## Skill Evaluation
+
+At the very end, use `AskUserQuestion` to ask:
+
+> "How did this skill perform?"
+> - Header: "Feedback"
+> - Option 1: "+1 — worked well"
+> - Option 2: "-1 — something went wrong"
+
+If they select `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
+
+Append one line to `~/.claude/skills/problematize/feedback.jsonl`:
+`{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
+
+For `-1` ratings: trigger self-annealing — identify and fix the root cause described in the comment.
 
 ---
 

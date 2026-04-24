@@ -3,8 +3,8 @@ name: solutionize
 description: >
   Interview the user about solutions to a well-understood problem, generate solution options, stress-test them using Mom Test principles, and produce a solution tree with modules, features, and open questions.
   Use this skill when the user types /solutionize, says "let's find solutions", "now let's solve it", "ready to solutionize", or wants to move from problem understanding into solution design.
-  Works best after /problematize has produced a Problem Summary, but also works standalone.
-  The skill concludes with a structured Solution Overview that maps solutions to specific evidence from the conversation.
+  Works best after /problematize has produced a Problem Summary (reads problem-summary.md from the current directory if present), but also works standalone.
+  The skill concludes with a structured Solution Overview saved to solution-overview.md that /to-prd can pick up.
 ---
 
 # /solutionize
@@ -17,11 +17,15 @@ The Mom Test principle carries over: don't ask for reactions, probe for signal. 
 
 ## Starting the Session
 
-### If a /problematize Problem Summary exists in context
+### If a /problematize Problem Summary exists
+
+First check for `problem-summary.md` in the current working directory and read it if present. Otherwise look in conversation context.
 
 Acknowledge it explicitly and use it as the foundation:
 
 > "Based on what we uncovered: [one-sentence restatement of distilled problem]. Let's find solutions that actually address that — not the surface version."
+
+Also note any open questions from the Problem Summary — these are the gaps solutionize needs to resolve before producing its output.
 
 Then move directly to Phase 1.
 
@@ -222,6 +226,15 @@ The top-level options explored. For each:
 State it and explain why in terms of the evidence — not preference.
 If signal does not clearly support one, say so explicitly rather than forcing a pick.
 
+**Success criteria**
+1–3 behavioral statements of what "done" looks like. Observable, not feature-based.
+Format: "A user can [do X] without [needing Y]" or "The system [does X] when [condition]."
+These must come from the conversation — not generic quality statements.
+
+**Constraints**
+Technical, time, or organisational limits that bound the solution space.
+Only include constraints that actually came up and shaped decisions.
+
 **Desired user flow**
 The end-to-end experience from the user's perspective for the leading direction.
 Describe it as a numbered sequence of steps — what the user does, sees, and gets at each stage.
@@ -281,12 +294,43 @@ Layers used: [Data / Logic / Front-end] or [custom layers if adjusted]
 1. [Specific area not explored — why it matters]
 2. [Continue for each gap]
 
+**Decisions**
+Key choices made during this session and the reasoning behind each.
+Format: "[We chose X over Y] because [specific reason from the conversation]."
+Only include decisions that were actually made — not things still open.
+
+**Out of scope**
+Things that came up and were explicitly parked.
+Format: "[Topic] — [one-line reason it was set aside]."
+This is a commitment, not just a list. If it's here, it means we're not building it now.
+
 **Open questions**
 1. [Question that would change the direction if answered]
 2. [Continue for each open question]
 ```
 
-After presenting the overview, say: "This is the map of where we've landed. Anything here that feels wrong or missing before you take this forward?"
+After presenting the overview:
+
+1. Save the full Solution Overview to `solution-overview.md` in the current working directory, overwriting any previous version.
+2. Tell the user: "Saved to `solution-overview.md`. Ready to run /to-prd when you are."
+
+---
+
+## Skill Evaluation
+
+At the very end, use `AskUserQuestion` to ask:
+
+> "How did this skill perform?"
+> - Header: "Feedback"
+> - Option 1: "+1 — worked well"
+> - Option 2: "-1 — something went wrong"
+
+If they select `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
+
+Append one line to `~/.claude/skills/solutionize/feedback.jsonl`:
+`{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
+
+For `-1` ratings: trigger self-annealing — identify and fix the root cause described in the comment.
 
 ---
 

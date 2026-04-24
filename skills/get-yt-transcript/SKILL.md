@@ -33,7 +33,7 @@ Use `AskUserQuestion` to ask the following two questions **in a single call**:
 
 **Question 1 — Output location**
 - Header: "Save location"
-- Default option (first): `C:\Users\msk\OneDrive\6_knowledge\transcripts\` (Recommended)
+- Default option (first): `/Users/michael.khmelik/Library/CloudStorage/OneDrive-Personal/6_knowledge/transcripts/` (Recommended) — Mac OneDrive path
 - Other option: "Custom path" — if selected, ask the user to type the path
 
 **Question 2 — Language/format**
@@ -44,9 +44,43 @@ Use `AskUserQuestion` to ask the following two questions **in a single call**:
 
 After collecting answers, apply Step 0 validations for language code and custom path before continuing.
 
-## Step 2: Download subtitles with yt-dlp <!-- Hardened 2026-04-13 — /make-secure -->
+## Step 2: Download transcript <!-- Hardened 2026-04-13 — /make-secure -->
 
-Run in a temp directory (`/tmp`). Both the URL and language code must be shell-quoted to prevent injection:
+### Step 2a: Fetch video metadata with yt-dlp
+
+Always use yt-dlp to get the metadata for the filename (this works even when subtitles are blocked):
+
+```bash
+yt-dlp --skip-download --print "%(upload_date)s_%(channel)s_%(title)s" "$URL" 2>/dev/null
+```
+
+### Step 2b: Fetch transcript text
+
+**Primary method — `youtube_transcript_api` (preferred, more reliable than yt-dlp for auto-captions):**
+
+YouTube's PO token requirement often blocks yt-dlp auto-captions. Use `youtube_transcript_api` instead:
+
+```bash
+pip3 install -q youtube-transcript-api  # installs to system python3.13
+```
+
+```python
+# Run with python3.13 (not python3 — the package installs there)
+from youtube_transcript_api import YouTubeTranscriptApi
+api = YouTubeTranscriptApi()
+transcript = api.fetch('VIDEO_ID', languages=['en'])  # api.fetch(), not get_transcript()
+lines = []
+prev = None
+for s in transcript.snippets:
+    text = s.text.strip()
+    if text and text != prev:
+        lines.append(text)
+        prev = text
+```
+
+Extract `VIDEO_ID` from the URL (the `v=` parameter value, e.g. `pJylXFAC87A`).
+
+**Fallback — yt-dlp VTT (if `youtube_transcript_api` fails):**
 
 ```bash
 cd /tmp && yt-dlp --write-auto-sub --sub-langs "$LANG" --sub-format vtt --skip-download \
@@ -58,7 +92,7 @@ cd /tmp && yt-dlp --write-auto-sub --sub-langs "$LANG" --sub-format vtt --skip-d
 
 ## Step 3: Build the output filename
 
-From the downloaded `.vtt` filename (e.g. `20251001_Nick Saraev_How I Would Start...en.vtt`):
+From the metadata string returned by Step 2a (e.g. `20251001_Nick Saraev_How I Would Start...`):
 
 1. Strip the `.en.vtt` extension
 2. Take the first 8 chars as YYYYMMDD, convert to YYMMDD by dropping the first 2 chars

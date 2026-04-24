@@ -9,15 +9,15 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 | [caveman](skills/caveman/SKILL.md) | Ultra-compressed communication mode — drops filler/articles/pleasantries, keeps full technical accuracy (~75% token reduction) | ✓ | ✓ | meta, productivity |
 | [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube video transcript as plain text | ✓ | — | personal, productivity |
 | [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | ✓ | ✓ | security, meta |
-| [get-prd](skills/get-prd/SKILL.md) | Synthesize problem-summary.md + solution-summary.md into a committed PRD; saves prd.md | ✓ | ✓ | thinking, planning |
-| [problematize](skills/problematize/SKILL.md) | Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology; saves problem-summary.md | ✓ | ✓ | thinking, research |
-| [solutionize](skills/solutionize/SKILL.md) | Solution design interview — surfaces, stress-tests, and structures options; saves solution-summary.md | ✓ | ✓ | thinking, research |
+| [problematize](skills/problematize/SKILL.md) | (1/3) Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology; saves problem-summary.md | ✓ | ✓ | thinking, research |
+| [solutionize](skills/solutionize/SKILL.md) | (2/3) Solution design interview — surfaces, stress-tests, and structures options; saves solution-summary.md | ✓ | ✓ | thinking, research |
+| [get-prd](skills/get-prd/SKILL.md) | (3/3) Synthesize problem-summary.md + solution-summary.md into a committed PRD; saves prd.md | ✓ | ✓ | thinking, planning |
 
 ## How it works
 
 - **File sync** keeps the `skills/` folder up to date across devices (Windows + macOS)
 - **GitHub** provides version history and public sharing
-- **Private skills** stay in the same folder but are listed in `.gitignore` — they sync to your devices but never reach GitHub
+- **Private skills** stay in the same folder but are excluded via `.git/info/exclude` (local only) — they sync to your devices but never reach GitHub
 
 ## Setup on a new machine
 
@@ -40,7 +40,7 @@ This creates junctions/symlinks from `~/.claude/skills` and `~/.cursor/skills` t
 1. Copy `templates/SKILL-template.md` → `skills/<name>/SKILL.md`
 2. Fill in frontmatter and instructions
 3. Add a row to the index table above
-4. For private skills: add `skills/<name>/` to `.gitignore` before committing
+4. For private skills: add `skills/<name>/` to `.git/info/exclude` (never pushed)
 
 ## Skill file format
 

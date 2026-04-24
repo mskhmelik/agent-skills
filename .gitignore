@@ -1,2 +1,0 @@
-# Private skills are excluded via .git/info/exclude (local-only, never pushed).
-# That way skill names stay private even if this file is public.

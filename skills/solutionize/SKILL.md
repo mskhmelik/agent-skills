@@ -4,7 +4,7 @@ description: >
   Interview the user about solutions to a well-understood problem, generate solution options, stress-test them using Mom Test principles, and produce a solution tree with modules, features, and open questions.
   Use this skill when the user types /solutionize, says "let's find solutions", "now let's solve it", "ready to solutionize", or wants to move from problem understanding into solution design.
   Works best after /problematize has produced a Problem Summary (reads problem-summary.md from the current directory if present), but also works standalone.
-  The skill concludes with a structured Solution Overview saved to solution-overview.md that /to-prd can pick up.
+  The skill concludes with a structured Solution Overview saved to solution-summary.md that /to-prd can pick up.
 ---
 
 # /solutionize
@@ -311,8 +311,8 @@ This is a commitment, not just a list. If it's here, it means we're not building
 
 After presenting the overview:
 
-1. Save the full Solution Overview to `solution-overview.md` in the current working directory, overwriting any previous version.
-2. Tell the user: "Saved to `solution-overview.md`. Ready to run /to-prd when you are."
+1. Save the full Solution Overview to `solution-summary.md` in the current working directory, overwriting any previous version.
+2. Tell the user: "Saved to `solution-summary.md`. Ready to run /to-prd when you are."
 
 ---
 

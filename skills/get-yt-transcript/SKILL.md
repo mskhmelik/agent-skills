@@ -33,7 +33,7 @@ Use `AskUserQuestion` to ask the following two questions **in a single call**:
 
 **Question 1 — Output location**
 - Header: "Save location"
-- Default option (first): `/Users/michael.khmelik/Library/CloudStorage/OneDrive-Personal/6_knowledge/transcripts/` (Recommended) — Mac OneDrive path
+- Default option (first): `~/transcripts/` (Recommended) — expand to full path at runtime
 - Other option: "Custom path" — if selected, ask the user to type the path
 
 **Question 2 — Language/format**

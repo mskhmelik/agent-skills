@@ -23,10 +23,10 @@ Perform a security audit of active Claude Code skills.
 Collect all active SKILL.md files from two locations:
 
 **User skills:**
-List directories under `C:\Users\msk\.claude\skills\` and read each `<dir>\SKILL.md`.
+List directories under `~/.claude/skills/` (macOS/Linux) or `%USERPROFILE%\.claude\skills\` (Windows) and read each `<dir>/SKILL.md`.
 
 **Plugin skills:**
-Read `C:\Users\msk\.claude\plugins\installed_plugins.json`. For each entry's `installPath`, glob `<installPath>\skills\**\SKILL.md`.
+Read `~/.claude/plugins/installed_plugins.json` (macOS/Linux) or `%USERPROFILE%\.claude\plugins\installed_plugins.json` (Windows). For each entry's `installPath`, glob `<installPath>/skills/**/SKILL.md`.
 
 For each skill record: name (from `name:` frontmatter), source type (user / plugin name), canonical file path, full content.
 

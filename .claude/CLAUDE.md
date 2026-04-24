@@ -19,6 +19,8 @@ A skill is private if it contains any personal information, client data, account
 2. If yes — add `skills/<name>/` to `.git/info/exclude` **before** creating the file.
 3. Never commit a private skill to git, even accidentally.
 
+**Never create or modify `.gitignore`.** This repo has no `.gitignore` by design. Private skill exclusions live in `.git/info/exclude` (local-only, never pushed). If you need to exclude a file or directory, add it to `.git/info/exclude` — not `.gitignore`.
+
 `feedback.jsonl` files are also private — never commit them. Add `skills/*/feedback.jsonl` to `.git/info/exclude` if you haven't already.
 
 ## feedback.jsonl — no PII in comments

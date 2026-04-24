@@ -8,7 +8,6 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 |-------|-------------|:------:|:------:|------|
 | [caveman](skills/caveman/SKILL.md) | Ultra-compressed communication mode — drops filler/articles/pleasantries, keeps full technical accuracy (~75% token reduction) | ✓ | ✓ | meta, productivity |
 | [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube video transcript as plain text | ✓ | — | personal, productivity |
-| [linkedin-connect](skills/linkedin-connect/SKILL.md) | Find external attendees from recent calendar meetings and send LinkedIn connection requests | ✓ | — | personal, productivity |
 | [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | ✓ | ✓ | security, meta |
 | [get-prd](skills/get-prd/SKILL.md) | Synthesize problem-summary.md + solution-summary.md into a committed PRD; saves prd.md | ✓ | ✓ | thinking, planning |
 | [problematize](skills/problematize/SKILL.md) | Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology; saves problem-summary.md | ✓ | ✓ | thinking, research |

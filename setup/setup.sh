@@ -1,17 +1,10 @@
 #!/bin/bash
 # One-time setup for macOS.
-# Run after OneDrive has synced 5_projects/agent-skills/.
-#
-# OneDrive path varies by macOS OneDrive version — check yours first:
-#   ls ~/OneDrive        (older OneDrive)
-#   ls ~/Library/CloudStorage/   (newer OneDrive, look for OneDrive-Personal)
-#
-# Edit ONEDRIVE below if needed, then: bash setup.sh
+# Run from anywhere — the script locates itself and derives the skills path.
+# Usage: bash /path/to/agent-skills/setup/setup.sh
 
-ONEDRIVE="${HOME}/Library/CloudStorage/OneDrive-Personal"
-# ONEDRIVE="${HOME}/OneDrive"   # older macOS OneDrive client
-
-SKILLS="${ONEDRIVE}/5_projects/agent-skills/skills"
+REPO_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+SKILLS="${REPO_ROOT}/skills"
 
 if [ ! -d "$SKILLS" ]; then
   echo "ERROR: Skills folder not found at $SKILLS"

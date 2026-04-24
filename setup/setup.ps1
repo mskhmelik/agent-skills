@@ -1,8 +1,9 @@
 # One-time setup for a new Windows machine.
-# Run after OneDrive has synced 5_projects/agent-skills/.
+# Run from anywhere — the script locates itself and derives the skills path.
+# Usage: & "C:\path\to\agent-skills\setup\setup.ps1"
 # No admin rights required (uses NTFS junctions, not symlinks).
 
-$skills = "$env:USERPROFILE\OneDrive\5_projects\agent-skills\skills"
+$skills = (Resolve-Path "$PSScriptRoot\..\skills").Path
 
 if (-not (Test-Path $skills)) {
     Write-Error "Skills folder not found at $skills. Make sure OneDrive has finished syncing."

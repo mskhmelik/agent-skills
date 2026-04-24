@@ -6,8 +6,12 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 
 | Skill | Description | Claude | Cursor | Tags |
 |-------|-------------|:------:|:------:|------|
+| [code-smart](skills/code-smart/SKILL.md) | Behavioral guidelines to reduce common LLM coding mistakes (Karpathy-style) | ✓ | ✓ | coding, meta |
 | [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube video transcript as plain text | ✓ | — | personal, productivity |
+| [linkedin-connect](skills/linkedin-connect/SKILL.md) | Find external attendees from recent calendar meetings and send LinkedIn connection requests | ✓ | — | personal, productivity |
 | [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | ✓ | ✓ | security, meta |
+| [problematize](skills/problematize/SKILL.md) | Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology | ✓ | ✓ | thinking, research |
+| [solutionize](skills/solutionize/SKILL.md) | Solution design interview — surfaces, stress-tests, and structures options; pairs with /problematize | ✓ | ✓ | thinking, research |
 
 ## How it works
 

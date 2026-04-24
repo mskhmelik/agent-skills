@@ -55,57 +55,65 @@ Do not ask about gaps that are explicitly out of scope — those are already res
 
 ## Step 4 — Produce the PRD
 
-Synthesise everything into the following structure. Do not invent content — every item must be traceable to something in the inputs or the gap-fill conversation.
+Synthesise both files into the following structure. Every section draws from both inputs — problem-summary.md provides the problem context and evidence; solution-summary.md provides the direction and commitments. Do not invent content — every item must be traceable to one of the two files or the gap-fill conversation.
 
 ```markdown
 # PRD — [short name]
 
 ## Problem statement
-[Distilled problem from problem-summary.md — one sharp sentence.
-Not the original framing — the excavated version.]
+Source: problem-summary.md (distilled problem) + solution-summary.md (problem anchor)
+One sharp sentence. Use the excavated version, not the original framing.
+If the two files state it differently, use the more specific version.
 
 ## Why this matters
-[Stakes and cost of inaction from problem-summary.md — 2–3 sentences.
-What breaks or stays broken if this isn't solved.]
+Source: problem-summary.md (stakes, cost of inaction, specific examples)
+2–3 sentences on what breaks or stays broken if this isn't solved.
+Ground it in the concrete examples surfaced during /problematize — not generalisations.
 
 ## Success criteria
-[From solution-summary.md — 1–3 behavioral statements.
+Source: solution-summary.md (success criteria section)
+1–3 behavioral statements of what done looks like.
 Format: "A user can [do X] without [needing Y]" or "The system [does X] when [condition Y]."
-These are the acceptance tests for the whole feature.]
+These are the acceptance tests for the whole feature.
 
 ## User stories
-As a [who], I can [action], so that [outcome].
+Source: solution-summary.md (desired user flow + feature breakdown) informed by problem-summary.md (who has the problem, their workarounds, their context)
 
-Synthesised from the desired user flow and confirmed features in solution-summary.md.
+As a [who — from problem-summary persona], I can [action — from solution user flow], so that [outcome — tied to success criteria].
+
 Mark each as:
 - ✓ Confirmed — validated in the session
 - ~ Proposed — inferred, not explicitly discussed
 
-Only include stories for the recommended direction. Do not include ruled-out options.
+The "who" must come from problem-summary.md (the real person with the real problem).
+The "action" must come from solution-summary.md (the confirmed user flow steps).
+Do not include stories for ruled-out solution directions.
 
 ## Implementation decisions
-[From solution-summary.md decisions section.
+Source: solution-summary.md (decisions section) + problem-summary.md (failed solutions, workarounds)
 Format: "We chose [X] over [Y] because [specific reason]."
-Each decision here is closed — not up for re-discussion during implementation.]
+Include failed solutions from /problematize if they overlap with ruled-out options — this explains why those paths were already tried.
+Each decision here is closed — not up for re-discussion during implementation.
 
 ## Out of scope
-[From solution-summary.md out-of-scope section.
+Source: solution-summary.md (out-of-scope section) + problem-summary.md (what's still open that we're not solving now)
 Format: "[Topic] — [one-line reason]."
-This is a commitment. If it's listed here, it will not be built in this iteration.]
+This is a commitment. If it's listed here, it will not be built in this iteration.
 
 ## Constraints
-[From solution-summary.md constraints section.
-Technical, time, or organisational limits that bound the implementation.]
+Source: solution-summary.md (constraints section) + problem-summary.md (context on who, environment, existing workarounds)
+Technical, time, or organisational limits that bound the implementation.
 
 ## Testing approach
-How to verify this is working. Derived from success criteria and the confirmed user stories.
-Focus on behaviour through public interfaces — not implementation details.
+Source: derived from success criteria (solution-summary.md) + specific examples (problem-summary.md)
+Use the concrete examples from /problematize as the basis for test scenarios — they represent real situations the solution must handle.
+Focus on behaviour through public interfaces, not implementation details.
 List the key scenarios that must pass, not an exhaustive test plan.
 
 ## Open questions
-[Only include if something genuinely could not be resolved.
-Flag each one clearly: it must be answered before implementation begins.
-An empty section here is the goal.]
+Only include if something genuinely could not be resolved from either file or the gap-fill.
+Flag each one clearly — it must be answered before implementation begins.
+An empty section here is the goal.
 ```
 
 ---

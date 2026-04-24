@@ -4,7 +4,7 @@ description: >
   Run a deep problem investigation interview using Rob Fitzpatrick's Mom Test methodology before jumping to solutions.
   Use this skill when the user types /problematize, says "understand the problem before building", "let's investigate the problem first", "problematize this", or wants to establish a shared problem foundation before ideating or designing.
   Also trigger when a user describes a problem they want to solve and jumps straight to asking for solutions — pause and suggest running /problematize first.
-  The skill concludes with a structured handoff artifact saved to problem-summary.md that /solutionize and /to-prd can pick up.
+  The skill concludes with a structured handoff artifact saved to problem-summary.md that /solutionize and /get-prd can pick up.
 ---
 
 # /problematize

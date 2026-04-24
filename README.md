@@ -10,8 +10,9 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 | [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube video transcript as plain text | ✓ | — | personal, productivity |
 | [linkedin-connect](skills/linkedin-connect/SKILL.md) | Find external attendees from recent calendar meetings and send LinkedIn connection requests | ✓ | — | personal, productivity |
 | [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | ✓ | ✓ | security, meta |
-| [problematize](skills/problematize/SKILL.md) | Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology | ✓ | ✓ | thinking, research |
-| [solutionize](skills/solutionize/SKILL.md) | Solution design interview — surfaces, stress-tests, and structures options; pairs with /problematize | ✓ | ✓ | thinking, research |
+| [get-prd](skills/get-prd/SKILL.md) | Synthesize problem-summary.md + solution-summary.md into a committed PRD; saves prd.md | ✓ | ✓ | thinking, planning |
+| [problematize](skills/problematize/SKILL.md) | Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology; saves problem-summary.md | ✓ | ✓ | thinking, research |
+| [solutionize](skills/solutionize/SKILL.md) | Solution design interview — surfaces, stress-tests, and structures options; saves solution-summary.md | ✓ | ✓ | thinking, research |
 
 ## How it works
 

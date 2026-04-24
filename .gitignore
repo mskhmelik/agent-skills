@@ -1,6 +1,2 @@
-# Private skills — sync via OneDrive only, never pushed to GitHub
-# Add skill folder names below as you designate them private:
-skills/linkedin-connect/
-skills/create-pov/
-skills/create-materials/
-# skills/my-private-skill/
+# Private skills are excluded via .git/info/exclude (local-only, never pushed).
+# That way skill names stay private even if this file is public.

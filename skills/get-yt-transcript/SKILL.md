@@ -32,8 +32,15 @@ Apply URL validation immediately. Collect options in Step 1, then apply lang/pat
 Use `AskUserQuestion` to ask the following two questions **in a single call**:
 
 **Question 1 — Output location**
+
+Before presenting this question, run the following to discover the default save path:
+```bash
+find ~/Library/CloudStorage -type d -name "transcripts" 2>/dev/null | head -1
+```
+If a path is found, use it as the default. If not found, fall back to `~/transcripts/` (creating it if needed).
+
 - Header: "Save location"
-- Default option (first): `~/transcripts/` (Recommended) — expand to full path at runtime
+- Default option (first): `<discovered transcripts path>` (Recommended)
 - Other option: "Custom path" — if selected, ask the user to type the path
 
 **Question 2 — Language/format**

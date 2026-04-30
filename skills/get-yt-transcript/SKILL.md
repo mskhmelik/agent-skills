@@ -153,7 +153,25 @@ Use `AskUserQuestion` to ask:
 > - Option 1: "Yes — summarize it" (Recommended)
 > - Option 2: "No thanks"
 
-If the user says **yes**, read the saved transcript file and produce a summary. Adapt the format to the content and structure of the video — use whatever combination of prose, headers, tables, or numbered/unnumbered lists best fits how the material is organized. Avoid forcing a rigid template. Aim for the level of detail and styling that would be genuinely useful for someone who wants to understand the video without watching it. Use numbered lists only when order or sequence matters; otherwise prefer prose or contextually appropriate structure.
+If the user says **yes**, read the saved transcript file and produce a summary. Follow these formatting rules:
+
+- **Use numbered lists** for all lists of items, steps, options, or examples — not bullet points.
+- **Add conceptual context** for each item where relevant: one sentence explaining the *why* or the conceptual distinction (e.g., what makes this platform different from the others, what tradeoff it represents). Don't just restate what was said — add the insight.
+- Use headers to organize sections. Prose is fine for transitions and framing.
+- Aim for the level of detail that would let someone understand the video without watching it, including the reasoning behind choices, not just the steps.
+
+## Step 8: Offer to save the summary
+
+After producing the summary, use `AskUserQuestion` to ask:
+
+> "Would you like to save this summary as a Markdown file?"
+> - Header: "Save summary"
+> - Option 1: "Yes — save summary" (Recommended)
+> - Option 2: "No thanks"
+
+If the user says **yes**, save the summary as `<output_dir>/<filename>.md` — same directory and base name as the transcript `.txt` file, but with a `.md` extension. Include the video title, channel, date, and URL as frontmatter at the top of the file.
+
+Skip this step entirely if the user declined the summary in Step 7.
 
 ## Step 9: Skill evaluation
 

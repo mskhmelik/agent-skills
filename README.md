@@ -12,6 +12,7 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 | [problematize](skills/problematize/SKILL.md) | (1/3) Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology; saves problem-summary.md | ✓ | ✓ | thinking, research |
 | [solutionize](skills/solutionize/SKILL.md) | (2/3) Solution design interview — surfaces, stress-tests, and structures options; saves solution-summary.md | ✓ | ✓ | thinking, research |
 | [get-prd](skills/get-prd/SKILL.md) | (3/3) Synthesize problem-summary.md + solution-summary.md into a committed PRD; saves prd.md | ✓ | ✓ | thinking, planning |
+| [prd-to-issues](skills/prd-to-issues/SKILL.md) | (4/4) Break prd.md into vertical-slice GitHub issues with HITL/AFK classification and dependency ordering | ✓ | — | thinking, planning |
 
 ## How it works
 

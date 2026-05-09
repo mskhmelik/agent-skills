@@ -68,14 +68,14 @@ yt-dlp --skip-download --print "%(upload_date)s_%(channel)s_%(title)s" "$URL" 2>
 YouTube's PO token requirement often blocks yt-dlp auto-captions. Use `youtube_transcript_api` instead:
 
 ```bash
-pip3 install -q youtube-transcript-api  # installs to system python3.13
+conda run pip install -q youtube-transcript-api
 ```
 
-```python
-# Run with python3.13 (not python3 — the package installs there)
+```bash
+conda run python -c "
 from youtube_transcript_api import YouTubeTranscriptApi
 api = YouTubeTranscriptApi()
-transcript = api.fetch('VIDEO_ID', languages=['en'])  # api.fetch(), not get_transcript()
+transcript = api.fetch('VIDEO_ID', languages=['en'])
 lines = []
 prev = None
 for s in transcript.snippets:
@@ -83,6 +83,8 @@ for s in transcript.snippets:
     if text and text != prev:
         lines.append(text)
         prev = text
+print('\n'.join(lines))
+"
 ```
 
 Extract `VIDEO_ID` from the URL (the `v=` parameter value, e.g. `pJylXFAC87A`).
@@ -101,14 +103,14 @@ cd /tmp && yt-dlp --write-auto-sub --sub-langs "$LANG" --sub-format vtt --skip-d
 
 From the metadata string returned by Step 2a (e.g. `20251001_Nick Saraev_How I Would Start...`):
 
-1. Strip the `.en.vtt` extension
-2. Take the first 8 chars as YYYYMMDD, convert to YYMMDD by dropping the first 2 chars
-3. Lowercase everything
-4. Replace spaces and hyphens with `_`
-5. Strip all characters that are not `a-z`, `0-9`, or `_`
-6. Collapse consecutive underscores to one
+1. Extract three parts from the raw metadata string: `YYYYMMDD`, `channel`, and `title`
+2. Convert `YYYYMMDD` → `YYMMDD` (drop first 2 chars)
+3. Normalize `channel`: lowercase, replace spaces/hyphens with `_`, strip non-`[a-z0-9_]`, collapse consecutive `_`
+4. **Summarize `title` to 3–4 words** that capture the core topic — do this yourself as the model, not via shell. Use judgment: pick the most semantically distinctive nouns/verbs from the title, ignore filler words ("how to", "the", "your", "in", "if", etc.). Example: "How I Would Start AI Consulting in 2026 If I Could Start Over" → `start_ai_consulting`
+5. Normalize the summarized title the same way as channel (lowercase, `_`-separated, strip special chars)
+6. Assemble: `YYMMDD_<channel>_<summarized_title>`
 
-Result example: `251001_nick_saraev_how_i_would_start_ai_consulting_in_2026_if_i_could_start_over`
+Result example: `251001_nick_saraev_start_ai_consulting`
 
 ## Step 4: Check for existing file <!-- Hardened 2026-04-13 — /make-secure -->
 

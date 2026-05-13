@@ -1,163 +1,168 @@
 ---
 name: get-prd
 description: >
-  Synthesize problem-summary.md and solution-summary.md into a Product Requirements Document and save it as prd.md.
-  Use this skill when the user types /get-prd, says "generate the PRD", "create the PRD", or "let's write the PRD".
-  Works best after /problematize and /solutionize have run. Can also work from conversation context alone.
-  The skill does not re-interview — it synthesizes what is already known, asks targeted questions only to close genuine gaps, then saves prd.md.
+  Synthesize problem and solution docs into a strict Product Requirements Document (docs/prd.md).
+  Use when the user types /get-prd, says "generate the PRD", "create the PRD", or "let's write the PRD".
+  Works after /problematize and /solutionize (or repo equivalents). Does not re-interview — reads files,
+  asks at most 3 targeted gap questions, produces a PRD with no Open questions section (unresolved items
+  live in problem/solution docs only).
 ---
 
 # /get-prd
 
-A synthesis skill. Its job is to close the loop from exploration to commitment — turning the problem and solution work into a document that answers: "what exactly are we building, and what aren't we?"
+Synthesis skill: turn exploration outputs into a commitment document — **what we are building and what we are not**.
 
-This skill does **not** re-run the investigation. It reads existing outputs, fills any remaining gaps with minimal targeted questions, and produces a PRD that has no open questions.
+This skill **does not** re-run investigation. It reads existing outputs, asks **minimal targeted questions** only to close genuine gaps, then saves **`docs/prd.md`**.
 
-If open questions remain when this skill runs, they must be resolved before the PRD is finalised. A PRD with open questions is not a PRD — it's a draft.
+**Strict PRD rule:** the saved PRD must **not** contain an `## Open questions` section. Anything still unresolved belongs in **`docs/problem_summary.md`** and/or **`docs/solution_overview.md`** (see Step 3–4).
+
+**Feedback log:** `feedback.jsonl` lives in the same directory as this `SKILL.md`.
+
+---
+
+## Step 0 — Resolve repository root
+
+Before reading inputs:
+
+1. Start from the **current working directory** (or the workspace root the user indicated).
+2. Walk **upward** until you find a directory that contains **`.git`** or **`docs/prd.md`**. Treat that directory as **`REPO_ROOT`**.
+3. All relative paths below are under `REPO_ROOT`.
+
+If no root is found, ask the user which folder is the project root and use that as `REPO_ROOT`.
 
 ---
 
 ## Step 1 — Load inputs
 
-Check for the following files in the current working directory and read them if present:
-- `problem-summary.md` — output of /problematize
-- `solution-summary.md` — output of /solutionize
+Under `REPO_ROOT`, locate files in this **priority order** (first match wins):
 
-If neither file exists, ask: "I don't see problem-summary.md or solution-summary.md here. Should I work from our conversation context, or do you want to run /problematize and /solutionize first?"
+**Problem summary**
 
-If only one file exists, use it and note what's missing.
+1. `docs/problem_summary.md`
+2. `problem_summary.md`
+3. `problem-summary.md`
+
+**Solution summary**
+
+1. `docs/solution_overview.md`
+2. `solution_overview.md`
+3. `solution-summary.md`
+
+If **neither** problem nor solution file exists, ask once: whether to work from **conversation context only**, or to run the upstream skills first.
+
+If **only one** exists, use it and note clearly in the PRD preamble (one sentence) which input is missing.
 
 ---
 
 ## Step 2 — Cross-check alignment
 
-Before synthesising, verify the two documents are pointing at the same problem:
+Before synthesising:
 
-- The **problem anchor** in solution-summary.md should match the **distilled problem** in problem-summary.md
-- If they diverge, flag it explicitly: "The problem framing shifted between /problematize and /solutionize — [state the divergence]. Which version should the PRD be anchored to?"
-
-Do not proceed until alignment is confirmed.
+- The **problem anchor** in the solution document must align with the **distilled problem** in the problem document.
+- If they **diverge**, state the divergence explicitly and ask which framing the PRD should anchor to. **Do not** finalise until confirmed.
 
 ---
 
-## Step 3 — Gap check
+## Step 3 — Gap check and strict open-items routing
 
-Scan both files for unresolved items:
-- Open questions in solution-summary.md
-- "What's still open" items in problem-summary.md that were not addressed in solutionize
-- Any feature or step marked `?` in the solution-summary that is load-bearing for the PRD
+Scan inputs for unresolved load-bearing items:
 
-For each genuine gap, ask one targeted question at a time. Maximum 3 questions total. If there are more than 3 gaps, prioritise the ones that would change the scope or direction of the PRD.
+- Open items, `?`, or undecided options in the solution document
+- **What's still open** (or equivalent) in the problem document
 
-Do not ask about gaps that are explicitly out of scope — those are already resolved.
+For each **genuine** gap: ask **one** targeted question at a time. **Maximum 3 questions** total. Prioritise gaps that change scope or direction.
+
+**Routing rule:** answers and still-unresolved items must be written to **`docs/problem_summary.md`** and/or **`docs/solution_overview.md`** — for example under **What's still open** or **Open questions** there — **not** into the PRD body.
+
+Do not ask about topics explicitly **out of scope** in the solution document.
 
 ---
 
 ## Step 4 — Produce the PRD
 
-Synthesise both files into the following structure. Every section draws from both inputs — problem-summary.md provides the problem context and evidence; solution-summary.md provides the direction and commitments. Do not invent content — every item must be traceable to one of the two files or the gap-fill conversation.
+Synthesise into **`docs/prd.md`** using the template below. Every substantive line must be traceable to the problem doc, the solution doc, gap-fill answers, or prior agreed session notes — **do not invent** requirements.
+
+**Output path:** always `docs/prd.md` (create `docs/` if missing).
+
+**Include** a section **`## Build order — vertical slices`** after **User stories** (or after **Success criteria** if stories are long): an **ordered numbered list** of thin vertical slices (each slice is a shippable increment or spike; reference story IDs from the user-stories tables). This list is the default **implementation queue**; user stories remain the **requirements matrix**, not sprint order.
+
+**Omit** `## Open questions` entirely from the PRD.
 
 ```markdown
 # PRD — [short name]
 
 ## Problem statement
-Source: problem-summary.md (distilled problem) + solution-summary.md (problem anchor)
-One sharp sentence. Use the excavated version, not the original framing.
-If the two files state it differently, use the more specific version.
+One sharp sentence (most specific version from aligned inputs).
 
 ## Why this matters
-Source: problem-summary.md (stakes, cost of inaction, specific examples)
-2–3 sentences on what breaks or stays broken if this isn't solved.
-Ground it in the concrete examples surfaced during /problematize — not generalisations.
+2–3 sentences grounded in concrete examples from the problem doc.
 
 ## Success criteria
-Source: solution-summary.md (success criteria section)
-1–3 behavioral statements of what done looks like.
+1–4 behavioural "done looks like" statements from the solution doc.
 Format: "A user can [do X] without [needing Y]" or "The system [does X] when [condition Y]."
-These are the acceptance tests for the whole feature.
 
 ## User stories
-Source: solution-summary.md (desired user flow + feature breakdown) informed by problem-summary.md (who has the problem, their workarounds, their context)
+Use tables or subsections by area (Foundation, Money, Time, …). Each story: As a …, I can …, so that …
+Mark ✓ Confirmed or ~ Proposed. Include IDs for traceability (e.g. F-01, M-M02).
 
-As a [who — from problem-summary persona], I can [action — from solution user flow], so that [outcome — tied to success criteria].
-
-Mark each as:
-- ✓ Confirmed — validated in the session
-- ~ Proposed — inferred, not explicitly discussed
-
-The "who" must come from problem-summary.md (the real person with the real problem).
-The "action" must come from solution-summary.md (the confirmed user flow steps).
-Do not include stories for ruled-out solution directions.
+## Build order — vertical slices
+1. **[Slice title]** — Outcome in one sentence. Relates to: ID1, ID2, …
+2. …
 
 ## Implementation decisions
-Source: solution-summary.md (decisions section) + problem-summary.md (failed solutions, workarounds)
-Format: "We chose [X] over [Y] because [specific reason]."
-Include failed solutions from /problematize if they overlap with ruled-out options — this explains why those paths were already tried.
-Each decision here is closed — not up for re-discussion during implementation.
+Table or list: We chose [X] over [Y] because [reason]. Only closed decisions.
 
 ## Out of scope
-Source: solution-summary.md (out-of-scope section) + problem-summary.md (what's still open that we're not solving now)
-Format: "[Topic] — [one-line reason]."
-This is a commitment. If it's listed here, it will not be built in this iteration.
+Bullet list with one-line reasons.
 
 ## Constraints
-Source: solution-summary.md (constraints section) + problem-summary.md (context on who, environment, existing workarounds)
-Technical, time, or organisational limits that bound the implementation.
+Technical, platform, product, or organisational limits.
 
 ## Testing approach
-Source: derived from success criteria (solution-summary.md) + specific examples (problem-summary.md)
-Use the concrete examples from /problematize as the basis for test scenarios — they represent real situations the solution must handle.
-Focus on behaviour through public interfaces, not implementation details.
-List the key scenarios that must pass, not an exhaustive test plan.
-
-## Open questions
-Only include if something genuinely could not be resolved from either file or the gap-fill.
-Flag each one clearly — it must be answered before implementation begins.
-An empty section here is the goal.
+Key scenarios derived from success criteria and concrete problem examples — behaviours, not implementation detail.
 ```
 
 ---
 
 ## Step 5 — Review and confirm
 
-After presenting the PRD draft, ask:
+Present the draft PRD (or summary if too long) and ask whether anything is wrong, missing, or must be tightened **before save**.
 
-> "Does this capture what we're committing to? Anything wrong, missing, or that needs tightening before I save it?"
-
-Incorporate any adjustments. Then save.
+Incorporate adjustments.
 
 ---
 
 ## Step 6 — Save
 
-Save the finalised PRD to `prd.md` in the current working directory, overwriting any previous version.
+Write the final PRD to **`docs/prd.md`**, overwriting if present.
 
-Tell the user: "Saved to `prd.md`."
+Tell the user: **Saved to `docs/prd.md`.**
 
 ---
 
-## Skill Evaluation
+## Step 7 — Skill feedback (mandatory)
 
-At the very end, use `AskUserQuestion` to ask:
+**Always** run this step after Step 6.
 
-> "How did this skill perform?"
-> - Header: "Feedback"
-> - Option 1: "+1 — worked well"
-> - Option 2: "-1 — something went wrong"
+1. Ask how this skill performed, with exactly two options:
+   - **+1 — worked well**
+   - **-1 — something went wrong**
+2. If the user chooses **-1**, also ask: **"What went wrong?"** (they may decline to type detail; still append the line with `comment: null` if no text).
+3. Append **one JSON line** to **`feedback.jsonl` in the same directory as this `SKILL.md`** (create the file if it does not exist). Use ISO 8601 UTC for `ts`. Set `runtime` to **`"cursor"`** or **`"claude"`** depending on which product is running the agent.
 
-If they select `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
+```json
+{"ts":"2026-05-10T12:00:00.000Z","rating":1,"comment":null,"runtime":"cursor"}
+```
 
-Append one line to `~/.claude/skills/get-prd/feedback.jsonl`:
-`{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
+`rating` must be **1** or **-1**.
 
-For `-1` ratings: trigger self-annealing — identify and fix the root cause described in the comment.
+4. If **-1**: state that the maintainer should use `comment` to improve this `SKILL.md` (self-annealing).
 
 ---
 
 ## What NOT to do
 
-- Do not re-interview. If the inputs exist, use them. Ask only to close gaps.
-- Do not invent user stories or decisions not grounded in the inputs.
-- Do not produce the PRD if the problem anchor is unresolved.
-- Do not leave open questions in the PRD and call it done. Resolve them or flag them explicitly.
-- Do not include ruled-out solution directions in the user stories or implementation decisions.
+- Do not re-interview beyond the 3-question gap cap.
+- Do not invent user stories or decisions not grounded in inputs or gap-fill.
+- Do not ship a PRD with an `## Open questions` section — that belongs in problem/solution docs only.
+- Do not include ruled-out directions as committed scope.

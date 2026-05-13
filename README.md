@@ -4,15 +4,18 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 
 ## Skill Index
 
-| Skill | Description | Claude | Cursor | Tags |
-|-------|-------------|:------:|:------:|------|
-| [caveman](skills/caveman/SKILL.md) | Ultra-compressed communication mode — drops filler/articles/pleasantries, keeps full technical accuracy (~75% token reduction) | ✓ | ✓ | meta, productivity |
-| [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube video transcript as plain text | ✓ | — | personal, productivity |
-| [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | ✓ | ✓ | security, meta |
-| [problematize](skills/problematize/SKILL.md) | (1/3) Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology; saves problem-summary.md | ✓ | ✓ | thinking, research |
-| [solutionize](skills/solutionize/SKILL.md) | (2/3) Solution design interview — surfaces, stress-tests, and structures options; saves solution-summary.md | ✓ | ✓ | thinking, research |
-| [get-prd](skills/get-prd/SKILL.md) | (3/3) Synthesize problem-summary.md + solution-summary.md into a committed PRD; saves prd.md | ✓ | ✓ | thinking, planning |
-| [prd-to-issues](skills/prd-to-issues/SKILL.md) | (4/4) Break prd.md into vertical-slice GitHub issues with HITL/AFK classification and dependency ordering | ✓ | — | thinking, planning |
+| Skill | Description | Tags |
+|-------|-------------|------|
+| [caveman](skills/caveman/SKILL.md) | Ultra-compressed communication mode — drops filler/articles/pleasantries, keeps full technical accuracy (~75% token reduction) | meta, productivity |
+| [contemplate](skills/contemplate/SKILL.md) | Process new sources in Obsidian vault `sources/` → update `ai_memory/` with summaries, concepts, and entity pages (Karpathy LLM Wiki pattern) | vault, knowledge |
+| [get-prd](skills/get-prd/SKILL.md) | (3/3) Synthesize problem + solution docs into `docs/prd.md`; strict no-open-questions rule; outputs vertical build-order slices | thinking, planning |
+| [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube transcript; optional auto-summary saved as `.md` with YAML frontmatter; keep/delete choice at end | personal, productivity |
+| [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | security, meta |
+| [problematize](skills/problematize/SKILL.md) | (1/3) Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology; saves problem-summary.md | thinking, research |
+| [prd-to-issues](skills/prd-to-issues/SKILL.md) | (4/4) Break prd.md into vertical-slice GitHub issues with HITL/AFK classification and dependency ordering | thinking, planning |
+| [remember](skills/remember/SKILL.md) | Save content (posts, articles, transcripts, excerpts) into Obsidian vault `sources/` as a formatted source note; upstream of `/contemplate` | vault, knowledge |
+| [solutionize](skills/solutionize/SKILL.md) | (2/3) Solution design interview — surfaces, stress-tests, and structures options; saves solution-summary.md | thinking, research |
+| [tdd](skills/tdd/SKILL.md) | Red-green-refactor TDD loop driven by a GitHub issue; acceptance criteria become the test spec | dev, testing |
 
 ## How it works
 

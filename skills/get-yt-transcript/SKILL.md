@@ -1,6 +1,6 @@
 ---
 name: get-yt-transcript
-description: Download a YouTube video transcript as plain text. Asks for URL, output location (default: OneDrive transcripts folder), and format (default: English plain text). Saves with YYMMDD_channel_video_title naming convention.
+description: Download a YouTube video transcript as plain text. Asks upfront for URL, save location, format, and summary preference. Saves with YYMMDD_channel_video_title naming convention. Offers keep/delete choice at the end.
 argument-hint: <youtube_url>
 allowed-tools: [Bash, AskUserQuestion]
 ---
@@ -29,18 +29,21 @@ Apply URL validation immediately. Collect options in Step 1, then apply lang/pat
 
 ## Step 1: Confirm options with the user
 
-Use `AskUserQuestion` to ask the following two questions **in a single call**:
+Use `AskUserQuestion` to ask the following **three questions in a single call**:
 
 **Question 1 — Output location**
 
-Before presenting this question, run the following to discover the default save path:
+Before presenting this question, run the following to discover the default save path.
+Prefer the vault `sources/` folder if one exists:
+
 ```bash
-find ~/Library/CloudStorage -type d -name "transcripts" 2>/dev/null | head -1
+find ~/Library/CloudStorage -type d -name "sources" -path "*/second_mind/*" 2>/dev/null | head -1
 ```
-If a path is found, use it as the default. If not found, fall back to `~/transcripts/` (creating it if needed).
+
+If nothing found, fall back to `~/transcripts/` (creating it if needed).
 
 - Header: "Save location"
-- Default option (first): `<discovered transcripts path>` (Recommended)
+- Default option (first): `<discovered path>` (Recommended)
 - Other option: "Custom path" — if selected, ask the user to type the path
 
 **Question 2 — Language/format**
@@ -48,6 +51,11 @@ If a path is found, use it as the default. If not found, fall back to `~/transcr
 - Default option (first): English plain text, no timestamps (Recommended)
 - Other option: "With timestamps" — VTT-style, one line per cue
 - Other option: "Other language" — ask user to specify language code
+
+**Question 3 — Summary**
+- Header: "Summary"
+- Default option (first): "Yes — summarize after download" (Recommended)
+- Other option: "No — transcript only"
 
 After collecting answers, apply Step 0 validations for language code and custom path before continuing.
 
@@ -146,34 +154,46 @@ Tell the user:
 - Full path of the saved file
 - Line count
 
-## Step 7: Offer a summary
+## Step 7: Summarize (if requested in Step 1)
 
-Use `AskUserQuestion` to ask:
-
-> "Would you like a summary of this video?"
-> - Header: "Summary"
-> - Option 1: "Yes — summarize it" (Recommended)
-> - Option 2: "No thanks"
-
-If the user says **yes**, read the saved transcript file and produce a summary. Follow these formatting rules:
+If the user chose **"Yes — summarize"** in Step 1, read the saved transcript file and produce a summary. Follow these formatting rules:
 
 - **Use numbered lists** for all lists of items, steps, options, or examples — not bullet points.
-- **Add conceptual context** for each item where relevant: one sentence explaining the *why* or the conceptual distinction (e.g., what makes this platform different from the others, what tradeoff it represents). Don't just restate what was said — add the insight.
+- **Add conceptual context** for each item where relevant: one sentence explaining the *why* or the conceptual distinction. Don't just restate what was said — add the insight.
 - Use headers to organize sections. Prose is fine for transitions and framing.
 - Aim for the level of detail that would let someone understand the video without watching it, including the reasoning behind choices, not just the steps.
 
-## Step 8: Offer to save the summary
+After producing the summary, save it automatically as `<output_dir>/<filename>.md` — same directory and base name as the transcript `.txt` file. Include the video title, channel, date, and URL as YAML frontmatter:
 
-After producing the summary, use `AskUserQuestion` to ask:
+```yaml
+---
+title: <video title>
+channel: <channel name>
+date: <upload date YYMMDD>
+source: <youtube url>
+type: youtube_summary
+status: unprocessed
+---
+```
 
-> "Would you like to save this summary as a Markdown file?"
-> - Header: "Save summary"
-> - Option 1: "Yes — save summary" (Recommended)
-> - Option 2: "No thanks"
+If the user chose **"No — transcript only"**, skip this step entirely.
 
-If the user says **yes**, save the summary as `<output_dir>/<filename>.md` — same directory and base name as the transcript `.txt` file, but with a `.md` extension. Include the video title, channel, date, and URL as frontmatter at the top of the file.
+## Step 8: Keep or delete
 
-Skip this step entirely if the user declined the summary in Step 7.
+Use `AskUserQuestion` to ask:
+
+- Header: "Keep files?"
+
+**If a summary was generated (Step 7 ran):**
+- Option 1: "Keep both — transcript and summary" (Recommended)
+- Option 2: "Keep summary only — delete transcript"
+- Option 3: "Delete both"
+
+**If no summary was generated:**
+- Option 1: "Keep transcript" (Recommended)
+- Option 2: "Delete transcript"
+
+Execute the deletions immediately after the user answers. Tell the user what was deleted.
 
 ## Step 9: Skill evaluation
 

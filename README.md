@@ -8,7 +8,6 @@ Personal skills for AI coding agents. A single `skills/` folder works across Cla
 |-------|-------------|------|
 | [caveman](skills/caveman/SKILL.md) | Ultra-compressed communication mode — drops filler/articles/pleasantries, keeps full technical accuracy (~75% token reduction) | meta, productivity |
 | [contemplate](skills/contemplate/SKILL.md) | Process new sources in Obsidian vault `sources/` → update `ai_memory/` with summaries, concepts, and entity pages (Karpathy LLM Wiki pattern) | vault, knowledge |
-| [design-principles](skills/design-principles/SKILL.md) | Apply universal design principles to UI, documents, presentations, and dashboards — layout, visual hierarchy, typography, color, component structure | design, productivity |
 | [get-prd](skills/get-prd/SKILL.md) | (3/3) Synthesize problem + solution docs into `docs/prd.md`; strict no-open-questions rule; outputs vertical build-order slices | thinking, planning |
 | [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube transcript; optional auto-summary saved as `.md` with YAML frontmatter; keep/delete choice at end | personal, productivity |
 | [handoff](skills/handoff/SKILL.md) | Compact the current conversation into a temp handoff doc so a fresh agent session can continue the work; references existing artifacts rather than duplicating them | meta, productivity |

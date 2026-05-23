@@ -99,14 +99,6 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 | [caveman](skills/utilities/caveman/SKILL.md) | Ultra-compressed replies |
 | [make-secure](skills/utilities/make-secure/SKILL.md) | Audit skills for security risks |
 
-### private/ (excluded from git, never pushed)
-
-| Skill | Role |
-|-------|------|
-| [local-skill] | Calendar → LinkedIn connection requests |
-| [local-skill] | Extract + save client brand guidelines |
-| [local-skill] | Upwork brief → proposal deck |
-
 Adapted from [mattpocock/skills](https://github.com/mattpocock/skills): `/diagnose`, `/unslop-repo` (improve-codebase-architecture).
 
 ---
@@ -118,8 +110,5 @@ Adapted from [mattpocock/skills](https://github.com/mattpocock/skills): `/diagno
 2. Fill frontmatter + instructions
 3. Re-run `bash setup/setup.sh` to add the new symlink
 4. Add a row to the index above (omit private skills)
-5. For private skills: `skills/private/` is already in `.git/info/exclude` — no extra entry needed
+5. For private skills: place under `skills/private/` — already covered by `.git/info/exclude`
 
-## Archive
-
-`4_learning/claude/skills-main/` is an old bundle — **do not copy from it**. Port skills explicitly.

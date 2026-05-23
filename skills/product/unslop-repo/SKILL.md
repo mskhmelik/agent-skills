@@ -6,6 +6,7 @@ description: >
   Use when the user types /unslop-repo, "unslop repo", wants architecture review, refactoring
   opportunities, or to make a codebase more testable and AI-navigable.
 user-invocable: true
+allowed-tools: [Bash, Read, Write, Edit, Agent, AskUserQuestion]
 ---
 
 # /unslop-repo

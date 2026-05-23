@@ -2,6 +2,8 @@
 name: handoff
 description: Compact the current conversation into a handoff document for another agent to pick up.
 argument-hint: "What will the next session be used for?"
+user-invocable: true
+allowed-tools: [Bash, Write, AskUserQuestion]
 ---
 
 Follow these steps in order. **Do not ask for session feedback until Step 3 is fully complete** (summary, file path, and prompt block if any are all shown in chat).

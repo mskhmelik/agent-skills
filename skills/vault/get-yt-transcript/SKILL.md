@@ -2,7 +2,8 @@
 name: get-yt-transcript
 description: Download a YouTube video transcript as plain text. Asks upfront for URL, save location, format, and summary preference. Saves with YYMMDD_channel_video_title naming convention. Offers keep/delete choice at the end.
 argument-hint: <youtube_url>
-allowed-tools: [Bash, AskUserQuestion]
+user-invocable: true
+allowed-tools: [Bash, Write, AskUserQuestion]
 ---
 
 <!-- Security boundary: all external inputs ($ARGUMENTS URL, user-typed language

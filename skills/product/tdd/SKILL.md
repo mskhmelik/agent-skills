@@ -155,7 +155,7 @@ Use `AskUserQuestion` to ask:
 
 If -1, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
 
-Append one line to `~/.claude/skills/tdd/feedback.jsonl`:
+Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","issue":<N>,"rating":<-1|1>,"comment":<string|null>}`
 
 For -1 ratings: trigger self-annealing — identify and fix the root cause described in the comment.

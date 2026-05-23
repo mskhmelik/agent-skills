@@ -1,5 +1,7 @@
 ---
 name: problematize
+user-invocable: true
+allowed-tools: [Write, AskUserQuestion]
 description: >
   Run a deep problem investigation interview using Rob Fitzpatrick's Mom Test methodology before jumping to solutions.
   Use this skill when the user types /problematize, says "understand the problem before building", "let's investigate the problem first", "problematize this", or wants to establish a shared problem foundation before ideating or designing.
@@ -202,7 +204,7 @@ At the very end, use `AskUserQuestion` to ask:
 
 If they select `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
 
-Append one line to `~/.claude/skills/problematize/feedback.jsonl`:
+Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
 For `-1` ratings: trigger self-annealing — identify and fix the root cause described in the comment.

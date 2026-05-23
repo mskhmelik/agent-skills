@@ -1,5 +1,6 @@
 ---
 name: diagnose
+allowed-tools: [Bash, Read, Edit, Write, AskUserQuestion]
 description: >
   Disciplined diagnosis loop for bugs and regressions. Feedback loop first, then
   hypothesise, instrument, fix, regression-test. Use when the user says /diagnose,

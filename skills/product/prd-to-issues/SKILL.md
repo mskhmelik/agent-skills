@@ -1,5 +1,7 @@
 ---
 name: prd-to-issues
+user-invocable: true
+allowed-tools: [Bash, Read, AskUserQuestion]
 description: >
   Break a prd.md into independently-deliverable GitHub issues using vertical (tracer-bullet) slices.
   Use when the user types /prd-to-issues, says "turn this PRD into issues", "create GitHub issues from the PRD", or "break this into issues".
@@ -150,7 +152,7 @@ At the very end, use `AskUserQuestion` to ask:
 
 If they select `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
 
-Append one line to `~/.claude/skills/prd-to-issues/feedback.jsonl`:
+Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
 For `-1` ratings: trigger self-annealing — identify and fix the root cause described in the comment.

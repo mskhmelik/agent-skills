@@ -10,6 +10,7 @@ description: Audit active Claude Code skills for security vulnerabilities and pr
   generates/executes code). For purely internal or read-only skills this is optional.
 user-invocable: true
 argument-hint: <skill-name | "all">
+allowed-tools: [Read, Edit, AskUserQuestion]
 ---
 
 Perform a security audit of active Claude Code skills.

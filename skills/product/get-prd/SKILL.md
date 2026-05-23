@@ -1,5 +1,7 @@
 ---
 name: get-prd
+user-invocable: true
+allowed-tools: [Read, Write, AskUserQuestion]
 description: >
   Synthesize problem and solution docs into a strict Product Requirements Document (docs/prd.md).
   Use when the user types /get-prd, says "generate the PRD", "create the PRD", or "let's write the PRD".

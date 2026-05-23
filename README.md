@@ -8,12 +8,15 @@ Personal **skills** and **rules** for Cursor and Claude Code. One `skills/` fold
 agent-skills/
 ├── README.md
 ├── setup/
-│   ├── setup.sh              ← macOS: ~/.claude/skills + ~/.cursor/skills
+│   ├── setup.sh              ← macOS: per-skill symlinks in ~/.claude/skills + ~/.cursor/skills
 │   └── setup.ps1             ← Windows
 ├── setup-cursor-wiring.sh    ← macOS: also wires ~/.cursor/rules
-├── skills/                   ← slash commands
-│   └── init-docs/templates/  ← per-repo doc scaffolds
-├── rules/                    ← generic Cursor rules (all projects)
+├── skills/
+│   ├── product/              ← product workflow chain (public)
+│   ├── vault/                ← knowledge/Obsidian tools (public)
+│   ├── utilities/            ← session + dev utilities (public)
+│   └── private/              ← private skills (.git/info/exclude, never pushed)
+├── rules/                    ← Cursor rules (loaded via ~/.cursor/rules symlink; Cursor only)
 └── templates/SKILL-template.md
 ```
 
@@ -71,23 +74,42 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 ## Skill index
 
+### product/
+
 | Skill | Role |
 |-------|------|
-| [init-docs](skills/init-docs/SKILL.md) | Scaffold `docs/` layout |
-| [problematize](skills/problematize/SKILL.md) | (1/3) Mom Test problem investigation |
-| [solutionize](skills/solutionize/SKILL.md) | (2/3) Solution stress-test + `CONTEXT.md` |
-| [get-prd](skills/get-prd/SKILL.md) | (3/3) Synthesize `docs/prd.md` |
-| [prd-to-issues](skills/prd-to-issues/SKILL.md) | (4/4) Vertical-slice GitHub issues |
-| [tdd](skills/tdd/SKILL.md) | Red-green-refactor from issue or bug |
-| [diagnose](skills/diagnose/SKILL.md) | Disciplined debug loop |
-| [unslop-repo](skills/unslop-repo/SKILL.md) | Shallow → deep module reviews |
-| [handoff](skills/handoff/SKILL.md) | Compact session for next agent |
-| [caveman](skills/caveman/SKILL.md) | Ultra-compressed replies |
-| [contemplate](skills/contemplate/SKILL.md) | Ingest Obsidian `sources/` → wiki |
-| [remember](skills/remember/SKILL.md) | Save content to vault sources |
-| [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | YouTube transcript download |
-| [make-secure](skills/make-secure/SKILL.md) | Audit skills for security risks |
-| [[local-skill]](skills/[local-skill]/SKILL.md) | Upwork brief → proposal deck |
+| [init-docs](skills/product/init-docs/SKILL.md) | Scaffold `docs/` layout |
+| [problematize](skills/product/problematize/SKILL.md) | (1/4) Mom Test problem investigation |
+| [solutionize](skills/product/solutionize/SKILL.md) | (2/4) Solution stress-test + `CONTEXT.md` |
+| [get-prd](skills/product/get-prd/SKILL.md) | (3/4) Synthesize `docs/prd.md` |
+| [prd-to-issues](skills/product/prd-to-issues/SKILL.md) | (4/4) Vertical-slice GitHub issues |
+| [tdd](skills/product/tdd/SKILL.md) | Red-green-refactor from issue or bug |
+| [diagnose](skills/product/diagnose/SKILL.md) | Disciplined debug loop |
+| [unslop-repo](skills/product/unslop-repo/SKILL.md) | Shallow → deep module reviews |
+
+### vault/
+
+| Skill | Role |
+|-------|------|
+| [contemplate](skills/vault/contemplate/SKILL.md) | Ingest Obsidian `sources/` → wiki |
+| [remember](skills/vault/remember/SKILL.md) | Save content to vault sources |
+| [get-yt-transcript](skills/vault/get-yt-transcript/SKILL.md) | YouTube transcript download |
+
+### utilities/
+
+| Skill | Role |
+|-------|------|
+| [handoff](skills/utilities/handoff/SKILL.md) | Compact session for next agent |
+| [caveman](skills/utilities/caveman/SKILL.md) | Ultra-compressed replies |
+| [make-secure](skills/utilities/make-secure/SKILL.md) | Audit skills for security risks |
+
+### private/ (excluded from git, never pushed)
+
+| Skill | Role |
+|-------|------|
+| [local-skill] | Calendar → LinkedIn connection requests |
+| [local-skill] | Extract + save client brand guidelines |
+| [local-skill] | Upwork brief → proposal deck |
 
 Adapted from [mattpocock/skills](https://github.com/mattpocock/skills): `/diagnose`, `/unslop-repo` (improve-codebase-architecture).
 
@@ -95,10 +117,12 @@ Adapted from [mattpocock/skills](https://github.com/mattpocock/skills): `/diagno
 
 ## Adding a skill
 
-1. Copy [`templates/SKILL-template.md`](templates/SKILL-template.md) → `skills/<name>/SKILL.md`
+1. Copy [`templates/SKILL-template.md`](templates/SKILL-template.md) → `skills/<group>/<name>/SKILL.md`
+   - `<group>` = `product`, `vault`, `utilities`, or `private`
 2. Fill frontmatter + instructions
-3. Add a row to the index above
-4. For private skills: add `skills/<name>/` to `.git/info/exclude`
+3. Re-run `bash setup/setup.sh` to add the new symlink
+4. Add a row to the index above (omit private skills)
+5. For private skills: add `skills/private/<name>/` to `.git/info/exclude`
 
 ## Archive
 

@@ -1,5 +1,7 @@
 ---
 name: solutionize
+user-invocable: true
+allowed-tools: [Write, AskUserQuestion]
 description: >
   Interview the user about solutions to a well-understood problem, generate solution options, stress-test them using Mom Test principles, and produce a solution tree with modules, features, and open questions.
   Use this skill when the user types /solutionize, says "let's find solutions", "now let's solve it", "ready to solutionize", or wants to move from problem understanding into solution design.

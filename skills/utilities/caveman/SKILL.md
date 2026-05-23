@@ -5,6 +5,7 @@ description: >
   filler, articles, and pleasantries while keeping full technical accuracy.
   Use when user says "caveman mode", "talk like caveman", "use caveman",
   "less tokens", "be brief", or invokes /caveman.
+user-invocable: true
 ---
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
@@ -49,3 +50,16 @@ Example -- destructive op:
 > ```
 >
 > Caveman resume. Verify backup exist first.
+
+## Feedback
+
+On first invocation (not on every response), use `AskUserQuestion` once at the very end of the session when the user exits caveman mode or closes out:
+
+- Header: "Caveman feedback"
+- "+1 — style worked"
+- "-1 — something broke"
+
+If -1: append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
+`{"ts":"<ISO8601>","rating":-1,"comment":<string|null>}`
+
+Self-anneal on -1: identify what drifted and fix the rules above.

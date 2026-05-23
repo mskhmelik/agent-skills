@@ -4,7 +4,7 @@ description: >
   Interview the user about solutions to a well-understood problem, generate solution options, stress-test them using Mom Test principles, and produce a solution tree with modules, features, and open questions.
   Use this skill when the user types /solutionize, says "let's find solutions", "now let's solve it", "ready to solutionize", or wants to move from problem understanding into solution design.
   Works best after /problematize has produced a Problem Summary (reads problem-summary.md from the current directory if present), but also works standalone.
-  The skill concludes with a structured Solution Overview saved to solution-summary.md that /get-prd can pick up.
+  Writes solution_overview.md and docs/CONTEXT.md (canonical domain terms). /get-prd consumes both.
 ---
 
 # /solutionize
@@ -13,19 +13,29 @@ A structured solution investigation skill. The goal is to surface, expand, and s
 
 The Mom Test principle carries over: don't ask for reactions, probe for signal. "Do you like this idea?" is useless. "What would have to be true for this to work in your situation?" is not.
 
+**Domain context:** canonical product terms live in **`docs/CONTEXT.md`** — not in `solution_overview.md`. See [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md). Module names in the solution tree must match terms in CONTEXT.md.
+
 ---
 
 ## Starting the Session
 
 ### If a /problematize Problem Summary exists
 
-First check for `problem-summary.md` in the current working directory and read it if present. Otherwise look in conversation context.
+First check for a problem summary in the repo root, in order:
+
+1. `docs/problem_summary.md`
+2. `problem-summary.md`
+3. `problem_summary.md`
+
+Read the first that exists. Otherwise use conversation context.
 
 Acknowledge it explicitly and use it as the foundation:
 
 > "Based on what we uncovered: [one-sentence restatement of distilled problem]. Let's find solutions that actually address that — not the surface version."
 
 Also note any open questions from the Problem Summary — these are the gaps solutionize needs to resolve before producing its output.
+
+If **Terms surfaced (raw)** exists in the problem doc, treat each as input for `docs/CONTEXT.md` — pick canonical names during this session.
 
 Then move directly to Phase 1.
 
@@ -253,6 +263,8 @@ Flag any steps where the user experience depends on an unresolved integration qu
 
 **Feature / module breakdown** (for the leading direction(s))
 
+Module names **must match** bold terms in `docs/CONTEXT.md`.
+
 Use a tree structure:
 
 [Solution name]
@@ -297,6 +309,7 @@ Layers used: [Data / Logic / Front-end] or [custom layers if adjusted]
 **Decisions**
 Key choices made during this session and the reasoning behind each.
 Format: "[We chose X over Y] because [specific reason from the conversation]."
+Tag each: `[product]` or `[technical → ADR candidate]`.
 Only include decisions that were actually made — not things still open.
 
 **Out of scope**
@@ -311,8 +324,22 @@ This is a commitment, not just a list. If it's here, it means we're not building
 
 After presenting the overview:
 
-1. Save the full Solution Overview to `solution-summary.md` in the current working directory, overwriting any previous version.
-2. Tell the user: "Saved to `solution-summary.md`. Ready to run /get-prd when you are."
+1. Save the full Solution Overview to **`docs/solution_overview.md`** if a `docs/` directory exists in the repo root; otherwise save to **`solution-summary.md`** in the repo root. Overwrite any previous version. **Do not** embed the glossary here — one line link: *"Canonical terms: [CONTEXT.md](CONTEXT.md)."*
+2. Save **CONTEXT** separately (see Step 3 below).
+3. Tell the user both saved paths. Ready to run `/get-prd` when you are.
+
+### Step 3 — Produce and save CONTEXT
+
+Produce **`docs/CONTEXT.md`** using [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md):
+
+- Resolve **Terms surfaced (raw)** from the problem doc into canonical entries (or defer unresolved items to Open questions in the solution overview).
+- Include every bold module name from the feature/module breakdown.
+- When multiple words exist for one concept, pick one; list others under `_Avoid:_`.
+- Sharpen definitions inline when the user clarifies a term during the session.
+
+Save to **`docs/CONTEXT.md`** (create `docs/` if missing). Overwrite any previous version.
+
+If `docs/` does not exist and you saved solution to repo root, save CONTEXT as **`CONTEXT.md`** at repo root instead.
 
 ---
 
@@ -327,7 +354,7 @@ At the very end, use `AskUserQuestion` to ask:
 
 If they select `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
 
-Append one line to `~/.claude/skills/solutionize/feedback.jsonl`:
+Append one line to **`feedback.jsonl` in the same directory as this `SKILL.md`**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
 For `-1` ratings: trigger self-annealing — identify and fix the root cause described in the comment.
@@ -342,3 +369,4 @@ For `-1` ratings: trigger self-annealing — identify and fix the root cause des
 - Do not mark assumptions as confirmed. If it wasn't validated in the conversation, mark it as `?`.
 - Do not produce the Solution Overview until the session is genuinely complete.
 - Do not suggest pivoting back to /problematize mid-session unless a fundamental problem mismatch emerges — if it does, name it clearly: "We may be solving the wrong problem. Do you want to pause and go back, or proceed with the current framing?"
+- Do not put the full domain glossary in `solution_overview.md` — it belongs in `CONTEXT.md`.

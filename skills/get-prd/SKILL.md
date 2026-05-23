@@ -48,7 +48,14 @@ Under `REPO_ROOT`, locate files in this **priority order** (first match wins):
 2. `solution_overview.md`
 3. `solution-summary.md`
 
+**Domain context (CONTEXT)**
+
+1. `docs/CONTEXT.md`
+2. `CONTEXT.md` (repo root — legacy)
+
 If **neither** problem nor solution file exists, ask once: whether to work from **conversation context only**, or to run the upstream skills first.
+
+If **CONTEXT.md** is missing but solution exists, note in the PRD preamble that glossary terms may be inconsistent — prefer running `/solutionize` again to produce `docs/CONTEXT.md`.
 
 If **only one** exists, use it and note clearly in the PRD preamble (one sentence) which input is missing.
 
@@ -88,11 +95,19 @@ Synthesise into **`docs/prd.md`** using the template below. Every substantive li
 
 **Omit** `## Open questions` entirely from the PRD.
 
+**Glossary rule:** User stories and Implementation decisions must use canonical terms from **`docs/CONTEXT.md`**. Do not introduce new synonyms. Include a **`## Glossary`** section that links to `CONTEXT.md` and lists the terms used in this PRD (copy only those terms — not the full file).
+
 ```markdown
 # PRD — [short name]
 
 ## Problem statement
 One sharp sentence (most specific version from aligned inputs).
+
+## Glossary
+
+Canonical terms — see [CONTEXT.md](CONTEXT.md). Terms used in this PRD:
+
+- **Term** — one-line definition (from CONTEXT)
 
 ## Why this matters
 2–3 sentences grounded in concrete examples from the problem doc.
@@ -166,3 +181,4 @@ Tell the user: **Saved to `docs/prd.md`.**
 - Do not invent user stories or decisions not grounded in inputs or gap-fill.
 - Do not ship a PRD with an `## Open questions` section — that belongs in problem/solution docs only.
 - Do not include ruled-out directions as committed scope.
+- Do not invent glossary terms — use `CONTEXT.md` or flag missing context file.

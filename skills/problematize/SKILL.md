@@ -4,7 +4,7 @@ description: >
   Run a deep problem investigation interview using Rob Fitzpatrick's Mom Test methodology before jumping to solutions.
   Use this skill when the user types /problematize, says "understand the problem before building", "let's investigate the problem first", "problematize this", or wants to establish a shared problem foundation before ideating or designing.
   Also trigger when a user describes a problem they want to solve and jumps straight to asking for solutions — pause and suggest running /problematize first.
-  The skill concludes with a structured handoff artifact saved to problem-summary.md that /solutionize and /get-prd can pick up.
+  The skill concludes with a structured handoff artifact saved to problem-summary.md that /solutionize and /get-prd can pick up. Raw domain terms in Terms surfaced feed /solutionize → docs/CONTEXT.md.
 ---
 
 # /problematize
@@ -53,6 +53,8 @@ Work through these dimensions, one at a time, conversationally. Don't present th
 5. **Failed solutions** — Have they tried to fix it? What didn't work?
 6. **Stakes** — What happens if it stays unsolved? What's the cost of inaction?
 7. **Root vs. symptom** — Is the stated problem the actual problem, or a symptom of something upstream?
+
+While excavating, note **domain nouns** the user repeats (job titles, entity names, workflow steps). These feed **Terms surfaced (raw)** in the handoff — not canonical names yet.
 
 ### Phase 3 — Third-person mode
 
@@ -174,12 +176,18 @@ Only include examples that were specific and real. Do not include hypotheticals 
 2. [Continue for each gap]
 
 Be honest here. Thin signal is worse than acknowledged gaps. If something couldn't be established, say so plainly — /solutionize needs to know where assumptions are being made.
+
+**Terms surfaced (raw)**
+Terms the user used during investigation — not yet canonical. /solutionize resolves these into `docs/CONTEXT.md`.
+
+- **[term]** — as the user used it in context (one line)
+- Do not pick canonical names or list _Avoid:_ synonyms here
 ```
 
 After presenting the summary:
 
-1. Save the full Problem Summary to `problem-summary.md` in the current working directory, overwriting any previous version.
-2. Tell the user: "Saved to `problem-summary.md`. Ready to run /solutionize when you are."
+1. Save the full Problem Summary to **`docs/problem_summary.md`** if a `docs/` directory exists in the repo root; otherwise save to **`problem-summary.md`** in the repo root. Overwrite any previous version.
+2. Tell the user the saved path. Ready to run `/solutionize` when you are — it will sharpen **Terms surfaced** into `docs/CONTEXT.md`.
 
 ---
 

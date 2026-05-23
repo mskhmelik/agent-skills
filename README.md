@@ -2,6 +2,8 @@
 
 Personal **skills** and **rules** for Cursor and Claude Code. One `skills/` folder, identical `SKILL.md` format, symlinked on each machine. Syncs via OneDrive; version history on GitHub.
 
+Inspired and adopted from [mattpocock/skills](https://github.com/mattpocock/skills)
+
 ## Layout
 
 ```
@@ -98,8 +100,6 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 | [handoff](skills/utilities/handoff/SKILL.md) | Compact session for next agent |
 | [caveman](skills/utilities/caveman/SKILL.md) | Ultra-compressed replies |
 | [make-secure](skills/utilities/make-secure/SKILL.md) | Audit skills for security risks |
-
-Adapted from [mattpocock/skills](https://github.com/mattpocock/skills): `/diagnose`, `/unslop-repo` (improve-codebase-architecture).
 
 ---
 

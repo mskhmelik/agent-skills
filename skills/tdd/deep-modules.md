@@ -1,5 +1,7 @@
 # Deep Modules
 
+For repo-wide architecture reviews, see **`/unslop-repo`** and its [LANGUAGE.md](../unslop-repo/LANGUAGE.md) (seam, adapter, leverage, locality).
+
 From *A Philosophy of Software Design* (Ousterhout).
 
 **Deep module** = small interface + lots of implementation

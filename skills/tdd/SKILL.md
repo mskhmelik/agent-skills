@@ -1,10 +1,12 @@
 ---
 name: tdd
 description: >
-  Test-driven development with red-green-refactor loop, driven by a GitHub issue.
-  Use when implementing a GitHub issue using TDD, mentions "red-green-refactor",
-  wants integration tests, or asks for test-first development.
-  Accepts an optional issue number: /tdd or /tdd <N>.
+  Test-driven development with red-green-refactor loop, driven by a GitHub issue
+  or a described bug/regression. Use when implementing a GitHub issue using TDD,
+  fixing a bug with a regression test, mentions "red-green-refactor", wants
+  integration tests, or asks for test-first development.
+  Accepts an optional issue number: /tdd or /tdd <N>. Without an issue, use
+  bug-fix mode (Step 0).
 argument-hint: "[issue-number]"
 allowed-tools: Bash, Read, Edit, Write, TodoWrite
 user-invocable: true
@@ -14,7 +16,23 @@ user-invocable: true
 
 Implements one GitHub issue using red-green-refactor TDD. The issue's acceptance criteria are the test specification — no planning from scratch.
 
-See [tests.md](tests.md), [mocking.md](mocking.md), [deep-modules.md](deep-modules.md), [interface-design.md](interface-design.md), [refactoring.md](refactoring.md).
+See [tests.md](tests.md), [tests-flutter.md](tests-flutter.md), [mocking.md](mocking.md), [deep-modules.md](deep-modules.md), [interface-design.md](interface-design.md), [refactoring.md](refactoring.md).
+
+Read **`docs/prd.md`** and **`docs/README.md`** when present — stay in scope.
+
+---
+
+## Step 0 — Bug-fix mode (no GitHub issue)
+
+Use when the user describes a **bug or regression** instead of an issue number. Prefer invoking **`/diagnose` first** to build the feedback loop; `/tdd` then owns the RED→GREEN regression test.
+
+1. Confirm the **symptom** and **presentation** (e.g. desktop panel vs mobile sheet).
+2. Map to a **test seam** — widget test at the UI path the user hit; unit test only for pure logic. See [tests-flutter.md](tests-flutter.md).
+3. List behaviors as acceptance criteria (one per test):
+   - `[ ] behavior → test name`
+4. Get user approval, then **Step 3 (tracer bullet)** — skip issue loading and PR template unless user wants a PR afterward.
+
+Do not write multiple failing tests upfront — vertical slices only.
 
 ---
 

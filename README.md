@@ -8,9 +8,8 @@ Personal **skills** and **rules** for Cursor and Claude Code. One `skills/` fold
 agent-skills/
 ├── README.md
 ├── setup/
-│   ├── setup.sh              ← macOS: per-skill symlinks in ~/.claude/skills + ~/.cursor/skills
+│   ├── setup.sh              ← macOS: per-skill symlinks in ~/.claude/skills + ~/.cursor/skills + ~/.cursor/rules
 │   └── setup.ps1             ← Windows
-├── setup-cursor-wiring.sh    ← macOS: also wires ~/.cursor/rules
 ├── skills/
 │   ├── product/              ← product workflow chain (public)
 │   ├── vault/                ← knowledge/Obsidian tools (public)
@@ -22,18 +21,13 @@ agent-skills/
 
 ## Setup (once per machine)
 
-**macOS — skills for Claude + Cursor:**
+**macOS:**
 
 ```bash
 bash /path/to/agent-skills/setup/setup.sh
 ```
 
-**macOS — also wire Cursor rules:**
-
-```bash
-chmod +x /path/to/agent-skills/setup-cursor-wiring.sh
-./setup-cursor-wiring.sh
-```
+Wires per-skill symlinks in `~/.claude/skills/` and `~/.cursor/skills/`, plus `~/.cursor/rules/`.
 
 **Windows:**
 

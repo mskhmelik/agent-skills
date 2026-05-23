@@ -44,5 +44,19 @@ for TARGET_DIR in "${HOME}/.claude/skills" "${HOME}/.cursor/skills"; do
   echo "Done: $TARGET_DIR"
 done
 
+# --- Cursor rules: single folder symlink ---
+CURSOR_RULES="${HOME}/.cursor/rules"
+RULES_SRC="${REPO_ROOT}/rules"
+
+if [ -d "$RULES_SRC" ]; then
+  if [ -L "$CURSOR_RULES" ] && [ "$(readlink "$CURSOR_RULES")" = "$RULES_SRC" ]; then
+    echo "rules already linked: $CURSOR_RULES"
+  else
+    [ -L "$CURSOR_RULES" ] && rm "$CURSOR_RULES"
+    ln -sf "$RULES_SRC" "$CURSOR_RULES"
+    echo "Linked: $CURSOR_RULES → $RULES_SRC"
+  fi
+fi
+
 echo
-echo "All skills linked for Claude Code and Cursor."
+echo "All skills linked for Claude Code and Cursor (including Cursor rules)."

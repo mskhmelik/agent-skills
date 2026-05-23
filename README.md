@@ -7,6 +7,8 @@ Personal **skills** and **rules** for Cursor and Claude Code. One `skills/` fold
 ```
 agent-skills/
 ├── README.md
+├── .claude/
+│   └── CLAUDE.md             ← security rules for skill development (no PII, private-skill checklist)
 ├── setup/
 │   ├── setup.sh              ← macOS: per-skill symlinks in ~/.claude/skills + ~/.cursor/skills + ~/.cursor/rules
 │   └── setup.ps1             ← Windows
@@ -116,7 +118,7 @@ Adapted from [mattpocock/skills](https://github.com/mattpocock/skills): `/diagno
 2. Fill frontmatter + instructions
 3. Re-run `bash setup/setup.sh` to add the new symlink
 4. Add a row to the index above (omit private skills)
-5. For private skills: add `skills/private/<name>/` to `.git/info/exclude`
+5. For private skills: `skills/private/` is already in `.git/info/exclude` — no extra entry needed
 
 ## Archive
 

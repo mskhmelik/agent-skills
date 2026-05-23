@@ -1,63 +1,105 @@
 # agent-skills
 
-Personal skills for AI coding agents. A single `skills/` folder works across Claude Code and Cursor — both use the identical `SKILL.md` format.
+Personal **skills** and **rules** for Cursor and Claude Code. One `skills/` folder, identical `SKILL.md` format, symlinked on each machine. Syncs via OneDrive; version history on GitHub.
 
-## Skill Index
+## Layout
 
-| Skill | Description | Tags |
-|-------|-------------|------|
-| [caveman](skills/caveman/SKILL.md) | Ultra-compressed communication mode — drops filler/articles/pleasantries, keeps full technical accuracy (~75% token reduction) | meta, productivity |
-| [contemplate](skills/contemplate/SKILL.md) | Process new sources in Obsidian vault `sources/` → update `ai_memory/` with summaries, concepts, and entity pages (Karpathy LLM Wiki pattern) | vault, knowledge |
-| [get-prd](skills/get-prd/SKILL.md) | (3/3) Synthesize problem + solution docs into `docs/prd.md`; strict no-open-questions rule; outputs vertical build-order slices | thinking, planning |
-| [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | Download a YouTube transcript; optional auto-summary saved as `.md` with YAML frontmatter; keep/delete choice at end | personal, productivity |
-| [handoff](skills/handoff/SKILL.md) | Compact the current conversation into a temp handoff doc so a fresh agent session can continue the work; references existing artifacts rather than duplicating them | meta, productivity |
-| [[local-skill]](skills/[local-skill]/SKILL.md) | Extract a client's brand guidelines (colors, fonts, logo) from screenshots and their website; saves a self-contained `brand-guidelines.html` to Google Drive | design, client |
-| [[local-skill]](SKILL.md) | Find external attendees from recent calendar meetings and send them LinkedIn connection requests | personal, productivity |
-| [make-secure](skills/make-secure/SKILL.md) | Audit active skills for security vulnerabilities; risk-classified report with interactive remediation | security, meta |
-| [problematize](skills/problematize/SKILL.md) | (1/3) Structured problem investigation interview using Rob Fitzpatrick's Mom Test methodology; saves problem-summary.md | thinking, research |
-| [prd-to-issues](skills/prd-to-issues/SKILL.md) | (4/4) Break prd.md into vertical-slice GitHub issues with HITL/AFK classification and dependency ordering | thinking, planning |
-| [remember](skills/remember/SKILL.md) | Save content (posts, articles, transcripts, excerpts) into Obsidian vault `sources/` as a formatted source note; upstream of `/contemplate` | vault, knowledge |
-| [solutionize](skills/solutionize/SKILL.md) | (2/3) Solution design interview — surfaces, stress-tests, and structures options; saves solution-summary.md | thinking, research |
-| [tdd](skills/tdd/SKILL.md) | Red-green-refactor TDD loop driven by a GitHub issue; acceptance criteria become the test spec | dev, testing |
-| [[local-skill]](skills/[local-skill]/SKILL.md) | Turn an Upwork brief into a shareable 3-slide HTML proposal deck saved to the Desktop | client, productivity |
+```
+agent-skills/
+├── README.md
+├── setup/
+│   ├── setup.sh              ← macOS: ~/.claude/skills + ~/.cursor/skills
+│   └── setup.ps1             ← Windows
+├── setup-cursor-wiring.sh    ← macOS: also wires ~/.cursor/rules
+├── skills/                   ← slash commands
+│   └── init-docs/templates/  ← per-repo doc scaffolds
+├── rules/                    ← generic Cursor rules (all projects)
+└── templates/SKILL-template.md
+```
 
-## How it works
+## Setup (once per machine)
 
-- **File sync** keeps the `skills/` folder up to date across devices (Windows + macOS)
-- **GitHub** provides version history and public sharing
-- **Private skills** stay in the same folder but are excluded via `.git/info/exclude` (local only) — they sync to your devices but never reach GitHub
+**macOS — skills for Claude + Cursor:**
 
-## Setup on a new machine
-
-Clone or sync this repo somewhere on your machine, then run the setup script for your OS:
-
-**macOS:**
 ```bash
-bash ~/path/to/agent-skills/setup/setup.sh
+bash /path/to/agent-skills/setup/setup.sh
+```
+
+**macOS — also wire Cursor rules:**
+
+```bash
+chmod +x /path/to/agent-skills/setup-cursor-wiring.sh
+./setup-cursor-wiring.sh
 ```
 
 **Windows:**
+
 ```powershell
 & "$env:USERPROFILE\path\to\agent-skills\setup\setup.ps1"
 ```
 
-This creates junctions/symlinks from `~/.claude/skills` and `~/.cursor/skills` to this repo's `skills/` folder.
+Restart Cursor / Claude after wiring.
+
+Private skills live under `skills/` but are listed in `.git/info/exclude` — they sync on your devices but never reach GitHub.
+
+---
+
+## Product workflow (any repo)
+
+Run **`/init-docs`** once to scaffold `docs/`. Then:
+
+| Step | Skill | Output |
+|------|-------|--------|
+| 1 | `/problematize` | `docs/problem_summary.md` (+ raw terms) |
+| 2 | `/solutionize` | `docs/solution_overview.md` + **`docs/CONTEXT.md`** |
+| 3 | `/get-prd` | `docs/prd.md` (Glossary from CONTEXT) |
+| 4 | `/prd-to-issues` | GitHub issues (vertical slices) |
+| 5 | `/tdd` | Code + tests |
+| — | `/diagnose` | Bugs — feedback loop first, regression test |
+| — | `/unslop-repo` | Architecture hygiene (periodic) |
+
+### CONTEXT vs LANGUAGE (don't mix them)
+
+| File | Layer | Where |
+|------|-------|-------|
+| **`docs/CONTEXT.md`** | Domain / product vocabulary | Repo — written by `/solutionize` |
+| **`unslop-repo/LANGUAGE.md`** | Architecture lexicon (module, seam, depth…) | Skill bundle only — used by `/unslop-repo` |
+
+After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT + PRD, proposes deepenings, may write `docs/modules/` and ADRs, then hand off refactors via `/prd-to-issues` → `/tdd`.
+
+---
+
+## Skill index
+
+| Skill | Role |
+|-------|------|
+| [init-docs](skills/init-docs/SKILL.md) | Scaffold `docs/` layout |
+| [problematize](skills/problematize/SKILL.md) | (1/3) Mom Test problem investigation |
+| [solutionize](skills/solutionize/SKILL.md) | (2/3) Solution stress-test + `CONTEXT.md` |
+| [get-prd](skills/get-prd/SKILL.md) | (3/3) Synthesize `docs/prd.md` |
+| [prd-to-issues](skills/prd-to-issues/SKILL.md) | (4/4) Vertical-slice GitHub issues |
+| [tdd](skills/tdd/SKILL.md) | Red-green-refactor from issue or bug |
+| [diagnose](skills/diagnose/SKILL.md) | Disciplined debug loop |
+| [unslop-repo](skills/unslop-repo/SKILL.md) | Shallow → deep module reviews |
+| [handoff](skills/handoff/SKILL.md) | Compact session for next agent |
+| [caveman](skills/caveman/SKILL.md) | Ultra-compressed replies |
+| [contemplate](skills/contemplate/SKILL.md) | Ingest Obsidian `sources/` → wiki |
+| [remember](skills/remember/SKILL.md) | Save content to vault sources |
+| [get-yt-transcript](skills/get-yt-transcript/SKILL.md) | YouTube transcript download |
+| [make-secure](skills/make-secure/SKILL.md) | Audit skills for security risks |
+| [[local-skill]](skills/[local-skill]/SKILL.md) | Upwork brief → proposal deck |
+
+Adapted from [mattpocock/skills](https://github.com/mattpocock/skills): `/diagnose`, `/unslop-repo` (improve-codebase-architecture).
+
+---
 
 ## Adding a skill
 
-1. Copy `templates/SKILL-template.md` → `skills/<name>/SKILL.md`
-2. Fill in frontmatter and instructions
-3. Add a row to the index table above
-4. For private skills: add `skills/<name>/` to `.git/info/exclude` (never pushed)
+1. Copy [`templates/SKILL-template.md`](templates/SKILL-template.md) → `skills/<name>/SKILL.md`
+2. Fill frontmatter + instructions
+3. Add a row to the index above
+4. For private skills: add `skills/<name>/` to `.git/info/exclude`
 
-## Skill file format
+## Archive
 
-```yaml
----
-name: skill-name
-description: One-line trigger description shown in the agent UI
-argument-hint: <optional argument hint>
----
-
-Markdown instructions the agent follows when this skill is invoked.
-```
+`4_learning/claude/skills-main/` is an old bundle — **do not copy from it**. Port skills explicitly.

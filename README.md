@@ -97,9 +97,11 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 | Skill | Role |
 |-------|------|
-| [handoff](skills/utilities/handoff/SKILL.md) | Compact session for next agent |
+| [handoff](skills/utilities/handoff/SKILL.md) | Hand off to next agent — **Quick** (copy-paste code block) or **Full** (temp doc + pointer) |
 | [caveman](skills/utilities/caveman/SKILL.md) | Ultra-compressed replies |
 | [make-secure](skills/utilities/make-secure/SKILL.md) | Audit skills for security risks |
+
+**`/handoff` modes:** **Quick** — short summary in a fenced code block (no temp file; same-session follow-ups). **Full** — writes `mktemp -t handoff-*.md` with full context; code block points the next agent at that path.
 
 ---
 

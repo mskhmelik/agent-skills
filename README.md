@@ -59,13 +59,6 @@ Run **`/init-docs`** once to scaffold `docs/`. Then:
 | — | `/diagnose` | Bugs — feedback loop first, regression test |
 | — | `/unslop-repo` | Architecture hygiene (periodic) |
 
-### CONTEXT vs LANGUAGE (don't mix them)
-
-| File | Layer | Where |
-|------|-------|-------|
-| **`docs/CONTEXT.md`** | Domain / product vocabulary | Repo — written by `/solutionize` |
-| **`unslop-repo/LANGUAGE.md`** | Architecture lexicon (module, seam, depth…) | Skill bundle only — used by `/unslop-repo` |
-
 After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT + PRD, proposes deepenings, may write `docs/modules/` and ADRs, then hand off refactors via `/prd-to-issues` → `/tdd`.
 
 ---
@@ -97,11 +90,9 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 | Skill | Role |
 |-------|------|
-| [handoff](skills/utilities/handoff/SKILL.md) | Hand off to next agent — **Quick** (copy-paste code block) or **Full** (temp doc + pointer) |
+| [handoff](skills/utilities/handoff/SKILL.md) | Hand off to next agent — **Quick** (short fenced code block, no file; for same-session follow-ups) or **Full** (`mktemp` doc with full context + pointer block; for large multi-file handovers) |
 | [caveman](skills/utilities/caveman/SKILL.md) | Ultra-compressed replies |
 | [make-secure](skills/utilities/make-secure/SKILL.md) | Audit skills for security risks |
-
-**`/handoff` modes:** **Quick** — short summary in a fenced code block (no temp file; same-session follow-ups). **Full** — writes `mktemp -t handoff-*.md` with full context; code block points the next agent at that path.
 
 ---
 

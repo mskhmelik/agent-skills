@@ -34,7 +34,7 @@ Skills run on macOS and Windows. When referencing Claude or system paths:
 | Instead of | Use |
 |------------|-----|
 | `C:\Users\<name>\.claude\` | `~/.claude/` (macOS) or `%USERPROFILE%\.claude\` (Windows) |
-| `~/...` | `~/...` |
+| `/Users/<name>/...` | `~/...` |
 | Absolute OneDrive paths | `~/OneDrive/...` or describe generically |
 
 ## When asked to create a skill

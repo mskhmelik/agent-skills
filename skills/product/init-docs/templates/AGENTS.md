@@ -14,4 +14,4 @@ Slash commands live in OneDrive `5_projects/ai/skills` (Cursor: `~/.cursor/skill
 | Feature (GitHub issue) | `/tdd` |
 | Missing docs layout | `/init-docs` |
 
-Generic rules: `5_projects/ai/rules/` — see [`5_projects/ai/README.md`](5_projects/ai/README.md) for wiring.
+Generic rules: `5_projects/ai/rules/` — see `5_projects/ai/README.md` for wiring.

@@ -105,8 +105,6 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 ---
 
----
-
 ## Adding a skill
 
 1. Copy [`templates/SKILL-template.md`](templates/SKILL-template.md) → `skills/<group>/<name>/SKILL.md`

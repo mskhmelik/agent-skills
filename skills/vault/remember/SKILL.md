@@ -41,7 +41,7 @@ Inspect the content to make smart proposals:
 - **Title proposal** — use the first non-empty line, trimmed and Title Cased.
 - **Slug proposal** — snake_case, 3–6 words derived from the title.
 - **Date proposal** — today (`YYYY-MM-DD` and `YYMMDD` forms).
-- **Author proposal** — `<author>` for first-person posts; otherwise extract from the content (channel name, byline) or set to `unknown` and ask.
+- **Author proposal** — infer from context (first-person → ask user to confirm their name); otherwise extract from the content (channel name, byline) or set to `unknown` and ask.
 - **Link proposal** — `NA` unless a URL is obvious.
 
 Ask all of these in one `AskUserQuestion` block (up to 4 questions per call — bundle the most ambiguous ones). Always present your proposal as the **first option** and label it `(proposed)`. Always include `Other` semantics so the user can correct any field.

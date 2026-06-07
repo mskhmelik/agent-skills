@@ -21,6 +21,28 @@ The Mom Test principle carries over: don't ask for reactions, probe for signal. 
 
 ## Starting the Session
 
+### Check for existing documentation first
+
+Before doing anything else, scan the repo for documentation this project may already have:
+
+- `docs/solution_overview.md`
+- `docs/CONTEXT.md`
+- `docs/adr/` (any ADRs)
+- `docs/prd.md`
+
+**If any of these exist, you are not starting from zero.** Read them and switch into **update mode**:
+
+> "You've already got a solution tree documented — [N] modules, [M] decisions recorded. I'll treat that as the baseline and focus on what's new or changed, not regenerate it from scratch."
+
+In update mode:
+- Treat existing `✓ Confirmed` items in `solution_overview.md` and existing entries in `CONTEXT.md` / `docs/adr/` as established truth, not drafts to be casually replaced.
+- When the user says something that conflicts with what's already documented, call it out immediately — don't silently overwrite: *"Your solution overview marks [X] as confirmed, but you're now describing [Y] — which is right?"*
+- When the user uses a term that conflicts with `CONTEXT.md`, sharpen it the same way: *"Your glossary defines '[term]' as [X], but you seem to mean [Y] here — which is it?"*
+- Cross-reference claims against the actual code/issues when relevant — if the user describes how something works and the repo disagrees, surface the contradiction rather than recording the claim at face value.
+- Scope the session to what's actually changed: new modules, revised decisions, newly-resolved open questions. Don't re-litigate settled ground unless the user reopens it.
+
+If none of these files exist, proceed in greenfield mode as below.
+
 ### If a /problematize Problem Summary exists
 
 First check for a problem summary in the repo root, in order:
@@ -326,9 +348,11 @@ This is a commitment, not just a list. If it's here, it means we're not building
 
 After presenting the overview:
 
-1. Save the full Solution Overview to **`docs/solution_overview.md`** if a `docs/` directory exists in the repo root; otherwise save to **`solution-summary.md`** in the repo root. Overwrite any previous version. **Do not** embed the glossary here — one line link: *"Canonical terms: [CONTEXT.md](CONTEXT.md)."*
+1. Save the full Solution Overview to **`docs/solution_overview.md`** if a `docs/` directory exists in the repo root; otherwise save to **`solution-summary.md`** in the repo root. **Do not** embed the glossary here — one line link: *"Canonical terms: [CONTEXT.md](CONTEXT.md)."*
+   - **If a previous version existed** (update mode): don't blind-overwrite. Call out specifically what changed from the prior version and why — e.g. *"Updated: [Module X] now includes [feature], because [decision made this session]. [Module Y] unchanged."* Preserve sections that weren't touched this session rather than regenerating them from scratch.
+   - **If a decision newly crystallized this session is (a) hard to reverse, (b) surprising without context, and (c) the result of a real trade-off**, offer to record it as an ADR in `docs/adr/NNNN-slug.md` (sequential numbering, scan for the highest existing number and increment). Keep it tight — what's the context, what did we decide, why — one paragraph is fine. Skip the offer if any of the three criteria is missing.
 2. Save **CONTEXT** separately (see Step 3 below).
-3. Tell the user both saved paths. Ready to run `/get-prd` when you are.
+3. Tell the user both saved paths (and any ADR created). Ready to run `/get-prd` when you are.
 
 ### Step 3 — Produce and save CONTEXT
 

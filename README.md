@@ -71,7 +71,7 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 |-------|------|
 | [init-docs](skills/product/init-docs/SKILL.md) | Scaffold `docs/` layout |
 | [problematize](skills/product/problematize/SKILL.md) | (1/4) Mom Test problem investigation |
-| [solutionize](skills/product/solutionize/SKILL.md) | (2/4) Solution stress-test + `CONTEXT.md` |
+| [solutionize](skills/product/solutionize/SKILL.md) | (2/4) Solution stress-test + `CONTEXT.md`; detects existing docs and runs in update mode rather than overwriting |
 | [get-prd](skills/product/get-prd/SKILL.md) | (3/4) Synthesize `docs/prd.md` |
 | [prd-to-issues](skills/product/prd-to-issues/SKILL.md) | (4/4) Vertical-slice GitHub issues |
 | [tdd](skills/product/tdd/SKILL.md) | Red-green-refactor from issue or bug |

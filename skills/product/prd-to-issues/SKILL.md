@@ -87,36 +87,23 @@ Incorporate any changes. Do not create issues until the user confirms.
 
 ---
 
-## Step 5 — Create issues via gh CLI
+## Step 5 — Create issues (delegate to `/create-ticket`)
 
-Once approved, create issues in dependency order (blockers first) using:
+Read [create-ticket/CONVENTIONS.md](../create-ticket/CONVENTIONS.md) and follow **Feature track** rules for every slice.
 
-```
-gh issue create \
-  --title "<title>" \
-  --body "<body>" \
-  --label "needs-triage"
-```
+Once approved, file issues in dependency order (blockers first):
 
-Use this body template for each issue:
+1. Run `GITHUB_REPO=<owner/repo> bash ../create-ticket/scripts/ensure-labels.sh`
+2. Check idempotency — skip if exact title already exists (`gh issue list --state all`)
+3. For each slice:
+   - **Title:** project convention (e.g. `Slice N — …`) — no `BUG-` prefix
+   - **Labels:** `type:slice`, `module:*`, `priority:must|should`, `agent:hitl|afk` (map Mode from Step 3; do **not** use `needs-triage`)
+   - **Body:** Feature track template from CONVENTIONS.md
 
-```markdown
-## Context
-> From PRD — [relevant user story or section]
-
-## Acceptance Criteria
-[Copied verbatim from PRD success criteria, filtered to this issue]
-
-## Out of Scope for This Issue
-[From PRD out-of-scope, filtered to what's relevant here]
-
-## QA Notes
-[From PRD testing approach, filtered to this issue]
-
-## Notes
-- **Mode:** HITL | AFK
-- **Blocks:** [issue titles]
-- **Blocked by:** [issue titles]
+```bash
+gh issue create --repo "$REPO" --title "<title>" \
+  --label "type:slice,module:<module>,priority:<must|should>,agent:<hitl|afk>" \
+  --body-file <file>
 ```
 
 Report each issue URL as it's created. If any `gh` command fails, report the error and continue with the remaining issues — don't abort the whole run.

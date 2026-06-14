@@ -12,8 +12,9 @@ This folder keeps product intent and dev agents aligned. **Read before expanding
 | 4 | `/get-prd` | [`prd.md`](prd.md) — committed scope (no open questions section) |
 | 5 | `/prd-to-issues` | GitHub issues (vertical slices) |
 | 6 | `/tdd` | Implementation with tests |
+| — | `/afk-dev` | Autonomous issue cycles — metadata in [`loops/`](loops/) |
 | — | `/diagnose` | Bug fixes — feedback loop first, regression test required |
-| — | `/unslop-repo` | Structural hygiene — reads `CONTEXT.md` + PRD; writes `modules/` + ADRs |
+| — | `/unslop-repo` | Architecture hygiene (periodic) → `/create-ticket` for approved deepenings |
 
 ## File roles
 
@@ -23,6 +24,7 @@ This folder keeps product intent and dev agents aligned. **Read before expanding
 - **`prd.md`** — What we ship now. If it's not here, ask before building.
 - **`adr/`** — Hard-to-reverse technical decisions ([README](adr/README.md)).
 - **`agents/`** — Repo-specific notes for AI agents (issue tracker, launch configs).
+- **`loops/`** — `/afk-dev` cycle plans, logs, summaries ([README](loops/README.md)). Worker sandboxes: `.worktrees/` (gitignored).
 
 ## During development
 

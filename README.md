@@ -49,17 +49,70 @@ Private skills live under `skills/` but are listed in `.git/info/exclude` — th
 
 Run **`/init-docs`** once to scaffold `docs/`. Then:
 
+```mermaid
+flowchart TB
+  subgraph greenfield [Greenfield product path]
+    initDocs["/init-docs"]
+    problematize["/problematize"]
+    solutionize["/solutionize"]
+    getPrd["/get-prd"]
+    prdToIssues["/prd-to-issues"]
+    initDocs --> problematize --> solutionize --> getPrd --> prdToIssues
+  end
+
+  subgraph filing [Issue filing hub]
+    createTicket["/create-ticket"]
+  end
+
+  subgraph build [Build and ship]
+    tdd["/tdd"]
+    afkDev["/afk-dev"]
+  end
+
+  prdToIssues -->|"Feature track: Slice N"| createTicket
+
+  subgraph intake [Other intake paths]
+    unslop["/unslop-repo"]
+    diagnose["/diagnose"]
+    reviewQA["Review / QA / backlog"]
+  end
+
+  unslop -->|"DEBT- ARCH- TEST-"| createTicket
+  diagnose -->|"BUG- triage"| createTicket
+  reviewQA -->|"BUG- SEC- DEBT-"| createTicket
+
+  createTicket --> ghIssues["GitHub Issues"]
+  ghIssues --> tdd
+  ghIssues --> afkDev
+
+  unslop -.->|"new PRD feature"| prdToIssues
+```
+
+**Reading the diagram**
+
+| Path | Skills | Issue style |
+|------|--------|-------------|
+| New product | `/init-docs` → … → `/prd-to-issues` → `/create-ticket` | Feature track (`Slice N — …`) |
+| Architecture review | `/unslop-repo` → `/create-ticket` | Review track (`DEBT-`, `ARCH-`, `TEST-`) |
+| Bugs | `/diagnose` → `/create-ticket` (optional) | `BUG-` + triage body |
+| Review / QA | `/create-ticket` | `BUG-`, `SEC-`, `DEBT-`, … |
+| Execute | `/tdd` (one issue) or `/afk-dev` (batch `agent:hitl`) | — |
+
+Filing rules: [create-ticket/CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)
+
 | Step | Skill | Output |
 |------|-------|--------|
 | 1 | `/problematize` | `docs/problem_summary.md` (+ raw terms) |
 | 2 | `/solutionize` | `docs/solution_overview.md` + **`docs/CONTEXT.md`** |
 | 3 | `/get-prd` | `docs/prd.md` (Glossary from CONTEXT) |
-| 4 | `/prd-to-issues` | GitHub issues (vertical slices) |
+| 4 | `/prd-to-issues` | GitHub issues (vertical slices) — filing via `/create-ticket` |
+| 4b | `/create-ticket` | Canonical issue filing (prefixes, labels, HITL/AFK) — review backlog, QA, triage, **unslop candidates** |
 | 5 | `/tdd` | Code + tests |
+| 6 | `/afk-dev` | Coordinated multi-agent cycle on `agent:hitl` issues — plan, spawn worker agents on branches, summary + manual QA |
 | — | `/diagnose` | Bugs — feedback loop first, regression test |
 | — | `/unslop-repo` | Architecture hygiene (periodic) |
 
-After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT + PRD, proposes deepenings, may write `docs/modules/` and ADRs, then hand off refactors via `/prd-to-issues` → `/tdd`.
+After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT + PRD, proposes deepenings, may write `docs/modules/` and ADRs, then files approved candidates via **`/create-ticket`** (`DEBT-`/`ARCH-`/…) → **`/tdd`** or **`/afk-dev`**. New PRD-scope features go through **`/prd-to-issues`** instead.
 
 ---
 
@@ -74,9 +127,11 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 | [solutionize](skills/product/solutionize/SKILL.md) | (2/4) Solution stress-test + `CONTEXT.md`; detects existing docs and runs in update mode rather than overwriting |
 | [get-prd](skills/product/get-prd/SKILL.md) | (3/4) Synthesize `docs/prd.md` |
 | [prd-to-issues](skills/product/prd-to-issues/SKILL.md) | (4/4) Vertical-slice GitHub issues |
+| [create-ticket](skills/product/create-ticket/SKILL.md) | Canonical GitHub issue filing — prefixes, labels, HITL/AFK, durable bodies ([CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)) |
 | [tdd](skills/product/tdd/SKILL.md) | Red-green-refactor from issue or bug |
+| [afk-dev](skills/product/afk-dev/SKILL.md) | (6) Triage `agent:*` issues, plan, spawn worker agents on branches, summary + manual QA. See `CONVENTIONS.md` for labels/caps/merge policy and `scripts/afk.sh` for headless looping |
 | [diagnose](skills/product/diagnose/SKILL.md) | Disciplined debug loop |
-| [unslop-repo](skills/product/unslop-repo/SKILL.md) | Shallow → deep module reviews |
+| [unslop-repo](skills/product/unslop-repo/SKILL.md) | Shallow → deep module reviews; files candidates via `/create-ticket` |
 
 ### vault/
 

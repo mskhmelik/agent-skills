@@ -102,16 +102,32 @@ Once the user picks a candidate, walk the design tree — constraints, seam plac
 | New or sharpened domain term | **`docs/CONTEXT.md`** (see [../solutionize/CONTEXT-FORMAT.md](../solutionize/CONTEXT-FORMAT.md)) |
 | Load-bearing rejection | Offer ADR in `docs/adr/` ([init-docs ADR format](../init-docs/templates/adr-README.md)) |
 | Deep module structure | `docs/modules/module_<name>.md` |
-| Ready to implement | Hand off to **`/prd-to-issues`** → **`/tdd`** |
+| Ready to implement — **architecture deepening** | Hand off to **`/create-ticket`** → **`/tdd`** or **`/afk-dev`** |
+| Ready to implement — **new PRD-scope feature** | Flag `docs/prd.md` scope; hand off to **`/prd-to-issues`** → **`/create-ticket`** → **`/tdd`** |
 
 **Guards:**
 
 - Do not edit `docs/prd.md` scope silently — flag scope impact
 - Do not run `/problematize` or `/solutionize` unless the user reveals a product-level mismatch
-- Do not create GitHub issues directly — use `/prd-to-issues`
+- Do not create GitHub issues directly — use **`/create-ticket`** (Review track: `DEBT-`/`ARCH-`/`TEST-`/`SPIKE-`)
+- Do not use `/prd-to-issues` for pure refactors — that skill is for PRD vertical slices only
 - For alternative interfaces: [INTERFACE-DESIGN.md](INTERFACE-DESIGN.md)
 
 Dependency categories and testing: [DEEPENING.md](DEEPENING.md).
+
+### 4. File approved candidates (`/create-ticket`)
+
+After the design loop, when the user confirms which candidates are ready to track on GitHub:
+
+1. Invoke **`/create-ticket`** — do not call `gh issue create` from this skill
+2. One thin issue per approved candidate (prefer parallelism over thick issues)
+3. **Review track** titles: `DEBT-{NN}: …`, `ARCH-{NN}: …`, `TEST-{NN}: …`, or `SPIKE-{NN}: …` per [create-ticket/CONVENTIONS.md](../create-ticket/CONVENTIONS.md)
+4. Bodies use domain terms from **`docs/CONTEXT.md`**; describe seams and behaviors — **no file paths** (Matt Pocock durability)
+5. Default **`agent:hitl`**; use `agent:afk` only for well-bounded test-only slices
+6. Link refs: `docs/modules/module_*.md`, relevant ADR, or note "from architecture review \<date\>"
+7. Present batch for approval before create (create-ticket Step 4)
+
+Then suggest execution: **`/tdd`** for a single issue, or **`/afk-dev`** for a batch of `agent:hitl` deepenings.
 
 ---
 

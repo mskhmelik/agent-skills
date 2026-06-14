@@ -217,6 +217,6 @@ gh issue create --repo "$REPO" --title "<title>" --label "type:bug,module:founda
 |------|-----|
 | `docs/reviews/README.md` | Review prefix table, shipped-arch skip list |
 | `docs/CONTEXT.md` | Domain glossary for titles and bodies |
-| `scripts/create_review_issues.sh` | Batch automation reference (idempotent `issue()` helper) |
+| `scripts/create_review_issues.sh` | Removed — issues filed on GitHub (#175–#205); use `/create-ticket` |
 
 If repo override conflicts with this file, **repo wins** for numbering and skip rules; labels and agent modes still follow this file unless repo doc explicitly differs.

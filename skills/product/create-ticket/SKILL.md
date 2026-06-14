@@ -26,7 +26,7 @@ Run `gh repo view --json nameWithOwner`. On failure: tell user to run from a git
 
 Read if present (do not invent):
 
-- `docs/reviews/README.md` — review prefixes, shipped-arch skips
+- `docs/reviews/README.md` — review prefix table, shipped-arch skip list (GitHub is tracker; no backlog markdown)
 - `docs/CONTEXT.md` — domain language
 - Conversation context or `$ARGUMENTS` — source doc, backlog row, QA notes
 

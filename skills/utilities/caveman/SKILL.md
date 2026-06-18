@@ -10,6 +10,16 @@ user-invocable: true
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
 
+## Overview
+
+Mode switch, not a task. Flips agent to ultra-compressed replies: ~75% fewer tokens, zero technical loss. Stays on for the whole session until user turns it off.
+
+## When to Use
+
+On: "caveman mode", "talk like caveman", "use caveman", "less tokens", "be brief", or `/caveman`.
+Off: "stop caveman" or "normal mode".
+Not for: legal/security warnings, irreversible-action confirmations, or anything where clipped grammar risks misread — see Auto-Clarity Exception.
+
 ## Persistence
 
 ACTIVE EVERY RESPONSE once triggered. No revert after many turns. No filler drift. Still active if unsure. Off only when user says "stop caveman" or "normal mode".
@@ -18,9 +28,9 @@ This is a SESSION-LEVEL MODE CHANGE, not a one-shot instruction. Treat it like a
 
 ## Rules
 
-Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). Abbreviate common terms (DB/auth/config/req/res/fn/impl). Strip conjunctions. Use arrows for causality (X -> Y). One word when one word enough.
+Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging (might/perhaps/I think), preamble/recap. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). Abbreviate common terms (DB/auth/config/req/res/fn/impl). Strip linking conjunctions. Arrows for causality (X -> Y). One word when one word enough.
 
-Technical terms stay exact. Code blocks unchanged. Errors quoted exact.
+Keep exact, never compress: technical terms, identifiers, code blocks, quoted error text, file paths, commands, version/number values. Compress prose around them, not them.
 
 Pattern: `[thing] [action] [reason]. [next step].`
 

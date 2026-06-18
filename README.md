@@ -137,9 +137,9 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 | Skill | Role |
 |-------|------|
-| [contemplate](skills/vault/contemplate/skill.md) | Ingest Obsidian `sources/` → wiki |
+| [contemplate](skills/vault/contemplate/SKILL.md) | Ingest Obsidian `sources/` → wiki |
 | [remember](skills/vault/remember/SKILL.md) | Save content to vault sources |
-| [get-yt-transcript](skills/vault/get-yt-transcript/skill.md) | YouTube transcript download |
+| [get-yt-transcript](skills/vault/get-yt-transcript/SKILL.md) | YouTube transcript download |
 
 ### utilities/
 

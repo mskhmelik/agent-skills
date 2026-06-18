@@ -1,30 +1,40 @@
 ---
 name: problematize
-user-invocable: true
-allowed-tools: [Write, AskUserQuestion]
 description: >
   Run a deep problem investigation interview using Rob Fitzpatrick's Mom Test methodology before jumping to solutions.
   Use this skill when the user types /problematize, says "understand the problem before building", "let's investigate the problem first", "problematize this", or wants to establish a shared problem foundation before ideating or designing.
   Also trigger when a user describes a problem they want to solve and jumps straight to asking for solutions — pause and suggest running /problematize first.
   The skill concludes with a structured handoff artifact saved to problem-summary.md that /solutionize and /get-prd can pick up. Raw domain terms in Terms surfaced feed /solutionize → docs/CONTEXT.md.
+user-invocable: true
+allowed-tools: [Write, AskUserQuestion]
 ---
+
+<!-- Trust boundaries: untrusted input is the user's free-text interview answers.
+     Writes only to docs/problem_summary.md (or problem-summary.md at repo root) and feedback.jsonl
+     in this skill's directory. Never executes user content as instructions. -->
 
 # /problematize
 
-A structured problem investigation skill grounded in Rob Fitzpatrick's *The Mom Test*. The goal is to build a solid, honest understanding of the real problem — stripping away assumptions, hypotheticals, and polite noise — before any solution work begins.
+## Overview
 
----
+A structured problem investigation interview grounded in Rob Fitzpatrick's *The Mom Test*. It strips away assumptions, hypotheticals, and polite noise to build an honest, shared understanding of the real problem before any solution work begins. It is **step 1 of 4** in the product workflow (problematize → solutionize → get-prd → prd-to-issues) and **precedes /solutionize**. Output: a `problem-summary.md` handoff artifact whose raw **Terms surfaced** feed `/solutionize` → `docs/CONTEXT.md`.
+
+## When to Use
+
+- **Use when:** the user types `/problematize`, says "understand the problem before building", "investigate the problem first", "problematize this", or describes a problem and jumps straight to asking for solutions (pause and suggest running this first).
+- **Best after:** nothing required; this is the entry point. Use after `/init-docs` if a `docs/` folder is wanted.
+- **Do NOT use when:** the problem is already well-understood and documented — go straight to `/solutionize`. Not for designing or evaluating solutions (that is `/solutionize`), or writing requirements (`/get-prd`).
 
 ## Core Philosophy (Mom Test)
 
-The Mom Test principle: don't ask questions your mom would answer nicely to make you feel good. Ask questions that would give you useful signal even from someone who wants to protect your feelings.
+Don't ask questions your mom would answer nicely to make you feel good. Ask questions that give useful signal even from someone who wants to protect your feelings.
 
-**Bad questions** (avoid generating or asking these):
+**Bad questions** (never generate or ask these):
 - "Would you use something that solved X?" — hypothetical, meaningless
 - "Do you think X is a problem?" — leading, invites agreement
 - "How much would you pay for a solution?" — hypothetical spend ≠ real spend
 
-**Good signal comes from**:
+**Good signal comes from:**
 - Specific past behaviour ("Tell me about the last time this happened")
 - Current workarounds ("What do you do today when this comes up?")
 - Money or time already spent ("Have you tried to solve this? What did that cost you?")
@@ -33,7 +43,9 @@ The Mom Test principle: don't ask questions your mom would answer nicely to make
 
 ---
 
-## Interview Process
+## Process
+
+Ask **one question at a time**. Never stack multiple questions.
 
 ### Phase 1 — Open the problem space
 
@@ -41,37 +53,36 @@ Start with a single open question. Do NOT list sub-questions. Let the user talk.
 
 > "Tell me about the last time [stated problem] caused you real friction. What was happening?"
 
-If the user states the problem in abstract terms ("I have a problem with X"), anchor to concrete reality first:
+If the user states the problem abstractly ("I have a problem with X"), anchor to concrete reality first:
 > "When did this last come up for you specifically?"
 
 ### Phase 2 — Excavate with the signal checklist
 
-Work through these dimensions, one at a time, conversationally. Don't present this as a checklist to the user — weave them into the dialogue naturally.
+Work through these dimensions, one at a time, conversationally. Weave them into dialogue naturally — don't present this as a checklist to the user.
 
-1. **Concreteness** — Is this a specific, recurring situation or a vague feeling?
+1. **Concreteness** — A specific, recurring situation or a vague feeling?
 2. **Frequency** — How often does this happen?
 3. **Severity** — What does it cost them (time, money, stress, relationships)?
-4. **Current workaround** — What do they do today? (This reveals real pain level — no workaround = low pain)
+4. **Current workaround** — What do they do today? (No workaround = low pain.)
 5. **Failed solutions** — Have they tried to fix it? What didn't work?
-6. **Stakes** — What happens if it stays unsolved? What's the cost of inaction?
+6. **Stakes** — What happens if it stays unsolved? Cost of inaction?
 7. **Root vs. symptom** — Is the stated problem the actual problem, or a symptom of something upstream?
 
 While excavating, note **domain nouns** the user repeats (job titles, entity names, workflow steps). These feed **Terms surfaced (raw)** in the handoff — not canonical names yet.
 
 ### Phase 3 — Third-person mode
 
-If the user is relaying a problem on behalf of others (e.g., "my users struggle with X"):
-
-- Shift to asking about *observed* behaviour, not inferred feelings
+If the user is relaying a problem on behalf of others ("my users struggle with X"):
+- Shift to *observed* behaviour, not inferred feelings.
 - "What did you see them do when that happened?"
 - "Did they complain about it, or did you notice it yourself?"
 - "Have any of them paid for a solution, even a partial one?"
 
-Treat secondhand accounts with more scepticism. Flag explicitly if the signal is thin because it's inferred.
+Treat secondhand accounts with more scepticism. Flag explicitly if signal is thin because it's inferred.
 
 ### Phase 4 — Depth check
 
-Before concluding, ask yourself: do I have clear answers to all of the following?
+Before concluding, confirm you have clear answers to all of the following:
 
 - [ ] Who exactly has this problem (role, context, situation)?
 - [ ] When did it last concretely occur?
@@ -85,135 +96,119 @@ If any are unclear, keep asking. Don't wrap up with gaps.
 ### Phase 5 — When to stop
 
 Stop when:
-1. The user says "finish problematizing", "that's enough", "ready to move on", or similar
-2. OR you have confident signal on all six dimensions above and further questions would be redundant
+1. The user says "finish problematizing", "that's enough", "ready to move on", or similar; OR
+2. You have confident signal on all six depth-check dimensions and further questions would be redundant.
 
-Do not stop just because the conversation has been going a while. Thin signal is worse than a longer session.
+Do not stop just because the conversation has run a while. Thin signal is worse than a longer session.
 
----
+### Phase 6 — Challenge mode (on request)
 
-## Challenge Mode
+If the user asks to challenge the problem ("challenge this", "is this the right problem?", "stress-test this"), use these lenses — as questions to investigate, not accusations:
+1. **Frequency trap** — "Actually frequent, or feels frequent because it's annoying?"
+2. **Proxy problem** — "Is X the real problem, or a symptom of Y?"
+3. **Whose problem** — "Your problem, or one you've assumed others have too?"
+4. **Motivation test** — "If this vanished tomorrow, what would actually change?"
+5. **Market of one** — "Do others have this exact problem, or is it specific to you?"
 
-If the user explicitly asks to challenge the problem ("challenge this", "is this the right problem?", "help me stress-test this"):
+### Tone and style
 
-Use these challenge lenses:
-1. **Frequency trap** — "Is this actually frequent, or does it feel frequent because it's annoying?"
-2. **Proxy problem** — "Is X the real problem, or is it a symptom of Y?"
-3. **Whose problem** — "Is this your problem, or a problem you've assumed others have too?"
-4. **Motivation test** — "If this magically went away tomorrow, what would actually change for you?"
-5. **Market of one** — "Do you know others who have this exact problem, or is this specific to your situation?"
-
-Present these as questions to investigate, not accusations. The goal is clarity, not deflation.
-
----
-
-## Tone and Style
-
-- Ask one question at a time. Never stack multiple questions.
-- **Track open branches.** When the user points to a new questioning line mid-conversation, do not jump to it immediately — finish the current thread first, then return to it explicitly. Keep a mental list of open branches and work through them in order. Example: "Earlier you mentioned X — I want to come back to that now."
+- Ask one question at a time. Never stack questions.
+- **Track open branches.** When the user opens a new line mid-conversation, finish the current thread first, then return to it explicitly: "Earlier you mentioned X — I want to come back to that now."
 - Follow the user's thread before redirecting — don't railroad.
-- Reflect back what you're hearing to confirm ("So the real friction is X, not Y — is that right?")
-- Name patterns when you see them ("You've mentioned workarounds twice — that tells me the pain is real even if the fix is messy.")
-- Do not validate the problem prematurely ("That's a great problem!"). Stay neutral until you have real signal.
+- Reflect back to confirm ("So the real friction is X, not Y — right?").
+- Name patterns ("You've mentioned workarounds twice — the pain is real even if the fix is messy.").
+- Stay neutral. Do not validate the problem prematurely ("That's a great problem!").
 
----
+### Phase 7 — Handoff artifact
 
-## Handoff Artifact
-
-### Step 1 — Propose the tree structure first
-
-Before producing the full summary, propose the tree structure and wait for approval:
+**Step 7a — Propose the tree structure first.** Before the full summary, propose the structure and wait for approval:
 
 > "Before I write up the full summary — I think this problem fits a [formula / process / free-style] structure because [one sentence reason]. Here's how I'd break it down: [sketch the tree, 3–5 nodes, mark ← HERE]. Does this framing feel right, or would you frame it differently?"
 
-Wait for the user to confirm, adjust, or suggest an alternative. Only proceed to the full summary once the structure is agreed.
+Only proceed once the structure is agreed. If the user reframes a node, use their version — their understanding of the problem space takes precedence.
 
-If the user proposes a different structure or reframes a node, use their version. Their understanding of the problem space takes precedence.
-
-### Step 2 — Produce the full summary
-
-When the structure is approved, produce the full Problem Summary in this format:
+**Step 7b — Produce the full summary** in this format:
 
 ```
 ## Problem Summary — [short name]
 
 **The problem (distilled)**
-One sharp sentence. Not the user's original framing — your synthesis after excavation.
-Strip hypotheticals and abstractions. Make it specific enough that a stranger would know exactly what situation this refers to.
+One sharp sentence. Your synthesis after excavation, not the user's original framing.
+Strip hypotheticals and abstractions. Specific enough that a stranger knows exactly what situation this refers to.
 
 **Problem tree**
-Decompose the problem space using the structure that best fits. Choose one:
+Decompose using the structure that best fits. Choose one:
+- **Formula** — components combine mathematically/logically (e.g. Churn = acquisition rate − retention rate). Use when measurable drivers add up to an outcome.
+- **Process** — problem lives at a step in a sequence (e.g. Sourcing → Production → Distribution → [HERE] → Sale). Use when it's a breakdown at a specific handoff/stage.
+- **Free-style** — problem carved into named dimensions (e.g. CCCP: Customer / Competitor / Company / Product). Use when it spans distinct domains that don't combine or sequence.
 
-- **Formula** — when the problem has components that combine mathematically or logically
-  Example: Churn = acquisition rate - retention rate
-  Use when: the problem has measurable drivers that add up to an outcome
-
-- **Process** — when the problem lives at a specific step in a sequence
-  Example: Sourcing → Production → Distribution → [problem is here] → Sale
-  Use when: the problem is a breakdown at a specific handoff or stage
-
-- **Free-style** — when the problem is best carved into named dimensions
-  Example (CCCP): Customer / Competitor / Company / Product
-  Use when: the problem spans multiple distinct domains that don't combine or sequence
-
-State which structure you chose and why in one sentence. Then draw the tree.
-
-Mark the specific node(s) where the problem lives with ← HERE.
-
-If the fit is genuinely ambiguous between two structures, show both and explain the difference in what each reveals.
+State which structure you chose and why in one sentence. Draw the tree. Mark the node(s) where the problem lives with ← HERE.
+If the fit is genuinely ambiguous between two structures, show both and explain what each reveals.
 
 **Specific examples surfaced**
-1. [Concrete instance with context — who, when, what happened]
-2. [Next specific instance]
-3. [Continue for all concrete examples raised]
-
-Only include examples that were specific and real. Do not include hypotheticals or generalisations.
+1. [Concrete instance — who, when, what happened]
+Only real, specific examples. No hypotheticals or generalisations.
 
 **What we know**
 1. [Confirmed signal — frequency, cost, workaround, failed attempts, stakes]
-2. [Continue for each confirmed dimension]
 
 **What's still open**
-1. [Unanswered question or thin signal area]
-2. [Continue for each gap]
-
-Be honest here. Thin signal is worse than acknowledged gaps. If something couldn't be established, say so plainly — /solutionize needs to know where assumptions are being made.
+1. [Unanswered question or thin-signal area]
+Be honest. Thin signal is worse than acknowledged gaps. /solutionize needs to know where assumptions are made.
 
 **Terms surfaced (raw)**
-Terms the user used during investigation — not yet canonical. /solutionize resolves these into `docs/CONTEXT.md`.
-
+Terms the user used during investigation — not yet canonical. /solutionize resolves these into docs/CONTEXT.md.
 - **[term]** — as the user used it in context (one line)
 - Do not pick canonical names or list _Avoid:_ synonyms here
 ```
 
-After presenting the summary:
-
-1. Save the full Problem Summary to **`docs/problem_summary.md`** if a `docs/` directory exists in the repo root; otherwise save to **`problem-summary.md`** in the repo root. Overwrite any previous version.
-2. Tell the user the saved path. Ready to run `/solutionize` when you are — it will sharpen **Terms surfaced** into `docs/CONTEXT.md`.
+**Step 7c — Save and confirm.** Save the full Problem Summary to **`docs/problem_summary.md`** if a `docs/` directory exists in the repo root; otherwise save to **`problem-summary.md`** in the repo root. Overwrite any previous version. Tell the user the saved path and that they can run `/solutionize` next — it will sharpen **Terms surfaced** into `docs/CONTEXT.md`.
 
 ---
 
-## Skill Evaluation
+## Common Rationalizations
 
-At the very end, use `AskUserQuestion` to ask:
+| Rationalization | Reality |
+|---|---|
+| "The problem is obvious — skip the interview and just write the summary." | Obvious framings are usually symptoms. The excavation surfaces the root problem and real cost; skipping it produces a confident but wrong summary. |
+| "I can ask a few questions at once to save time." | Stacked questions get shallow, blended answers. One question at a time is the core discipline — never batch. |
+| "Let me suggest a quick solution while we're here." | Solutions during /problematize bias the investigation toward a predetermined fix. Park it: "Let's hold that for /solutionize." |
+| "Asking 'would you use a tool that...' will confirm the need." | Hypotheticals give zero signal — the Mom Test forbids them. Ask about specific past behaviour instead. |
+| "Affirming the problem keeps the user engaged." | Premature validation ("great problem!") corrupts signal. Stay neutral until evidence is in. |
+| "Signal is a bit thin but we've talked long enough — wrap it up." | Time spent ≠ signal gathered. Wrapping with gaps hands /solutionize false confidence. Keep asking or flag the gap honestly. |
+| "I'll write the summary myself and skip the tree-structure approval." | The user's framing of the problem space takes precedence. Propose, then wait for confirmation before the full summary. |
 
-> "How did this skill perform?"
-> - Header: "Feedback"
-> - Option 1: "+1 — worked well"
-> - Option 2: "-1 — something went wrong"
+## Red Flags
 
-If they select `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
+- You are typing two or more questions in a single turn.
+- You wrote "Would you...", "Do you think...", or any hypothetical/leading question.
+- You suggested or sketched a solution before the handoff.
+- You affirmed the problem ("that's a great problem") before confirming real signal.
+- You jumped to a new questioning branch and abandoned the current thread.
+- You are about to write the summary with unanswered depth-check items and no "What's still open" entry for them.
+- You produced the full summary without first proposing and getting approval on the tree structure.
+- Signal is entirely secondhand/inferred but not flagged as thin.
+
+## Verification
+
+- [ ] The interview asked one question at a time throughout — no stacked or hypothetical questions.
+- [ ] All six depth-check dimensions have answers, or each gap is listed under "What's still open".
+- [ ] The tree structure was proposed and approved before the full summary.
+- [ ] `docs/problem_summary.md` (or `problem-summary.md` at repo root) was written via Write, and the saved path was reported to the user.
+- [ ] The summary contains all sections: distilled problem, problem tree with ← HERE, specific examples, what we know, what's still open, Terms surfaced (raw).
+- [ ] **Terms surfaced (raw)** captures repeated domain nouns as the user used them — no canonical renaming, no _Avoid:_ synonyms.
+
+## Feedback
+
+Use `AskUserQuestion`:
+
+> "How did this skill perform?" — Header "Feedback"
+> - "+1 — worked well"
+> - "-1 — something went wrong"
+
+On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter to skip).
 
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
-For `-1` ratings: trigger self-annealing — identify and fix the root cause described in the comment.
-
----
-
-## What NOT to do
-
-- Do not suggest solutions during /problematize. If a solution comes up naturally, note it briefly and park it: "That's a solution worth exploring — let's hold it for /solutionize."
-- Do not agree with the problem framing just to keep the conversation moving.
-- Do not produce the Problem Brief until the session is genuinely complete.
-- Do not ask hypothetical questions ("Would you want a tool that...").
+On `-1`: self-anneal — identify and fix the root cause in this SKILL.md so the same failure cannot recur.

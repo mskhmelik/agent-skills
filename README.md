@@ -9,17 +9,20 @@ Inspired and adopted from [mattpocock/skills](https://github.com/mattpocock/skil
 ```
 agent-skills/
 ├── README.md
-├── .claude/
-│   └── CLAUDE.md             ← security rules for skill development (no PII, private-skill checklist)
+├── LICENSE                       ← MIT
+├── .claude/CLAUDE.md             ← security rules for skill development (no PII, private-skill checklist)
+├── .github/workflows/            ← CI: validates skills against the anatomy on push/PR
+├── docs/skill-anatomy.md         ← the SKILL.md contract every skill follows
+├── scripts/validate-skills.js    ← structure validator (run locally or in CI)
 ├── setup/
-│   ├── setup.sh              ← macOS: per-skill symlinks in ~/.claude/skills + ~/.cursor/skills + ~/.cursor/rules
-│   └── setup.ps1             ← Windows
+│   ├── setup.sh                  ← macOS: per-skill symlinks in ~/.claude/skills + ~/.cursor/skills + ~/.cursor/rules
+│   └── setup.ps1                 ← Windows
 ├── skills/
-│   ├── product/              ← product workflow chain (public)
-│   ├── vault/                ← knowledge/Obsidian tools (public)
-│   ├── utilities/            ← session + dev utilities (public)
-│   └── private/              ← private skills (.git/info/exclude, never pushed)
-├── rules/                    ← Cursor rules (loaded via ~/.cursor/rules symlink; Cursor only)
+│   ├── product/                  ← product workflow chain (public)
+│   ├── vault/                    ← knowledge/Obsidian tools (public)
+│   ├── utilities/                ← session + dev utilities (public)
+│   └── private/                  ← private skills (.git/info/exclude, never pushed)
+├── rules/                        ← Cursor rules (loaded via ~/.cursor/rules symlink; Cursor only)
 └── templates/SKILL-template.md
 ```
 
@@ -122,14 +125,14 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 | Skill | Role |
 |-------|------|
-| [init-docs](skills/product/init-docs/SKILL.md) | Scaffold `docs/` layout |
+| [init-docs](skills/product/init-docs/SKILL.md) | Scaffold the `docs/` layout |
 | [problematize](skills/product/problematize/SKILL.md) | (1/4) Mom Test problem investigation |
-| [solutionize](skills/product/solutionize/SKILL.md) | (2/4) Solution stress-test + `CONTEXT.md`; detects existing docs and runs in update mode rather than overwriting |
+| [solutionize](skills/product/solutionize/SKILL.md) | (2/4) Solution stress-test → `CONTEXT.md` (update-safe) |
 | [get-prd](skills/product/get-prd/SKILL.md) | (3/4) Synthesize `docs/prd.md` |
 | [prd-to-issues](skills/product/prd-to-issues/SKILL.md) | (4/4) Vertical-slice GitHub issues |
-| [create-ticket](skills/product/create-ticket/SKILL.md) | Canonical GitHub issue filing — prefixes, labels, HITL/AFK, durable bodies ([CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)) |
-| [tdd](skills/product/tdd/SKILL.md) | Red-green-refactor from issue or bug |
-| [afk-dev](skills/product/afk-dev/SKILL.md) | (6) Triage `agent:*` issues, plan, spawn worker agents on branches, summary + manual QA. See `CONVENTIONS.md` for labels/caps/merge policy and `scripts/afk.sh` for headless looping |
+| [create-ticket](skills/product/create-ticket/SKILL.md) | Canonical issue filing — prefixes, labels, HITL/AFK ([CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)) |
+| [tdd](skills/product/tdd/SKILL.md) | Red-green-refactor from an issue or bug |
+| [afk-dev](skills/product/afk-dev/SKILL.md) | Triage `agent:*` issues → spawn worker agents → manual QA ([CONVENTIONS.md](skills/product/afk-dev/CONVENTIONS.md)) |
 | [diagnose](skills/product/diagnose/SKILL.md) | Disciplined debug loop |
 | [unslop-repo](skills/product/unslop-repo/SKILL.md) | Shallow → deep module reviews; files candidates via `/create-ticket` |
 
@@ -145,7 +148,7 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 | Skill | Role |
 |-------|------|
-| [handoff](skills/utilities/handoff/SKILL.md) | Hand off to next agent — **Quick** (short fenced code block, no file; for same-session follow-ups) or **Full** (`mktemp` doc with full context + pointer block; for large multi-file handovers) |
+| [handoff](skills/utilities/handoff/SKILL.md) | Hand off to the next agent — **Quick** (paste block) or **Full** (temp doc + pointer) |
 | [caveman](skills/utilities/caveman/SKILL.md) | Ultra-compressed replies |
 | [make-secure](skills/utilities/make-secure/SKILL.md) | Audit skills for security risks |
 
@@ -153,10 +156,11 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 ## Adding a skill
 
-1. Copy [`templates/SKILL-template.md`](templates/SKILL-template.md) → `skills/<group>/<name>/SKILL.md`
+1. Copy [`templates/SKILL-template.md`](templates/SKILL-template.md) → `skills/<group>/<name>/SKILL.md`, following the contract in [`docs/skill-anatomy.md`](docs/skill-anatomy.md)
    - `<group>` = `product`, `vault`, `utilities`, or `private`
-2. Fill frontmatter + instructions
-3. Re-run `bash setup/setup.sh` to add the new symlink
-4. Add a row to the index above (omit private skills)
-5. For private skills: place under `skills/private/` — already covered by `.git/info/exclude`
+2. Fill frontmatter + instructions (`name` must match the directory)
+3. Run `bash setup/setup.sh` to add the new symlink
+4. Run `node scripts/validate-skills.js` until it passes
+5. Add a row to the index above (omit private skills)
+6. For private skills: place under `skills/private/` — already covered by `.git/info/exclude`
 

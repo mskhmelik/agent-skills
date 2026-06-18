@@ -12,39 +12,38 @@ agent-skills/
 ├── LICENSE                       ← MIT
 ├── .claude/CLAUDE.md             ← security rules for skill development (no PII, private-skill checklist)
 ├── .github/workflows/            ← CI: validates skills against the anatomy on push/PR
-├── docs/skill-anatomy.md         ← the SKILL.md contract every skill follows
+├── docs/
+│   ├── skill-anatomy.md          ← the SKILL.md contract every skill follows
+│   └── SKILL-template.md         ← starter for new skills
 ├── scripts/validate-skills.js    ← structure validator (run locally or in CI)
-├── setup/
-│   ├── setup.sh                  ← macOS: per-skill symlinks in ~/.claude/skills + ~/.cursor/skills + ~/.cursor/rules
-│   └── setup.ps1                 ← Windows
-├── skills/
-│   ├── product/                  ← product workflow chain (public)
-│   ├── vault/                    ← knowledge/Obsidian tools (public)
-│   ├── utilities/                ← session + dev utilities (public)
-│   └── private/                  ← private skills (.git/info/exclude, never pushed)
 ├── rules/                        ← Cursor rules (loaded via ~/.cursor/rules symlink; Cursor only)
-└── templates/SKILL-template.md
+└── skills/
+    ├── product/                  ← product workflow chain (public)
+    ├── vault/                    ← knowledge/Obsidian tools (public)
+    ├── utilities/                ← session + dev utilities (public)
+    └── private/                  ← private skills (.git/info/exclude, never pushed)
 ```
 
 ## Setup (once per machine)
 
-**macOS:**
+Claude and Cursor read skills from a flat `~/.claude/skills/` and `~/.cursor/skills/`, so each skill is symlinked individually out of the grouped `skills/<group>/<name>/` layout. There's no setup script — wire it once, or just **ask Claude to do it for you**.
+
+**macOS / Linux** — from the repo root:
 
 ```bash
-bash /path/to/agent-skills/setup/setup.sh
+mkdir -p ~/.claude/skills ~/.cursor/skills
+for d in skills/*/*/; do
+  ln -sfn "$PWD/$d" ~/.claude/skills/"$(basename "$d")"
+  ln -sfn "$PWD/$d" ~/.cursor/skills/"$(basename "$d")"
+done
+ln -sfn "$PWD/rules" ~/.cursor/rules   # Cursor rules (Cursor only)
 ```
 
-Wires per-skill symlinks in `~/.claude/skills/` and `~/.cursor/skills/`, plus `~/.cursor/rules/`.
-
-**Windows:**
-
-```powershell
-& "$env:USERPROFILE\path\to\agent-skills\setup\setup.ps1"
-```
+**Windows:** ask Claude to create the equivalent links, or use `New-Item -ItemType SymbolicLink`.
 
 Restart Cursor / Claude after wiring.
 
-Private skills live under `skills/` but are listed in `.git/info/exclude` — they sync on your devices but never reach GitHub.
+Private skills live under `skills/private/` but are listed in `.git/info/exclude` — they sync on your devices but never reach GitHub.
 
 ---
 
@@ -156,10 +155,10 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 ## Adding a skill
 
-1. Copy [`templates/SKILL-template.md`](templates/SKILL-template.md) → `skills/<group>/<name>/SKILL.md`, following the contract in [`docs/skill-anatomy.md`](docs/skill-anatomy.md)
+1. Copy [`docs/SKILL-template.md`](docs/SKILL-template.md) → `skills/<group>/<name>/SKILL.md`, following the contract in [`docs/skill-anatomy.md`](docs/skill-anatomy.md)
    - `<group>` = `product`, `vault`, `utilities`, or `private`
 2. Fill frontmatter + instructions (`name` must match the directory)
-3. Run `bash setup/setup.sh` to add the new symlink
+3. Symlink it into `~/.claude/skills/` (and `~/.cursor/skills/`) — see [Setup](#setup-once-per-machine), or just ask Claude to wire it
 4. Run `node scripts/validate-skills.js` until it passes
 5. Add a row to the index above (omit private skills)
 6. For private skills: place under `skills/private/` — already covered by `.git/info/exclude`

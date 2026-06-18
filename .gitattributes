@@ -1,3 +1,1 @@
 * text=auto
-setup/setup.sh text eol=lf
-setup/setup.ps1 text eol=crlf

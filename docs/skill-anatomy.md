@@ -2,7 +2,7 @@
 
 The contract every `SKILL.md` in this repo follows. `scripts/validate-skills.js`
 enforces the **required** parts; the rest is a recommended pattern. Use
-[`templates/SKILL-template.md`](../templates/SKILL-template.md) as the starting point.
+[`SKILL-template.md`](SKILL-template.md) as the starting point.
 
 ## File location
 

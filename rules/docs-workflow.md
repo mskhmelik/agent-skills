@@ -38,4 +38,4 @@ docs/
 - [ ] Run `/init-docs`
 - [ ] Fill problem → solution → PRD before large builds
 - [ ] Add `docs/agents/README.md` with issue tracker and launch notes
-- [ ] Wire Cursor: `5_projects/ai/setup-cursor-wiring.sh`
+- [ ] Wire Cursor: symlink from `5_projects/ai/` — [README Setup](https://github.com/mskhmelik/agent-skills#setup-once-per-machine) (one-liner loop)

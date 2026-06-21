@@ -52,7 +52,7 @@ After EACH of these moments, append exactly ONE line to `docs/loops/loop_<date>-
 - When you pick up the task:
   `[#{{ISSUE_NUMBER}} {{BRANCH_NAME}}] picked up — <one sentence of what you're about to do>`
 - When you finish (success):
-  `[#{{ISSUE_NUMBER}} {{BRANCH_NAME}}] done — <what changed>, tests/typecheck pass, PR #<n> opened`
+  `[#{{ISSUE_NUMBER}} {{BRANCH_NAME}}] done — <what changed>, tests/typecheck pass, PR #<n> — <issue title> opened`
 - If you get blocked (see below):
   `[#{{ISSUE_NUMBER}} {{BRANCH_NAME}}] blocked — <what's blocking, in one sentence>`
 
@@ -63,8 +63,10 @@ in this format, and do not add other free-form commentary to docs/loops/loop_<da
 - Small, focused commits. Commit message includes: key decisions made, files
   changed, and any notes for the next iteration / reviewer.
 - Rebase onto {{BASE_BRANCH}} before opening the PR.
-- Open the PR with `gh pr create`, base = {{BASE_BRANCH}}. Title: reference
-  "#{{ISSUE_NUMBER}}". Do NOT mark it auto-merge — see CONVENTIONS.md merge policy.
+- Open the PR with `gh pr create`, base = {{BASE_BRANCH}}.
+  **Title:** copy the issue title exactly (e.g. `BUG-284: Filter bar mirrors…`).
+  **Body:** start with `Closes #{{ISSUE_NUMBER}}`, then Summary and Test plan.
+  See CONVENTIONS.md PR conventions. Do NOT mark it auto-merge — see merge policy.
 - Run the feedback loops one more time post-rebase before opening the PR.
 
 # If you get blocked — DO NOT just stop

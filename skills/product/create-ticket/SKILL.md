@@ -63,25 +63,26 @@ Read if present (do not invent):
 
 ### Step 2 — Classify track and prefix
 
-| Source | Track | Title |
-|--------|-------|-------|
-| `/prd-to-issues` approved slice | **Feature** | `Slice N — …` or project convention |
-| `/unslop-repo` approved deepening | **Review** | `{PREFIX}-{NN}: {short title}` — see prefix map below |
-| E2E review / backlog markdown | **Review** | `{PREFIX}-{NN}: {short title}` |
-| Manual QA / single triage | **Review** or **Bug triage** body | Prefix if part of numbered backlog; else descriptive title |
-| Post-`/diagnose` filing | **Bug triage** template | `BUG-{NN}:` if backlog slot exists |
+Draft **short title** and **prefix** only — the number `N` comes from GitHub after create.
+
+| Source | Track | Prefix | Final title (after finalize) |
+|--------|-------|--------|------------------------------|
+| `/prd-to-issues` approved slice | **Feature** | `SLICE` | `SLICE-{N}: {short title}` |
+| `/unslop-repo` approved deepening | **Review** | see map | `{PREFIX}-{N}: {short title}` |
+| E2E review / backlog markdown | **Review** | see map | `{PREFIX}-{N}: {short title}` |
+| Manual QA / single triage | **Review** | see map | `{PREFIX}-{N}: {short title}` |
+| Post-`/diagnose` filing | **Bug triage** | `BUG` | `BUG-{N}: {short title}` |
 
 **Prefix map for `/unslop-repo` candidates:**
 
 | Deepening type | Prefix | Labels (typical) |
 |----------------|--------|------------------|
-| Seam / module refactor | `DEBT-` or `ARCH-` | `type:refactor`, `module:*`, `priority:should`, `agent:hitl` |
-| Testability gap | `TEST-` | `type:test`, `module:*`, `priority:should`, `agent:hitl` |
-| Decision / spike before refactor | `SPIKE-` | `type:spike`, `module:*`, `priority:should`, `agent:hitl` |
+| Seam / module refactor | `DEBT` or `ARCH` | `type:refactor`, `module:*`, `priority:should`, `agent:hitl` |
+| Testability gap | `TEST` | `type:test`, `module:*`, `priority:should`, `agent:hitl` |
+| Decision / spike before refactor | `SPIKE` | `type:spike`, `module:*`, `priority:should`, `agent:hitl` |
 | New user-facing capability (PRD scope) | — | Hand back to `/prd-to-issues` (Feature track), not Review |
 
-For unslop-sourced issues without a backlog row: assign `{PREFIX}-{NN}` as next free
-number — scan `gh issue list --state all` for max `NN` per prefix.
+Do **not** scan for max `NN` per prefix — `N` is always the GitHub issue number.
 
 **Prefix decision (Review track):**
 
@@ -119,7 +120,7 @@ and share URL.
 ```
 ## Proposed Issues
 
-### 1. PREFIX-01: Title
+### 1. PREFIX — Title (N assigned at create)
 - **Track:** Feature | Review
 - **Labels:** type:…, module:…, priority:…, agent:…
 - **Mode:** HITL | AFK
@@ -131,35 +132,46 @@ Ask: "Approve this breakdown? Split, merge, rename, or reorder anything?"
 
 Do not create until user confirms.
 
-### Step 5 — Ensure labels and idempotency
+### Step 5 — Ensure labels, projects, idempotency
 
 ```bash
 GITHUB_REPO=<owner/repo> bash <skill-dir>/scripts/ensure-labels.sh
+REPO_ROOT=<repo-root> GITHUB_REPO=<owner/repo> bash <skill-dir>/scripts/ensure-projects.sh
 ```
 
-Fetch existing titles:
+Fetch existing titles (check against expected **final** `{PREFIX}-{N}:` titles where
+known; for new issues, skip only if the short title duplicates an existing final title).
 
 ```bash
 gh issue list --repo "$REPO" --state all --limit 500 --json title --jq '.[].title'
 ```
 
-Skip exact title matches (open or closed). Log `skip (exists): <title>`.
+Skip exact final-title matches (open or closed). Log `skip (exists): <title>`.
 
-### Step 6 — Create issues
+### Step 6 — Create and finalize issues
 
 Publish in **dependency order** (blockers first).
 
 ```bash
-gh issue create --repo "$REPO" --title "<title>" --label "<comma-separated>" --body-file <file>
+# Create with DRAFT title (short title only)
+gh issue create --repo "$REPO" --title "DRAFT: <short title>" \
+  --label "<comma-separated>" --body-file <file>
+
+# Parse N from output URL, then finalize:
+REPO_ROOT=<repo-root> GITHUB_REPO=<owner/repo> \
+  bash <skill-dir>/scripts/finalize-issue.sh <N> <PREFIX> "<short title>" <module:label>
 ```
 
-Report each URL. On `gh` failure: log error, continue remaining issues.
+`finalize-issue.sh` renames to `{PREFIX}-{N}: {short title}` and adds the issue to the
+module GitHub Project (Backlog).
+
+Report each URL as **`PREFIX-N — short title`**. On `gh` failure: log error, continue.
 
 End with summary:
 
 ```
 ## Issues Created
-1. [Title] — [URL]
+1. PREFIX-N — short title — [URL]
 …
 
 Execution order: …
@@ -205,7 +217,9 @@ above. Confirm no intended issue was silently dropped.
 - [ ] Existing-title list fetched and exact matches logged as `skip (exists)` (Step 5).
 - [ ] Each created issue has exactly one `type:*`, `module:*`, `priority:*`, and an `agent:hitl`/`agent:afk` label.
 - [ ] Batches (2+) were approved by the user before any `gh issue create`.
-- [ ] Every created issue URL reported, plus execution-order / AFK / HITL / skipped summary.
+- [ ] Every created issue URL reported as PREFIX-N — title, plus execution-order / AFK / HITL / skipped summary.
+- [ ] Each issue title matches GitHub number (`BUG-284` on `/issues/284`).
+- [ ] `finalize-issue.sh` ran for each created issue.
 
 ## Feedback
 

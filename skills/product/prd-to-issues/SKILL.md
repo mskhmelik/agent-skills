@@ -106,22 +106,23 @@ reorder before I create them?" Incorporate changes. **Do not create issues until
 ### Step 5 — Create issues (delegate to /create-ticket)
 
 Read [create-ticket/CONVENTIONS.md](../create-ticket/CONVENTIONS.md) and follow **Feature track** rules.
-Once approved, file in dependency order (blockers first):
+Once approved, file in dependency order (blockers first) via `/create-ticket` or:
 
 1. `GITHUB_REPO=<owner/repo> bash ../create-ticket/scripts/ensure-labels.sh`
-2. Check idempotency — skip if exact title exists (`gh issue list --state all`).
-3. For each slice — Title: project convention (e.g. `Slice N — …`), no `BUG-` prefix; Labels:
-   `type:slice`, `module:*`, `priority:must|should`, `agent:hitl|afk` (map Mode from Step 3; never
-   `needs-triage`); Body: Feature track template.
+2. `REPO_ROOT=<repo-root> GITHUB_REPO=<owner/repo> bash ../create-ticket/scripts/ensure-projects.sh`
+3. Check idempotency — skip if exact final title exists.
+4. For each slice — Prefix: `SLICE`; Labels: `type:slice`, `module:*`, `priority:must|should`,
+   `agent:hitl|afk`; Body: Feature track template (PRD slice number in Context).
 
 ```bash
-gh issue create --repo "$REPO" --title "<title>" \
+gh issue create --repo "$REPO" --title "DRAFT: <short title>" \
   --label "type:slice,module:<module>,priority:<must|should>,agent:<hitl|afk>" \
   --body-file <file>
+
+REPO_ROOT=<repo-root> bash ../create-ticket/scripts/finalize-issue.sh <N> SLICE "<short title>" module:<module>
 ```
 
-Report each URL as created. If a `gh` command fails, report the error and continue with the rest — don't
-abort the whole run.
+Report each URL as **`SLICE-N — short title`**. If a command fails, report and continue.
 
 ### Step 6 — Confirm success
 

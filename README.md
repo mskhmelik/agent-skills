@@ -71,7 +71,7 @@ flowchart TB
     afkDev["/afk-dev"]
   end
 
-  prdToIssues -->|"Feature track: Slice N"| createTicket
+  prdToIssues -->|"Feature track: SLICE-N"| createTicket
 
   subgraph intake [Other intake paths]
     unslop["/unslop-repo"]
@@ -94,7 +94,7 @@ flowchart TB
 
 | Path | Skills | Issue style |
 |------|--------|-------------|
-| New product | `/init-docs` → … → `/prd-to-issues` → `/create-ticket` | Feature track (`Slice N — …`) |
+| New product | `/init-docs` → … → `/prd-to-issues` → `/create-ticket` | Feature track (`SLICE-{N}: …`) |
 | Architecture review | `/unslop-repo` → `/create-ticket` | Review track (`DEBT-`, `ARCH-`, `TEST-`) |
 | Bugs | `/diagnose` → `/create-ticket` (optional) | `BUG-` + triage body |
 | Review / QA | `/create-ticket` | `BUG-`, `SEC-`, `DEBT-`, … |

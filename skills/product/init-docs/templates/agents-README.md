@@ -3,7 +3,7 @@
 Optional repo-specific pointers. Generic skills and rules live in OneDrive:
 
 - **Skills:** `5_projects/ai/skills/` (Cursor: `~/.cursor/skills`)
-- **Rules:** `5_projects/ai/rules/` (wire via `setup-cursor-wiring.sh`)
+- **Rules:** `5_projects/ai/rules/` (wire via [README Setup](https://github.com/mskhmelik/agent-skills#setup-once-per-machine))
 
 ## This repo
 

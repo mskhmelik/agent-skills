@@ -1,8 +1,23 @@
 # create-ticket conventions — single source of truth
 
-Naming, labels, body templates, and filing rules for GitHub issues. Referenced by `/create-ticket`, `/prd-to-issues` (Step 5), `/unslop-repo` (Step 4), and repo docs.
+Naming, labels, body templates, PR conventions, and filing rules for GitHub issues.
+Referenced by `/create-ticket`, `/prd-to-issues` (Step 5), `/unslop-repo` (Step 4), and repo docs.
 
 **Terminology:** Call the artifact an **issue** in titles and bodies. The skill name `/create-ticket` is the command only.
+
+---
+
+## Ticket ID = GitHub issue `#N`
+
+**Issue title:** `{PREFIX}-{N}: {short title}` where **N = GitHub issue number** (integer as assigned by GitHub, no zero-padding).
+
+Examples: `BUG-284: Filter bar mirrors…`, `SLICE-290: CSV import`, `SPIKE-283: Planned transactions…`
+
+**`PREFIX-N` and `#N` are the same ticket ID** — interchangeable in conversation and links.
+
+GitHub assigns `#N` at creation; you cannot know `N` beforehand. Filing flow: **create → finalize (rename + project)** via `scripts/finalize-issue.sh`.
+
+Do **not** scan titles for max `NN` per prefix — the number is always the GitHub issue number.
 
 ---
 
@@ -10,10 +25,10 @@ Naming, labels, body templates, and filing rules for GitHub issues. Referenced b
 
 | Track | When | Title format | Example |
 |-------|------|--------------|---------|
-| **Feature** | PRD vertical slices (`/prd-to-issues`) | Project convention — no `BUG-` prefix | `Slice 11 — CSV import` |
-| **Review** | E2E review, QA, security, debt, tests, triage, **`/unslop-repo`** | `{PREFIX}-{NN}: {short title}` | `DEBT-34: Relocate GridRow to models/` |
+| **Feature** | PRD vertical slices (`/prd-to-issues`) | `{SLICE}-{N}: {short title}` | `SLICE-290: CSV import` |
+| **Review** | E2E review, QA, security, debt, tests, triage, **`/unslop-repo`** | `{PREFIX}-{N}: {short title}` | `DEBT-285: Scrollbar fade styling` |
 
-`NN` = backlog pickup order, zero-padded (`01`–`99`). Not a per-prefix counter. For ad-hoc sources (`/unslop-repo`, QA): use next free `NN` per prefix from existing GitHub titles.
+PRD slice order (`Slice 11`, etc.) belongs in the issue body **Context** only — not in the title.
 
 ---
 
@@ -21,7 +36,7 @@ Naming, labels, body templates, and filing rules for GitHub issues. Referenced b
 
 | Prefix | Use for | `type:*` label |
 |--------|---------|----------------|
-| `BUG-` | Defects, data-loss, correctness | `type:bug` |
+| `BUG-` | Defects in **shipped** behavior, data-loss, correctness regressions | `type:bug` |
 | `SEC-` | Security findings | `type:security` |
 | `DATA-` | Data audits / one-off repairs | `type:bug` (or `type:chore` if decision-only) |
 | `DEBT-` | Quality refactors (non-feature) | `type:refactor` |
@@ -29,7 +44,61 @@ Naming, labels, body templates, and filing rules for GitHub issues. Referenced b
 | `ARCH-` | Cross-cutting structure | `type:refactor` — skip if already shipped |
 | `SPIKE-` | Research / decision-only | `type:spike` |
 
-PRD feature slices keep existing titles (`Slice N — …`, `Epic N — …`). Do not rename to `FEAT-NN`.
+Feature track uses **`SLICE-`** prefix with `type:slice` label.
+
+**Bug vs. feature:** `BUG-` is only for behavior that was built and now misbehaves. A capability that was never implemented — even one users expect or that a doc promises — is **missing scope**, so it belongs on the Feature track (`SLICE-`, `type:slice`), not `BUG-`. Tie-breaker: a *fix* repairs existing code; a *feature* adds a new code path, table, or endpoint.
+
+---
+
+## PR conventions
+
+PR **system number** (GitHub auto, e.g. `#291`) is not controllable and will not equal the issue number. That is expected.
+
+| Field | Rule | Example |
+|-------|------|---------|
+| **PR title** | Copy issue title exactly | `BUG-284: Filter bar mirrors visible column order` |
+| **PR body** | `Closes #N` first line, then Summary + Test plan | `Closes #284` |
+| **Branch** | `afk/{N}-{slug}` | `afk/284-filter-bar` |
+| **PR system #** | Use for `gh pr merge`, CI only | PR `#291` |
+
+### Citation rules (agents + humans)
+
+**Issues:** cite as **`PREFIX-N — short title`** (equals `#N`). Never bare `#N` without title in summaries.
+
+**PRs:** cite as **`PR #291 — BUG-284: short title`**. Never bare `PR #291` alone.
+
+- Ticket ID (`BUG-284` / `#284`) = what the work is
+- PR `#` = plumbing for merge/checkout only
+
+```bash
+gh pr create --title "BUG-284: Filter bar mirrors visible column order" \
+  --body "$(cat <<'EOF'
+Closes #284
+
+## Summary
+- …
+
+## Test plan
+- [ ] …
+EOF
+)"
+```
+
+---
+
+## GitHub Projects (module boards)
+
+Each filed issue is added to the module Project (Status = Backlog). See repo `docs/projects/README.md` and `docs/projects.json`.
+
+| Project | `module:*` label(s) |
+|---------|---------------------|
+| Money | `module:money` |
+| Health | `module:health` |
+| Time | `module:time` |
+| Wellbeing | `module:wellbeing` |
+| Foundation | `module:foundation`, `module:cross-cutting`, `module:intelligence` |
+
+Status workflow: Backlog → Ready → In progress → In review → Done
 
 ---
 
@@ -108,7 +177,7 @@ Issues should still make sense after major refactors.
 
 ```markdown
 ## Context
-> From PRD — [relevant user story or section]
+> From PRD — [relevant user story or section; include PRD slice number if applicable]
 
 ## Acceptance Criteria
 - [ ] …
@@ -189,6 +258,14 @@ bash "$(dirname "$0")/scripts/ensure-labels.sh"   # from skill dir
 GITHUB_REPO=owner/repo bash …/ensure-labels.sh
 ```
 
+### Ensure projects (once per repo, or after new module)
+
+```bash
+GITHUB_REPO=owner/repo REPO_ROOT=/path/to/repo bash …/scripts/ensure-projects.sh
+```
+
+Writes `docs/projects.json` in the repo.
+
 ### Idempotency
 
 Before create, fetch existing titles:
@@ -197,16 +274,24 @@ Before create, fetch existing titles:
 gh issue list --repo "$REPO" --state all --limit 500 --json title --jq '.[].title'
 ```
 
-Skip if exact title already exists (open or closed). Log `skip (exists): <title>`.
+Skip if exact **final** title already exists (open or closed). Log `skip (exists): <title>`.
 
-### Create
+### Create + finalize
 
 ```bash
-gh issue create --repo "$REPO" --title "<title>" --label "type:bug,module:foundation,priority:must,agent:hitl" --body-file /tmp/body.md
+# 1. Create with short title (no PREFIX-N yet)
+gh issue create --repo "$REPO" --title "DRAFT: Filter bar mirrors visible column order" \
+  --label "type:bug,module:money,priority:should,agent:hitl" --body-file /tmp/body.md
+
+# 2. Parse issue number N from output URL
+
+# 3. Finalize: rename + add to module Project
+bash scripts/finalize-issue.sh "$N" BUG "Filter bar mirrors visible column order" module:money
 ```
 
 - Publish in **dependency order** (blockers first)
-- Report each URL; on failure, log error and **continue** — do not abort batch
+- Report each URL as **`PREFIX-N — title`**
+- On failure, log error and **continue** — do not abort batch
 - Do not close or modify parent issues
 
 ---
@@ -217,6 +302,7 @@ gh issue create --repo "$REPO" --title "<title>" --label "type:bug,module:founda
 |------|-----|
 | `docs/reviews/README.md` | Review prefix table, shipped-arch skip list |
 | `docs/CONTEXT.md` | Domain glossary for titles and bodies |
-| `scripts/create_review_issues.sh` | Removed — issues filed on GitHub (#175–#205); use `/create-ticket` |
+| `docs/projects.json` | Module Project numbers for finalize script |
+| `docs/projects/README.md` | Project board workflow |
 
 If repo override conflicts with this file, **repo wins** for numbering and skip rules; labels and agent modes still follow this file unless repo doc explicitly differs.

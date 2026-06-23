@@ -22,7 +22,38 @@ opt-in per project (note it in the plan if the user wants it included).
 
 ## Branch naming
 
-`afk/<issue-number>-<slug>`, e.g. `afk/123-fix-auth-redirect`.
+`afk/<issue-number>-<slug>`, e.g. `afk/284-filter-bar`.
+
+**Ticket ID:** issue title `{PREFIX}-{N}` where **N = GitHub issue number** (same as `#N`).
+Branch uses that same `N`.
+
+## PR conventions
+
+Aligns with [create-ticket CONVENTIONS](file:///Users/msk/Library/CloudStorage/OneDrive-Personal/5_projects/ai/skills/product/create-ticket/CONVENTIONS.md).
+
+| Field | Rule |
+|-------|------|
+| **PR title** | Copy issue title exactly — e.g. `BUG-284: Filter bar mirrors visible column order` |
+| **PR body** | Start with `Closes #284`, then Summary and Test plan |
+| **PR system #** | GitHub auto (e.g. `#291`); use for merge/CI only — will not match issue # |
+| **Branch** | `afk/{N}-{slug}` where N = issue number |
+
+**Citation in summaries:** `PR #291 — BUG-284: Filter bar mirrors…` — never bare `PR #291`.
+
+Workers open PRs with:
+
+```bash
+gh pr create --title "<issue title exactly>" --body "$(cat <<'EOF'
+Closes #<N>
+
+## Summary
+- …
+
+## Test plan
+- [ ] …
+EOF
+)"
+```
 
 - Independent tasks branch from the cycle's base branch (default: `main`).
 - Dependent tasks (declared via "Blocked by #N" / "Depends on #N" in the issue body)

@@ -179,8 +179,8 @@ Once all spawned workers have finished or stopped (success or blocked), or the
 total/concurrent caps prevent further spawns this cycle:
 
 1. Write `docs/loops/loop_<YYYY-MM-DD>-<slug>/summary.md` containing:
-   - **Completed**: issue → PR link, one-line description of the change
-   - **Blocked**: issue → what's blocking, link to the comment left on the issue
+   - **Completed**: ticket ID + title → `PR #<pr> — PREFIX-N: title` link, one-line change
+   - **Blocked**: PREFIX-N — title → what's blocking, link to issue comment
    - **Deferred**: issues that were in scope but not spawned (cap reached or
      dependency unmerged), with reason
    - **Flagged — needs-triage**: issues with no `agent:*` label (from Step 2)

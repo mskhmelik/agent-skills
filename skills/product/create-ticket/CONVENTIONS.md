@@ -36,7 +36,7 @@ PRD slice order (`Slice 11`, etc.) belongs in the issue body **Context** only â€
 
 | Prefix | Use for | `type:*` label |
 |--------|---------|----------------|
-| `BUG-` | Defects, data-loss, correctness | `type:bug` |
+| `BUG-` | Defects in **shipped** behavior, data-loss, correctness regressions | `type:bug` |
 | `SEC-` | Security findings | `type:security` |
 | `DATA-` | Data audits / one-off repairs | `type:bug` (or `type:chore` if decision-only) |
 | `DEBT-` | Quality refactors (non-feature) | `type:refactor` |
@@ -45,6 +45,8 @@ PRD slice order (`Slice 11`, etc.) belongs in the issue body **Context** only â€
 | `SPIKE-` | Research / decision-only | `type:spike` |
 
 Feature track uses **`SLICE-`** prefix with `type:slice` label.
+
+**Bug vs. feature:** `BUG-` is only for behavior that was built and now misbehaves. A capability that was never implemented â€” even one users expect or that a doc promises â€” is **missing scope**, so it belongs on the Feature track (`SLICE-`, `type:slice`), not `BUG-`. Tie-breaker: a *fix* repairs existing code; a *feature* adds a new code path, table, or endpoint.
 
 ---
 

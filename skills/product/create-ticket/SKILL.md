@@ -84,6 +84,13 @@ Draft **short title** and **prefix** only — the number `N` comes from GitHub a
 
 Do **not** scan for max `NN` per prefix — `N` is always the GitHub issue number.
 
+**Bug vs. feature gate (apply first):** Before reaching for `BUG-`, ask *was this capability ever built?*
+
+- **Built and now misbehaves / regressed** → `BUG-` (correctness defect).
+- **Never built — missing capability** → Feature track (`SLICE-`, `type:slice`), even if it feels broken or violates a product promise. A documented expectation that was never implemented is missing scope, not a defect.
+
+Tie-breaker by remedy: a fix that *repairs* existing code is a bug; one that *adds* a new code path / table / endpoint is a feature.
+
 **Prefix decision (Review track):**
 
 | Finding | Prefix |
@@ -198,10 +205,12 @@ above. Confirm no intended issue was silently dropped.
 | "One `gh` error means I should stop and report." | Log the error and continue the rest of the batch — do not abort remaining issues. |
 | "This unslop candidate is a new feature, I'll file it as Review." | New user-facing capability hands back to `/prd-to-issues` (Feature track), not Review. |
 | "I'll invent acceptance criteria to fill the template." | Pull criteria from the source doc or investigation only — never fabricate. |
+| "It violates the documented promise, so it's a `BUG-`." | If the capability was never built, it's missing scope → Feature track (`SLICE-`, `type:slice`). `BUG-` is for shipped behavior that regressed. |
 
 ## Red Flags
 
 - About to batch-create (2+ issues) without an approved plan.
+- Filing a never-built capability as `BUG-` because it "should work" — that's a feature (`SLICE-`, `type:slice`).
 - Applying `needs-triage` to an agent-ready issue.
 - Using `area:*` or `priority:critical|high|med|low` instead of the canonical `priority:*` set.
 - Putting file paths or line numbers in a body (except decision-encoding snippets).

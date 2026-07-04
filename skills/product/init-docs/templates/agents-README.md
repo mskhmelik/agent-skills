@@ -1,9 +1,9 @@
 # Agent notes (this repo)
 
-Optional repo-specific pointers. Generic skills and rules live in OneDrive:
+Optional repo-specific pointers. Generic skills and rules are installed per-machine:
 
-- **Skills:** `5_projects/ai/skills/` (Cursor: `~/.cursor/skills`)
-- **Rules:** `5_projects/ai/rules/` (wire via [README Setup](https://github.com/mskhmelik/agent-skills#setup-once-per-machine))
+- **Skills:** `~/.claude/skills/` (Claude Code) · `~/.cursor/skills/` (Cursor)
+- **Rules:** `~/.cursor/rules/` (Cursor) — wire via [agent-skills README](https://github.com/mskhmelik/agent-skills#setup-once-per-machine)
 
 ## This repo
 

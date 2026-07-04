@@ -6,7 +6,7 @@ Product workflow and file roles: [`docs/README.md`](docs/README.md).
 
 ## Agent skills
 
-Slash commands live in OneDrive `5_projects/ai/skills` (Cursor: `~/.cursor/skills`).
+Slash commands are installed per-machine in `~/.claude/skills/` (Claude Code) and `~/.cursor/skills/` (Cursor).
 
 | Situation | Skill |
 |-----------|-------|
@@ -14,4 +14,4 @@ Slash commands live in OneDrive `5_projects/ai/skills` (Cursor: `~/.cursor/skill
 | Feature (GitHub issue) | `/tdd` |
 | Missing docs layout | `/init-docs` |
 
-Generic rules: `5_projects/ai/rules/` — see `5_projects/ai/README.md` for wiring.
+Generic rules: `~/.cursor/rules/` (Cursor) — see the agent-skills README for wiring.

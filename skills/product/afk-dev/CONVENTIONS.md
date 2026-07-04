@@ -29,7 +29,7 @@ Branch uses that same `N`.
 
 ## PR conventions
 
-Aligns with [create-ticket CONVENTIONS](file:///Users/msk/Library/CloudStorage/OneDrive-Personal/5_projects/ai/skills/product/create-ticket/CONVENTIONS.md).
+Aligns with [create-ticket CONVENTIONS](../create-ticket/CONVENTIONS.md).
 
 | Field | Rule |
 |-------|------|

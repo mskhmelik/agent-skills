@@ -148,11 +148,45 @@ Once all behaviors are GREEN, look for candidates from [refactoring.md](refactor
 Run tests after **every** refactor step. If any test goes RED during refactor, undo and
 fix before continuing. **Never refactor while RED.**
 
+### Dead-code check (mechanical — do not skip)
+
+"No speculative code" is not a vibe check. For each non-trivial line, branch, or
+collection element you added that no assertion directly targets, **delete it and re-run
+the suite**:
+
+- Suite goes RED → the line is justified; restore it.
+- Suite stays GREEN → the line is unverified. Either add a test that fails without it, or
+  **remove it**.
+
+This is the only reliable way to catch defensive duplication and redundant pass-through
+code (e.g. feeding raw input into a list a normalizer already handles). If you cannot
+point at the test that turns red when a line is removed, that line does not belong in the
+PR.
+
 ---
 
 ## Step 6 — PR creation
 
-Once all tests pass and refactor is complete, create a pull request:
+Before opening the PR, run the project's formatter and linter/analyzer **scoped to the
+files this change touched** — never across the whole repo. A repo-wide `dart format .`
+will rewrite pre-existing code when the SDK formatter version has drifted from when the
+repo was last formatted (hundreds of unrelated files), and a repo-wide analyzer run
+surfaces legacy findings your change did not cause. Both balloon or block the PR for the
+wrong reasons. For Dart/Flutter, gate only the changed Dart files:
+
+```
+CHANGED=$( { git diff --name-only --diff-filter=d HEAD; git ls-files --others --exclude-standard; } | grep '\.dart$' )
+echo "$CHANGED" | xargs -r dart format --set-exit-if-changed
+echo "$CHANGED" | xargs -r flutter analyze
+```
+
+Resolve every finding **attributable to your change** (any line you added or edited). A
+finding on a pre-existing line in a touched file, or in a file you did not edit, is out of
+scope: note it, but do not reformat or rewrite unrelated code into this PR. A non-zero exit
+caused by your own added lines blocks the PR — fix it before opening.
+
+Once all tests pass, the dead-code check is clean, and format/lint are green, create a
+pull request:
 
 ```
 gh pr create \
@@ -197,7 +231,12 @@ Observable signs during execution that the loop is broken — stop and correct:
 - A test references private fields, internal modules, or implementation details.
 - A mock stands in for code you own, not a system boundary.
 - You're refactoring while any test is RED.
-- You're about to run `gh pr create` while a behavior is still unchecked or any test fails.
+- You added a line you have **not** confirmed breaks a test when removed — if a line can be
+  deleted with the suite still green, it is untested and must go.
+- You're about to run `gh pr create` while a behavior is still unchecked, any test fails,
+  the dead-code check has not been run, or the formatter/linter is not green on the changed files.
+- You ran `dart format .` (or the analyzer) across the whole repo and it touched files your
+  change did not — scope the gate to changed files; unrelated formatter drift is out of scope.
 - The plan in Step 2 was never approved by the user before code was written.
 
 ## Verification
@@ -207,7 +246,11 @@ Observable signs during execution that the loop is broken — stop and correct:
 - [ ] The full test suite runs **green** (command output shows 0 failures).
 - [ ] Tests assert only through the public interface; mocks only at system boundaries.
 - [ ] No production code exists without a test that drove it.
+- [ ] Dead-code check run: every added line was confirmed to break a test when removed, or
+      was deleted.
 - [ ] Refactor ran only while green; suite still green afterward.
+- [ ] Formatter and linter/analyzer run on the **changed files only**, with zero findings
+      attributable to lines you added or edited (pre-existing findings noted, not reformatted in).
 - [ ] (Issue mode) PR created and URL reported; body closes the issue and lists behaviors.
 
 ## Feedback

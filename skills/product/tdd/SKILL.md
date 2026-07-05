@@ -207,37 +207,21 @@ Report the PR URL to the user.
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+These are stop-and-correct rules: if you catch yourself violating one mid-loop, stop and
+fix it before continuing.
+
+| Rule | Why / violation looks like |
 |---|---|
-| "I'll write the code first and add tests after." | A test written after the code can't fail for the right reason — you never see RED, so you never prove the test exercises the new behavior. Test first, always. |
-| "This behavior is trivial, skip the failing-test step." | The failing run is the only evidence the test is wired to the code. "Trivial" code with no observed RED is untested code. |
-| "Let me write all the tests up front, then implement." | Multiple failing tests at once breaks the vertical slice — you lose the one-test-one-change signal and can't tell which change made which test pass. One test at a time. |
-| "I'll mock my own module to isolate the unit." | Mocking your own code tests the mock, not the behavior. Mock only system boundaries (APIs, DB, time, FS). See [mocking.md](mocking.md). |
-| "I'll assert on internal state to be thorough." | Tests on internals break on every refactor and prove nothing about behavior. Assert only through the public interface. |
-| "While I'm here I'll add code for the next behavior too." | Code with no failing test driving it is speculative — delete it. Only write enough to pass the current test. |
-| "Tests are red mid-refactor, I'll fix them at the end." | Refactoring while RED mixes behavior change with restructuring and hides regressions. Get to GREEN, then refactor. |
-| "All criteria look done, I'll open the PR now." | "Looks done" isn't a green test run. Open the PR only after every acceptance criterion is observed GREEN. |
-
-## Red Flags
-
-Observable signs during execution that the loop is broken — stop and correct:
-
-- A new test **passes on its first run** — it isn't testing the new behavior; the code
-  already existed or the assertion is wrong.
-- You wrote production code **before** a failing test demanded it.
-- More than one test is RED at the same time — you skipped the vertical slice.
-- A test references private fields, internal modules, or implementation details.
-- A mock stands in for code you own, not a system boundary.
-- You're refactoring while any test is RED.
-- You added a line you have **not** confirmed breaks a test when removed — if a line can be
-  deleted with the suite still green, it is untested and must go.
-- You're about to run `gh pr create` while a behavior is still unchecked, any test fails,
-  the dead-code check has not been run, or the formatter/linter is not green on the changed files.
-- You ran `dart format .` (or the analyzer) across the whole repo and it touched files your
-  change did not — scope the gate to changed files; unrelated formatter drift is out of scope.
-- The plan in Step 2 was never approved by the user before code was written.
+| Test first, always — write the failing test before production code. | A test written after can't fail for the right reason; a new test that **passes on first run** isn't testing the new behavior (code already existed or the assertion is wrong). |
+| One test at a time; never more than one RED at once. | Multiple failing tests up front breaks the vertical slice — you lose the one-test-one-change signal. |
+| No "trivial" skips — observe RED for every behavior. | The failing run is the only evidence the test is wired to the code. |
+| Mock only system boundaries (APIs, DB, time, FS); assert only through the public interface. | Mocking your own code tests the mock; asserting on private fields/internals breaks on every refactor and proves nothing. See [mocking.md](mocking.md). |
+| Only write enough code to pass the current test. | Code with no failing test driving it is speculative — a line you can delete with the suite still green is untested and must go. |
+| Never refactor while any test is RED. | It mixes behavior change with restructuring and hides regressions — get to GREEN first. |
+| Don't `gh pr create` until every behavior is GREEN, the dead-code check ran, and format/lint pass on changed files only. | "Looks done" isn't a green run; a repo-wide `dart format .`/analyzer that touches files your change didn't is out of scope. |
+| The Step 2 plan must be user-approved before any code. | Writing code first skips the interface/behavior agreement. |
 
 ## Verification
 
@@ -253,9 +237,16 @@ Observable signs during execution that the loop is broken — stop and correct:
       attributable to lines you added or edited (pre-existing findings noted, not reformatted in).
 - [ ] (Issue mode) PR created and URL reported; body closes the issue and lists behaviors.
 
-## Feedback
+## Step 7 — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — write the full deliverable as text FIRST, then ask for feedback in the same
+response.** The bug this prevents: calling `AskUserQuestion` before the deliverable is
+written, so the user sees the feedback prompt first and the output only after replying.
+Emit the complete deliverable (report, saved paths, summary) as text, then call
+`AskUserQuestion` — never before the deliverable text, and never with another tool call
+between them.
+
+Then use `AskUserQuestion`:
 
 > "How did this skill perform?" — Header "Feedback"
 > - "+1 — worked well"
@@ -266,5 +257,5 @@ On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter t
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","issue":<N|null>,"rating":<-1|1>,"comment":<string|null>}`
 
-On `-1`: self-anneal — identify and fix the root cause in this SKILL.md so the same
-failure cannot recur.
+On `-1`: self-anneal — diagnose the root cause and **propose** the SKILL.md edit to the
+user; apply it only after they approve. Never silently modify this file mid-session.

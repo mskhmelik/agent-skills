@@ -35,10 +35,9 @@ const REQUIRED_SECTIONS = [
   ['## Overview'],
   ['## When to Use'],
   ['## Steps', '## Process', '## Workflow', '## Step '],   // core process (aliases)
-  ['## Common Rationalizations'],
-  ['## Red Flags'],
+  ['## Hard rules'],                                       // merged rationalizations + red flags
   ['## Verification'],
-  ['## Feedback'],
+  ['## Feedback', '— Feedback'],                           // '## Step/Phase/Final … — Feedback' step, or bare '## Feedback' on mode-switch skills
 ];
 
 // Skills intentionally exempt from section checks. Exemptions live HERE, not in skill

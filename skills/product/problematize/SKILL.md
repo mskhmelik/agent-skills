@@ -6,7 +6,7 @@ description: >
   Also trigger when a user describes a problem they want to solve and jumps straight to asking for solutions — pause and suggest running /problematize first.
   The skill concludes with a structured handoff artifact saved to problem-summary.md that /solutionize and /get-prd can pick up. Raw domain terms in Terms surfaced feed /solutionize → docs/CONTEXT.md.
 user-invocable: true
-allowed-tools: [Write, AskUserQuestion]
+allowed-tools: [Glob, Write, AskUserQuestion]
 ---
 
 <!-- Trust boundaries: untrusted input is the user's free-text interview answers.
@@ -162,32 +162,22 @@ Terms the user used during investigation — not yet canonical. /solutionize res
 - Do not pick canonical names or list _Avoid:_ synonyms here
 ```
 
-**Step 7c — Save and confirm.** Save the full Problem Summary to **`docs/problem_summary.md`** if a `docs/` directory exists in the repo root; otherwise save to **`problem-summary.md`** in the repo root. Overwrite any previous version. Tell the user the saved path and that they can run `/solutionize` next — it will sharpen **Terms surfaced** into `docs/CONTEXT.md`.
+**Step 7c — Save and confirm.** Save the full Problem Summary to **`docs/problem_summary.md`** if a `docs/` directory with contents exists in the repo root (use Glob `docs/*` to check); otherwise save to **`problem-summary.md`** in the repo root. Overwrite any previous version. Tell the user the saved path and that they can run `/solutionize` next — it will sharpen **Terms surfaced** into `docs/CONTEXT.md`.
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "The problem is obvious — skip the interview and just write the summary." | Obvious framings are usually symptoms. The excavation surfaces the root problem and real cost; skipping it produces a confident but wrong summary. |
-| "I can ask a few questions at once to save time." | Stacked questions get shallow, blended answers. One question at a time is the core discipline — never batch. |
-| "Let me suggest a quick solution while we're here." | Solutions during /problematize bias the investigation toward a predetermined fix. Park it: "Let's hold that for /solutionize." |
-| "Asking 'would you use a tool that...' will confirm the need." | Hypotheticals give zero signal — the Mom Test forbids them. Ask about specific past behaviour instead. |
-| "Affirming the problem keeps the user engaged." | Premature validation ("great problem!") corrupts signal. Stay neutral until evidence is in. |
-| "Signal is a bit thin but we've talked long enough — wrap it up." | Time spent ≠ signal gathered. Wrapping with gaps hands /solutionize false confidence. Keep asking or flag the gap honestly. |
-| "I'll write the summary myself and skip the tree-structure approval." | The user's framing of the problem space takes precedence. Propose, then wait for confirmation before the full summary. |
-
-## Red Flags
-
-- You are typing two or more questions in a single turn.
-- You wrote "Would you...", "Do you think...", or any hypothetical/leading question.
-- You suggested or sketched a solution before the handoff.
-- You affirmed the problem ("that's a great problem") before confirming real signal.
-- You jumped to a new questioning branch and abandoned the current thread.
-- You are about to write the summary with unanswered depth-check items and no "What's still open" entry for them.
-- You produced the full summary without first proposing and getting approval on the tree structure.
-- Signal is entirely secondhand/inferred but not flagged as thin.
+| One question at a time — never stack two in a turn. | Stacked questions get shallow, blended answers; it's the core discipline. |
+| No hypothetical/leading questions ("Would you...", "Do you think..."). | Hypotheticals give zero signal (Mom Test); ask about specific past behaviour. |
+| Excavate before writing — don't skip the interview on an "obvious" problem. | Obvious framings are usually symptoms; skipping produces a confident but wrong summary. |
+| No solutions during /problematize. | Suggesting or sketching a fix biases the investigation — park it for /solutionize. |
+| Stay neutral; never affirm the problem before evidence. | "Great problem!" corrupts signal. |
+| Don't wrap with gaps — keep asking or list them under "What's still open". | Time spent ≠ signal; unflagged gaps hand /solutionize false confidence. Flag entirely-secondhand signal as thin. |
+| Finish the current thread before opening a new question branch. | Jumping to a new branch and abandoning the current thread loses signal — return to it explicitly. |
+| Propose the tree structure and get approval before the full summary. | The user's framing of the problem space takes precedence. |
 
 ## Verification
 
@@ -198,9 +188,16 @@ Terms the user used during investigation — not yet canonical. /solutionize res
 - [ ] The summary contains all sections: distilled problem, problem tree with ← HERE, specific examples, what we know, what's still open, Terms surfaced (raw).
 - [ ] **Terms surfaced (raw)** captures repeated domain nouns as the user used them — no canonical renaming, no _Avoid:_ synonyms.
 
-## Feedback
+## Phase 8 — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — write the full deliverable as text FIRST, then ask for feedback in the same
+response.** The bug this prevents: calling `AskUserQuestion` before the deliverable is
+written, so the user sees the feedback prompt first and the output only after replying.
+Emit the complete deliverable (report, saved paths, summary) as text, then call
+`AskUserQuestion` — never before the deliverable text, and never with another tool call
+between them.
+
+Then use `AskUserQuestion`:
 
 > "How did this skill perform?" — Header "Feedback"
 > - "+1 — worked well"
@@ -211,4 +208,4 @@ On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter t
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
-On `-1`: self-anneal — identify and fix the root cause in this SKILL.md so the same failure cannot recur.
+On `-1`: self-anneal — diagnose the root cause and **propose** the SKILL.md edit to the user; apply it only after they approve. Never silently modify this file mid-session.

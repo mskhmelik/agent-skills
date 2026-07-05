@@ -134,28 +134,17 @@ Then suggest execution: **`/tdd`** for a single issue, or **`/afk-dev`** for a b
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "I know the codebase; I can skip reading docs/CONTEXT.md and the ADRs." | Reports must use domain names from CONTEXT.md, and ADRs record settled decisions. Skipping them produces wrong vocabulary and re-litigated decisions. Read order in Step 1 is mandatory. |
-| "This module looks shallow — I'll just propose the refactor." | Run the **deletion test** first. A module that looks shallow may earn its interface; a "useful" one may delete cleanly. Assertions without the test are speculation. |
-| "I'll write the report into the repo so it's tracked." | The report is non-committed by design — write only to `$TMPDIR`. Tracking belongs in `/create-ticket`, not stray HTML in the tree. |
-| "These candidates are obvious; I'll cut tickets now." | Step 2 ends with a question, not tickets. The user picks candidates (Step 3) before anything is filed. No tickets before approval. |
-| "I'll just `gh issue create` — it's faster than /create-ticket." | Ticketing conventions (Review-track prefixes, no file paths, agent labels) live in `/create-ticket`. Bypassing it produces non-conforming, non-durable issues. |
-| "This deepening also adds a small feature; I'll fold it into the refactor." | New behavior crosses the PRD scope boundary. Flag scope impact and route via `/prd-to-issues` — never expand scope silently. |
-| "Architecture and domain terms are basically the same; I'll use one." | They are two vocabularies (see table). Conflating them makes reports unreadable and tickets ambiguous. Domain = CONTEXT.md; structure = LANGUAGE.md. |
-
-## Red Flags
-
-- You are writing the HTML report somewhere under the repo path instead of `$TMPDIR`.
-- You started proposing interfaces or designs in Step 2, before the user picked a candidate.
-- You called `gh issue create` (or any direct GitHub mutation) instead of `/create-ticket`.
-- Suggestions name code symbols (`FooBarHandler`) instead of domain modules from `docs/CONTEXT.md`.
-- You are describing structure without LANGUAGE.md terms (saying "boundary" instead of **seam**, "useful" instead of **deep**).
-- You are about to edit `docs/prd.md` scope, run `/problematize`/`/solutionize`, or modify source code — none are this skill's job.
-- You skipped the explore subagent and reviewed from memory or a single file.
-- A candidate has a `Strong` badge but no deletion-test evidence behind it.
+| Read the Step 1 order (README, CONTEXT.md, ADRs) and spawn the explore subagent before reviewing. | Skipping produces wrong vocabulary and re-litigated decisions; reviewing from memory or one file misses friction. |
+| Run the deletion test before proposing any refactor. | A shallow-looking module may earn its interface; a `Strong` badge with no deletion-test evidence is speculation. |
+| Write the HTML report only to `$TMPDIR`, never under the repo. | The report is non-committed by design; tracking belongs in `/create-ticket`. |
+| Step 2 ends with a question, not tickets; the user picks candidates (Step 3) first. | No interfaces/designs before a pick, no tickets before approval. |
+| File via `/create-ticket`, never direct `gh issue create`. | Review-track prefixes, no file paths, and agent labels live there; bypassing produces non-durable issues. |
+| Two vocabularies: domain names from `docs/CONTEXT.md`, structure terms from LANGUAGE.md. | Naming code symbols (`FooBarHandler`) or saying "boundary"/"useful" instead of **seam**/**deep** makes reports unreadable. |
+| Don't edit `docs/prd.md` scope, run `/problematize`/`/solutionize`, or modify source code. | A deepening that adds a feature crosses PRD scope — flag it and route via `/prd-to-issues`. |
 
 ## Verification
 
@@ -167,9 +156,16 @@ Then suggest execution: **`/tdd`** for a single issue, or **`/afk-dev`** for a b
 - [ ] Doc artifacts written only where approved: `docs/CONTEXT.md` terms, `docs/modules/module_*.md`, and/or `docs/adr/` entries (list paths).
 - [ ] Approved candidates filed via `/create-ticket` with Review-track titles and no file paths in bodies — not via direct `gh` calls.
 
-## Feedback
+## Final step — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — write the full deliverable as text FIRST, then ask for feedback in the same
+response.** The bug this prevents: calling `AskUserQuestion` before the deliverable is
+written, so the user sees the feedback prompt first and the output only after replying.
+Emit the complete deliverable (report, saved paths, summary) as text, then call
+`AskUserQuestion` — never before the deliverable text, and never with another tool call
+between them.
+
+Then use `AskUserQuestion`:
 
 > "How did this skill perform?" — Header "Feedback"
 > - "+1 — worked well"
@@ -180,4 +176,4 @@ On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter t
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
-On `-1`: self-anneal — identify and fix the root cause in this SKILL.md so the same failure cannot recur.
+On `-1`: self-anneal — diagnose the root cause and **propose** the SKILL.md edit to the user; apply it only after they approve. Never silently modify this file mid-session.

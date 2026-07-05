@@ -49,26 +49,27 @@ Tell the user what was done and the full path or URL of any output.
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+Merge of the anti-rationalization guard and run-time red flags — the excuses an agent uses
+to skip steps, and the observable "you're going wrong" signals, each with its consequence.
+
+| Rule | Why / violation looks like |
 |---|---|
-| "<excuse the agent makes to skip a step>" | <factual rebuttal> |
-| "This input is obviously fine, skip validation." | Untrusted input is validated in Step 1 — no exceptions. |
-
-## Red Flags
-
-- <Observable warning sign during execution that the skill is going wrong.>
-- The agent is about to proceed past Step 1 without validated inputs.
+| <the correct behavior, imperative> | <the excuse it counters, or the observable signal that it was violated> |
+| Validate untrusted input in Step 1 — no exceptions. | Proceeding past Step 1 without validated inputs. |
 
 ## Verification
 
 - [ ] <Exit criterion backed by evidence — a file path written, a command's output, a test result.>
 - [ ] <Exit criterion.>
 
-## Feedback
+## Step N+1 — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — write the full deliverable as text FIRST, then ask in the same response.** Never
+call `AskUserQuestion` before the deliverable text, or the user sees the prompt first.
+
+Then use `AskUserQuestion`:
 
 > "How did this skill perform?" — Header "Feedback"
 > - "+1 — worked well"
@@ -79,5 +80,5 @@ On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter t
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
-On `-1`: self-anneal — identify and fix the root cause in this SKILL.md so the same
-failure cannot recur.
+On `-1`: self-anneal — diagnose the root cause and **propose** the SKILL.md edit for the
+user to approve; never modify this file silently.

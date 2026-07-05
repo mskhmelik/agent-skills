@@ -194,30 +194,19 @@ above. Confirm no intended issue was silently dropped.
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "It's only two issues, I'll just file them." | 2+ issues is a batch — present the full plan and get approval first (Step 4). |
-| "ensure-labels.sh probably already ran." | Run it every time; missing labels make `gh issue create` fail mid-batch. |
-| "This title is basically the same as an existing one, close enough." | Idempotency is exact-title match (Step 5). Near-matches still file — only skip exact matches you logged. |
-| "File paths make the body more precise." | Paths rot. Use behaviors and seams (domain language). Paths allowed only in decision-encoding snippets. |
-| "One `gh` error means I should stop and report." | Log the error and continue the rest of the batch — do not abort remaining issues. |
-| "This unslop candidate is a new feature, I'll file it as Review." | New user-facing capability hands back to `/prd-to-issues` (Feature track), not Review. |
-| "I'll invent acceptance criteria to fill the template." | Pull criteria from the source doc or investigation only — never fabricate. |
-| "It violates the documented promise, so it's a `BUG-`." | If the capability was never built, it's missing scope → Feature track (`SLICE-`, `type:slice`). `BUG-` is for shipped behavior that regressed. |
-
-## Red Flags
-
-- About to batch-create (2+ issues) without an approved plan.
-- Filing a never-built capability as `BUG-` because it "should work" — that's a feature (`SLICE-`, `type:slice`).
-- Applying `needs-triage` to an agent-ready issue.
-- Using `area:*` or `priority:critical|high|med|low` instead of the canonical `priority:*` set.
-- Putting file paths or line numbers in a body (except decision-encoding snippets).
-- Acceptance criteria not traceable to a source doc or investigation.
-- Aborting the whole batch after a single `gh` failure.
-- Re-filing an arch item listed as shipped in `docs/reviews/README.md`.
-- Closing or modifying parent issues while filing children.
+| Never batch-create (2+ issues) without an approved plan (Step 4). | Filing before approval bypasses the human gate. |
+| A never-built capability is a feature (`SLICE-`, `type:slice`), not a `BUG-`. | `BUG-` is only for shipped behavior that regressed; "it should work" or "violates the promise" is still missing scope. A new unslop capability hands back to `/prd-to-issues`, not Review. |
+| Idempotency is exact-title match (Step 5). | Near-matches still file; only skip the exact matches you logged. |
+| Bodies use behaviors/seams, never file paths or line numbers. | Paths rot (allowed only in decision-encoding snippets). |
+| Acceptance criteria must trace to a source doc or investigation. | Never fabricate criteria to fill the template. |
+| Log a `gh` failure and continue the batch. | Aborting after one failure strands the already-approved issues. |
+| Run `ensure-labels.sh` every time. | Missing labels make `gh issue create` fail mid-batch. |
+| Use the canonical `priority:*` set; never `area:*`, `priority:critical/high/med/low`, or `needs-triage` on an agent-ready issue. | Wrong labels break the taxonomy. |
+| Don't close/modify parent issues while filing children; don't re-file an arch item marked shipped in `docs/reviews/README.md`. | Out of scope for filing. |
 
 ## Verification
 
@@ -230,9 +219,16 @@ above. Confirm no intended issue was silently dropped.
 - [ ] Each issue title matches GitHub number (`BUG-284` on `/issues/284`).
 - [ ] `finalize-issue.sh` ran for each created issue.
 
-## Feedback
+## Step 8 — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — write the full deliverable as text FIRST, then ask for feedback in the same
+response.** The bug this prevents: calling `AskUserQuestion` before the deliverable is
+written, so the user sees the feedback prompt first and the output only after replying.
+Emit the complete deliverable (report, saved paths, summary) as text, then call
+`AskUserQuestion` — never before the deliverable text, and never with another tool call
+between them.
+
+Then use `AskUserQuestion`:
 
 > "How did this skill perform?" — Header "Feedback"
 > - "+1 — worked well"
@@ -243,8 +239,9 @@ On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter t
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
-On `-1`: self-anneal — fix the root cause in this SKILL.md or CONVENTIONS.md so the
-same failure cannot recur.
+On `-1`: self-anneal — diagnose the root cause and **propose** the edit to this SKILL.md
+or CONVENTIONS.md to the user; apply it only after they approve. Never silently modify
+these files mid-session.
 
 ---
 

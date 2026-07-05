@@ -147,7 +147,7 @@ HITL issues (need supervision): [list]
 | Only group stories that share a data-model boundary and can't be tested independently. | When in doubt, split. |
 | File blockers before dependents (Step 3 order). | Filing a dependent first breaks the build order. |
 | Proposed (~) stories become separate discussion issues, not slices. | They aren't confirmed scope. |
-| Run `gh repo view` first; log a `gh create` failure and continue. | No repo check → wrong target; aborting strands approved slices. |
+| Run `gh repo view` first and require it to succeed; log a `gh create` failure and continue. | No/failed repo check → wrong target; aborting mid-batch strands approved slices. |
 | Map `agent:hitl|afk` from Step 3; never `needs-triage`; never turn PRD out-of-scope items into issues. | Wrong labels / scope creep. |
 
 ## Verification

@@ -176,7 +176,8 @@ Terms the user used during investigation — not yet canonical. /solutionize res
 | No solutions during /problematize. | Suggesting or sketching a fix biases the investigation — park it for /solutionize. |
 | Stay neutral; never affirm the problem before evidence. | "Great problem!" corrupts signal. |
 | Don't wrap with gaps — keep asking or list them under "What's still open". | Time spent ≠ signal; unflagged gaps hand /solutionize false confidence. Flag entirely-secondhand signal as thin. |
-| Propose the tree structure and get approval before the full summary. | The user's framing takes precedence; finish the current thread before switching branches. |
+| Finish the current thread before opening a new question branch. | Jumping to a new branch and abandoning the current thread loses signal — return to it explicitly. |
+| Propose the tree structure and get approval before the full summary. | The user's framing of the problem space takes precedence. |
 
 ## Verification
 

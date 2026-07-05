@@ -209,6 +209,9 @@ Report the PR URL to the user.
 
 ## Hard rules
 
+These are stop-and-correct rules: if you catch yourself violating one mid-loop, stop and
+fix it before continuing.
+
 | Rule | Why / violation looks like |
 |---|---|
 | Test first, always — write the failing test before production code. | A test written after can't fail for the right reason; a new test that **passes on first run** isn't testing the new behavior (code already existed or the assertion is wrong). |

@@ -193,7 +193,7 @@ After each edit, summarise which lines changed and why.
 ### Step 6 — Confirm success
 
 Report the number of skills audited, their risk classes, and the path of every SKILL.md
-edited. Then run the Feedback section.
+edited. Then run Step 7 — Feedback (always run last).
 
 ---
 

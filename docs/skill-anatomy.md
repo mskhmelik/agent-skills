@@ -42,27 +42,31 @@ Every task skill must contain these headings (equivalent aliases in brackets are
 1. **`## Overview`** — what the skill does, why it exists, where it sits in the workflow.
 2. **`## When to Use`** — trigger conditions *and* when **not** to use it.
 3. **A core-process section** — `## Steps` *(or `## Process`, `## Workflow`, or numbered `## Step N` headings)*. The actual workflow: specific, actionable, with checkpoints.
-4. **`## Common Rationalizations`** — a table of excuses an agent uses to skip steps, each with a factual rebuttal. This is the anti-rationalization guard.
-5. **`## Red Flags`** — observable signs *during execution* that the skill is going wrong (distinct from design anti-patterns).
-6. **`## Verification`** — an exit checklist where every item is backed by evidence (test output, a written file path, a build result).
-7. **`## Feedback`** — the self-annealing loop (see below). Required in this repo.
+4. **`## Hard rules`** — a table (Rule / why it matters) that merges the anti-rationalization guard and the run-time red flags: the excuses an agent uses to skip steps *and* the observable "you're going wrong" signals, each with a factual consequence.
+5. **`## Verification`** — an exit checklist where every item is backed by evidence (test output, a written file path, a build result).
+6. **Feedback** — the self-annealing loop, as the **final numbered step** (`## Step N — Feedback (always run last)`, or a bare `## Feedback` on a mode-switch skill). See below. Required in this repo.
 
 A skill that is a pure mode-switch or reference (not a workflow) can be exempted from
 the section checks — add it to `SECTION_EXEMPT_SKILLS` in `scripts/validate-skills.js`
 with a one-line reason. Exemptions live in the validator, not in skill frontmatter, so
 a skill cannot exempt itself.
 
-## The Feedback section (repo-specific)
+## The Feedback step (repo-specific)
 
-This is what makes the library self-improving — keep it in every task skill:
+This is what makes the library self-improving — keep it as the **last step** of every task
+skill, gated so it runs only after the deliverable is shown:
 
 ```markdown
-## Feedback
+## Step N — Feedback (always run last)
+
+**Gate — write the full deliverable as text FIRST, then ask in the same response.** Never
+call `AskUserQuestion` before the deliverable text, or the user sees the prompt first.
 
 Use `AskUserQuestion`: "How did this skill perform?" — `+1` worked / `-1` something broke.
 On `-1`, ask "What went wrong?" (optional). Append one line to `feedback.jsonl` in this
 skill's directory: `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`.
-On `-1`, self-anneal: fix the root cause in this SKILL.md so the failure cannot recur.
+On `-1`, self-anneal: diagnose the root cause and **propose** the SKILL.md edit for the
+user to approve — never modify the file silently.
 ```
 
 ## Trust-boundary block
@@ -82,7 +86,7 @@ mirror other skills — add it only when there's a runnable helper.
 1. **Process over prose** — steps, not facts.
 2. **Specific over general** — "Run `npm test` and confirm 0 failures" beats "check the tests".
 3. **Evidence over assumption** — every Verification item needs proof.
-4. **Anti-rationalization** — every skippable step gets a rebuttal in the table.
+4. **Anti-rationalization** — every skippable step gets a rebuttal in the `## Hard rules` table.
 5. **Token-conscious** — if removing a section wouldn't change agent behavior, remove it.
 6. **No PII** — public skills carry no real names, emails, paths, or client data (see `.claude/CLAUDE.md`).
 

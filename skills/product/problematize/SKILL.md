@@ -166,28 +166,17 @@ Terms the user used during investigation — not yet canonical. /solutionize res
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "The problem is obvious — skip the interview and just write the summary." | Obvious framings are usually symptoms. The excavation surfaces the root problem and real cost; skipping it produces a confident but wrong summary. |
-| "I can ask a few questions at once to save time." | Stacked questions get shallow, blended answers. One question at a time is the core discipline — never batch. |
-| "Let me suggest a quick solution while we're here." | Solutions during /problematize bias the investigation toward a predetermined fix. Park it: "Let's hold that for /solutionize." |
-| "Asking 'would you use a tool that...' will confirm the need." | Hypotheticals give zero signal — the Mom Test forbids them. Ask about specific past behaviour instead. |
-| "Affirming the problem keeps the user engaged." | Premature validation ("great problem!") corrupts signal. Stay neutral until evidence is in. |
-| "Signal is a bit thin but we've talked long enough — wrap it up." | Time spent ≠ signal gathered. Wrapping with gaps hands /solutionize false confidence. Keep asking or flag the gap honestly. |
-| "I'll write the summary myself and skip the tree-structure approval." | The user's framing of the problem space takes precedence. Propose, then wait for confirmation before the full summary. |
-
-## Red Flags
-
-- You are typing two or more questions in a single turn.
-- You wrote "Would you...", "Do you think...", or any hypothetical/leading question.
-- You suggested or sketched a solution before the handoff.
-- You affirmed the problem ("that's a great problem") before confirming real signal.
-- You jumped to a new questioning branch and abandoned the current thread.
-- You are about to write the summary with unanswered depth-check items and no "What's still open" entry for them.
-- You produced the full summary without first proposing and getting approval on the tree structure.
-- Signal is entirely secondhand/inferred but not flagged as thin.
+| One question at a time — never stack two in a turn. | Stacked questions get shallow, blended answers; it's the core discipline. |
+| No hypothetical/leading questions ("Would you...", "Do you think..."). | Hypotheticals give zero signal (Mom Test); ask about specific past behaviour. |
+| Excavate before writing — don't skip the interview on an "obvious" problem. | Obvious framings are usually symptoms; skipping produces a confident but wrong summary. |
+| No solutions during /problematize. | Suggesting or sketching a fix biases the investigation — park it for /solutionize. |
+| Stay neutral; never affirm the problem before evidence. | "Great problem!" corrupts signal. |
+| Don't wrap with gaps — keep asking or list them under "What's still open". | Time spent ≠ signal; unflagged gaps hand /solutionize false confidence. Flag entirely-secondhand signal as thin. |
+| Propose the tree structure and get approval before the full summary. | The user's framing takes precedence; finish the current thread before switching branches. |
 
 ## Verification
 

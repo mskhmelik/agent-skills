@@ -137,27 +137,18 @@ HITL issues (need supervision): [list]
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "Slicing by layer (all models, then all APIs) is cleaner to build." | Horizontal slices aren't demo-able until every layer lands. Each issue must cut through the full stack. Split vertically. |
-| "The breakdown is obvious — I'll just create the issues." | Step 4 is a hard gate. Never create issues without explicit human approval of the full breakdown. |
-| "The PRD doesn't state criteria, I'll write reasonable ones." | Never invent acceptance criteria. Copy them verbatim from PRD success criteria; if absent, flag the gap, don't fabricate. |
-| "These two stories feel related, group them." | Only group when they share a data-model boundary and can't be tested independently. When in doubt, split. |
-| "Order doesn't matter, I'll file them as listed." | Blockers must be filed before dependents. Respect the dependency order from Step 3. |
-| "Proposed (~) stories are basically confirmed, treat them as slices." | Proposed stories become separate, clearly-labelled discussion issues — not implementation slices. |
-| "One `gh create` failed, safest to stop." | Report the failure and continue; aborting strands the already-approved slices. |
-
-## Red Flags
-
-- About to run `gh issue create` without having shown the breakdown and gotten a "yes".
-- An issue title or body says "all models", "all routes", "backend only", or "schema only" — that's horizontal.
-- Acceptance criteria don't appear anywhere in `prd.md` (invented).
-- Out-of-scope items from the PRD are becoming their own issues.
-- Dependents would be filed before their blockers.
-- No `gh repo view` was run, or it failed, yet issue creation is proceeding.
-- Labelling an issue `needs-triage` instead of mapping `agent:hitl|afk` from Step 3.
+| Every issue is a vertical slice (data + logic + UI/output), demo-able alone. | A title/body saying "all models", "all routes", "backend only", or "schema only" is horizontal — not demo-able until every layer lands. Split vertically. |
+| Never `gh issue create` before the full breakdown is shown and approved (Step 4). | "The breakdown is obvious" still needs an explicit yes. |
+| Acceptance criteria are copied verbatim from PRD success criteria. | If absent, flag the gap — never invent criteria that don't appear in `prd.md`. |
+| Only group stories that share a data-model boundary and can't be tested independently. | When in doubt, split. |
+| File blockers before dependents (Step 3 order). | Filing a dependent first breaks the build order. |
+| Proposed (~) stories become separate discussion issues, not slices. | They aren't confirmed scope. |
+| Run `gh repo view` first; log a `gh create` failure and continue. | No repo check → wrong target; aborting strands approved slices. |
+| Map `agent:hitl|afk` from Step 3; never `needs-triage`; never turn PRD out-of-scope items into issues. | Wrong labels / scope creep. |
 
 ## Verification
 

@@ -119,25 +119,16 @@ Write the final PRD to **`docs/prd.md`**, overwriting if present. Tell the user:
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "The inputs are thin — I'll re-interview the user to flesh out the PRD." | This skill does not re-investigate. Cap is 3 targeted gap questions; missing depth belongs upstream in `/problematize` / `/solutionize`. |
-| "There's an unresolved item — I'll add an `## Open questions` section so nothing is lost." | The strict PRD rule forbids it. Route unresolved items to `problem_summary.md` / `solution_overview.md` instead. |
-| "A clean story needs one more requirement; I'll add a sensible one." | Every substantive line must trace to an input or gap-fill answer. Inventing requirements breaks traceability. |
-| "CONTEXT.md is missing but I know what the terms mean." | Glossary terms must come from `CONTEXT.md`. If missing, flag it in the preamble and prefer re-running `/solutionize`. |
-| "Problem and solution anchors differ slightly — close enough to proceed." | Divergence must be stated and confirmed before finalising. Anchoring to the wrong framing corrupts the whole PRD. |
-| "A ruled-out option is interesting — I'll list it as proposed scope." | Ruled-out directions are not committed scope. Keep them out of the PRD. |
-
-## Red Flags
-
-- You are asking a 4th gap question, or re-running discovery questions already answered upstream.
-- The draft PRD contains an `## Open questions` section, or unresolved items are sitting in the PRD body instead of the problem/solution docs.
-- A user story, decision, or constraint has no traceable source in the inputs or gap-fill answers.
-- The Glossary introduces a term not present in `CONTEXT.md`.
-- You proceeded past a problem/solution anchor divergence without user confirmation.
-- You wrote the PRD somewhere other than `docs/prd.md`.
+| Do not re-investigate; cap at 3 targeted gap questions. | Asking a 4th, or re-running answered discovery, belongs upstream in `/problematize` / `/solutionize`. |
+| No `## Open questions` section in the PRD. | Route unresolved items to `problem_summary.md` / `solution_overview.md`, never the PRD body. |
+| Every substantive line traces to an input or gap-fill answer. | Inventing a "sensible" requirement, decision, or constraint breaks traceability. |
+| Glossary terms come only from `CONTEXT.md`. | If it's missing, flag it in the preamble and prefer re-running `/solutionize`; never introduce a term absent from CONTEXT. |
+| State and confirm any problem/solution anchor divergence before finalising. | Anchoring to the wrong framing corrupts the whole PRD. |
+| Keep ruled-out options out; write only to `docs/prd.md`. | Ruled-out directions aren't committed scope. |
 
 ## Verification
 

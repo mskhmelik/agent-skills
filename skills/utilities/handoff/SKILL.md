@@ -125,25 +125,15 @@ Output the fenced block and these prose notes, then **END YOUR RESPONSE** — do
 any tool (including `AskUserQuestion`) in the same message as the block. Feedback (Step 4)
 happens in your NEXT message, only after the block is visible in chat.
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "Full mode is safer, always pick it." | Quick mode exists to avoid bloat; Step 1 lets the user choose — ask, don't default. |
-| "I'll save the Full doc in docs/ so it's findable." | Handoffs are transient — write only to `mktemp`. Repo files become stale clutter. |
-| "I'll paste the whole Full doc in chat too, for convenience." | The block must stay short and point at the file; duplicating defeats Full mode. |
-| "I'll re-summarize the PRD/plan into the handoff." | Reference artifacts by path/URL — copying them invites drift. |
-| "Let me ask for feedback now while I'm here." | Feedback comes only after the block is shown — never before Step 3 completes. |
-| "The next agent can infer the first step." | Spell out one concrete first step and the skill to invoke — inference wastes a turn. |
-
-## Red Flags
-
-- Writing the Full doc to `docs/`, the repo, or any non-temp path.
-- The in-chat block reproduces the entire Full document instead of pointing to it.
-- The copy-paste block is not inside triple backticks (user can't one-click copy).
-- Asking for feedback before the handoff block is displayed.
-- The handoff has no concrete "first step" or names no skill to invoke.
-- Pasting raw test logs or full file contents instead of paths/links.
+| Ask Quick vs Full in Step 1 — never default to Full. | Quick mode exists to avoid bloat; the user chooses. |
+| Feedback (Step 4) comes only after the handoff block is visible in chat. | If the feedback question appears before the block, you violated Step 3 — re-show the block first. |
+| Full mode writes only to `mktemp`; the in-chat block points at the file. | Writing to `docs/`/the repo leaves stale clutter; reproducing the whole doc in chat defeats Full mode. |
+| Reference PRDs/plans/logs by path or URL — never copy them in. | Copying invites drift; paste paths/links, not raw test logs or file contents. |
+| The copy-paste block sits inside triple backticks and names one concrete first step + a skill to invoke. | No backticks → user can't one-click copy; no first step → the next agent wastes a turn inferring. |
 
 ## Verification
 

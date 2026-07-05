@@ -118,24 +118,15 @@ Tell the user:
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "There's no `.git`, I'll just scaffold in the cwd." | Step 0 requires a confirmed root — guessing scatters `docs/` into the wrong folder. Ask the user. |
-| "I'll fill the templates with real problem/solution content to save a step." | Templates are placeholders. Content is owned by `/problematize` and `/solutionize`; inventing it corrupts their inputs. |
-| "`problem_summary.md` already exists but it's probably stale — overwrite it." | Non-empty problem/solution/PRD files are never overwritten without explicit consent (Step 2). |
-| "I'll just write the docs from memory instead of copying templates." | The layout must match what downstream skills expect — copy from `templates/`, do not improvise structure. |
-| "README already describes the workflow, I'll silently re-copy everything." | Step 1 requires asking skip/merge/overwrite — don't clobber a customized README. |
-
-## Red Flags
-
-- About to write under a directory you never confirmed as `REPO_ROOT`.
-- Overwriting a non-empty `problem_summary.md`, `solution_overview.md`, `CONTEXT.md`, or
-  `prd.md` without explicit user consent.
-- Typing template content by hand instead of copying from `templates/`.
-- Leaving `{{PROJECT_NAME}}` unreplaced in created files.
-- Creating `docs/` content that invents product details rather than placeholders.
+| Never write under a directory you haven't confirmed as `REPO_ROOT` (Step 0). | Guessing scatters `docs/` into the wrong folder — ask the user. |
+| Copy from `templates/`; never improvise structure or type content by hand. | The layout must match what downstream skills expect. |
+| Templates are placeholders — never fill them with real product content. | That content is owned by `/problematize` and `/solutionize`; inventing it corrupts their inputs. |
+| Never overwrite a non-empty `problem_summary.md`, `solution_overview.md`, `CONTEXT.md`, or `prd.md` without explicit consent (Step 2). | Silent overwrite destroys prior work; clobbering a customized README needs the Step 1 skip/merge/overwrite ask. |
+| Replace every `{{PROJECT_NAME}}` in created files. | A leftover placeholder ships broken docs. |
 
 ## Verification
 

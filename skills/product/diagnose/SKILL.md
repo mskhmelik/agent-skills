@@ -132,26 +132,17 @@ drift from PRD).
 
 ---
 
-## Common Rationalizations
+## Hard rules
 
-| Rationalization | Reality |
+| Rule | Why / violation looks like |
 |---|---|
-| "I can see the bug in the code — skip reproduction." | Reading code confirms a *theory*, not the failure. Without Phase 2 you cannot prove the fix worked. Build the loop. |
-| "A unit test passes, so it's fixed." | If the report is widget/focus/keyboard, a passing unit test proves nothing at the seam the user hit. Reproduce at the same presentation. |
-| "Let me add a few logs first to see what's happening." | Instrumenting before a Phase 1 loop exists is blind guessing. The loop comes first. |
-| "It's an obvious one-line fix, no regression test needed." | If `flutter test` can reach the bug, a missing test means it recurs. RED before GREEN. |
-| "This touches an extra module — I'll just fix it while I'm here." | Scope beyond `docs/prd.md` needs the user's OK. Note it; don't expand silently. |
-| "I'll leave the debug logs, they might help later." | Tagged `[DEBUG-...]` lines are noise in the diff. Grep and remove every one in Phase 6. |
-
-## Red Flags
-
-- About to instrument or fix before a Phase 1 feedback loop exists.
-- Hypothesising with no reproduction — no confirmed failing signal.
-- Declaring "done" on unit tests when the report is widget/focus/keyboard.
-- Changing more than one variable per probe; can't tell which change mattered.
-- Writing session-scoped log files (`.cursor/debug-*.log`, `agent_debug_log.dart`).
-- Editing files outside the PRD scope without asking.
-- `[DEBUG-...]` lines still present in the final diff.
+| Build the Phase 1 feedback loop before any instrumenting or fixing. | Reading code confirms a theory, not the failure; instrumenting first is blind guessing. |
+| Reproduce (Phase 2) before hypothesising. | No confirmed failing signal means you can't prove the fix worked. |
+| Reproduce at the same presentation the user hit. | A passing unit test proves nothing for a widget/focus/keyboard report. |
+| Every fix gets a regression test, RED before GREEN. | "Obvious one-line fix" still recurs if `flutter test` can reach it and no test guards it. |
+| Change one variable per probe. | Multiple changes at once hide which one mattered. |
+| Remove every `[DEBUG-...]` line and session log file in Phase 6. | Tagged debug lines and `.cursor/debug-*.log` / `agent_debug_log.dart` are diff noise. |
+| Don't expand scope beyond `docs/prd.md` without asking. | Fixing an extra module "while here" is silent scope creep. |
 
 ## Verification
 

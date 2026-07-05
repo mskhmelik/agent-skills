@@ -121,9 +121,10 @@ Then, in prose outside the block:
 2. **Full only:** the absolute temp-file path plus a 2-sentence summary of its contents.
 3. **Quick only:** one sentence on what the block contains.
 
-Output the fenced block and these prose notes, then **END YOUR RESPONSE** — do not call
-any tool (including `AskUserQuestion`) in the same message as the block. Feedback (Step 4)
-happens in your NEXT message, only after the block is visible in chat.
+Output the fenced block and these prose notes FIRST. Only once the block is fully written
+do you call `AskUserQuestion` for feedback (Step 4) — same response is fine, but never
+call it before the block, or the user sees the feedback prompt and the handoff renders
+only after they reply.
 
 ## Hard rules
 
@@ -146,10 +147,10 @@ happens in your NEXT message, only after the block is visible in chat.
 
 ## Step 4 — Feedback (always run last)
 
-**Gate — do not begin this step until the handoff block from Step 3 is already visible in
-chat.** The message that shows the block must END with the block (and its prose notes) —
-no tool call after it. Ask for feedback in your NEXT message, never in the same message as
-the block and never before it.
+**Gate — the handoff block from Step 3 must be fully written out BEFORE you call
+`AskUserQuestion`.** The bug this prevents: asking for feedback first, so the user replies
+and only then sees the handoff. Write the block, then ask — never the feedback prompt
+first, and never another tool call between the block and the question.
 
 Then use `AskUserQuestion`:
 

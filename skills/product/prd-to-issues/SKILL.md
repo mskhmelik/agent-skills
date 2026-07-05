@@ -161,10 +161,12 @@ HITL issues (need supervision): [list]
 
 ## Step 7 — Feedback (always run last)
 
-**Gate — do not begin this step until the deliverable is already visible in chat.** The
-message that delivers this skill's output (report, saved paths, handoff block, summary)
-must END with that output — no tool call after it. Ask for feedback in your NEXT message,
-never in the same message as the deliverable and never before it.
+**Gate — write the full deliverable as text FIRST, then ask for feedback in the same
+response.** The bug this prevents: calling `AskUserQuestion` before the deliverable is
+written, so the user sees the feedback prompt first and the output only after replying.
+Emit the complete deliverable (report, saved paths, summary) as text, then call
+`AskUserQuestion` — never before the deliverable text, and never with another tool call
+between them.
 
 Then use `AskUserQuestion`:
 

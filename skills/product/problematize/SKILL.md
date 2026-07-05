@@ -6,7 +6,7 @@ description: >
   Also trigger when a user describes a problem they want to solve and jumps straight to asking for solutions — pause and suggest running /problematize first.
   The skill concludes with a structured handoff artifact saved to problem-summary.md that /solutionize and /get-prd can pick up. Raw domain terms in Terms surfaced feed /solutionize → docs/CONTEXT.md.
 user-invocable: true
-allowed-tools: [Write, AskUserQuestion]
+allowed-tools: [Glob, Write, AskUserQuestion]
 ---
 
 <!-- Trust boundaries: untrusted input is the user's free-text interview answers.
@@ -162,7 +162,7 @@ Terms the user used during investigation — not yet canonical. /solutionize res
 - Do not pick canonical names or list _Avoid:_ synonyms here
 ```
 
-**Step 7c — Save and confirm.** Save the full Problem Summary to **`docs/problem_summary.md`** if a `docs/` directory exists in the repo root; otherwise save to **`problem-summary.md`** in the repo root. Overwrite any previous version. Tell the user the saved path and that they can run `/solutionize` next — it will sharpen **Terms surfaced** into `docs/CONTEXT.md`.
+**Step 7c — Save and confirm.** Save the full Problem Summary to **`docs/problem_summary.md`** if a `docs/` directory with contents exists in the repo root (use Glob `docs/*` to check); otherwise save to **`problem-summary.md`** in the repo root. Overwrite any previous version. Tell the user the saved path and that they can run `/solutionize` next — it will sharpen **Terms surfaced** into `docs/CONTEXT.md`.
 
 ---
 

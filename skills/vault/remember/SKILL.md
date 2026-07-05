@@ -160,13 +160,27 @@ Open the note in Obsidian to verify image rendering.
 Run /contemplate later to ingest into concepts/.
 ```
 
-### Reference — canonical example notes
+### Reference — shape of a finished note
 
-Produced by this workflow manually on 2026-05-12; match their shape exactly:
+Match this shape (example: a user's own LinkedIn post saved to `notes/`):
 
-- `notes/Problem half solved.md`
-- `notes/Four design principles.md`
-- `notes/Process mapping guide.md`
+```markdown
+---
+title: "Four design principles"
+author: <user's name>
+link: NA
+type: linkedin_post
+date: <YYYY-MM-DD>
+tags: []
+---
+
+The four principles I keep coming back to:
+1. <verbatim first point from the paste>
+2. <verbatim second point>
+...
+```
+
+The body is the paste, unedited. Frontmatter carries the metadata confirmed in Step 3.
 
 ---
 

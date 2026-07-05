@@ -333,7 +333,7 @@ Unprocessed remaining: <count>
 - [ ] `_index.md` has one new line per created page, with no duplicates (Step 5e).
 - [ ] `ingest_log.md` has a new `## <date> — <file>` block per processed source (Step 5f); re-running `--list` shows those sources gone from the queue.
 - [ ] The Step 6 report lists counts that match the files actually written.
-- [ ] **No phantom links:** run `python3 $VAULT/_tools/check_phantom_links.py` — it must report `BROKEN NOTE-LINKS: 0`. If not, fix the offending `[[link]]`/`related:` entries (create the page or convert to plain text) before finishing.
+- [ ] **No phantom links:** if `$VAULT/_tools/check_phantom_links.py` exists, run `python3 $VAULT/_tools/check_phantom_links.py` — it must report `BROKEN NOTE-LINKS: 0`. If the script does not exist, instead manually verify every `[[link]]` and `related:` entry you wrote resolves to a page you created this run or that already existed. Either way, fix the offending `[[link]]`/`related:` entries (create the page or convert to plain text) before finishing.
 - [ ] All new/edited synthesized filenames are **sentence case with spaces, no underscores** (acronyms/proper nouns preserved).
 
 ## Feedback

@@ -72,4 +72,4 @@ On first invocation (not on every response), use `AskUserQuestion` once at the v
 If -1: append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":-1,"comment":<string|null>}`
 
-Self-anneal on -1: identify what drifted and fix the rules above.
+Self-anneal on -1: identify what drifted and **propose** the fix to the rules above to the user; apply it only after they approve.

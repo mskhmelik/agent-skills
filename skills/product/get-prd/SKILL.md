@@ -148,9 +148,14 @@ Write the final PRD to **`docs/prd.md`**, overwriting if present. Tell the user:
 - [ ] Gap answers and unresolved items were written to `problem_summary.md` / `solution_overview.md`, not the PRD.
 - [ ] At most 3 gap questions were asked.
 
-## Feedback
+## Step 7 — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — do not begin this step until the deliverable is already visible in chat.** The
+message that delivers this skill's output (report, saved paths, handoff block, summary)
+must END with that output — no tool call after it. Ask for feedback in your NEXT message,
+never in the same message as the deliverable and never before it.
+
+Then use `AskUserQuestion`:
 
 > "How did this skill perform?" — Header "Feedback"
 > - "+1 — worked well"
@@ -161,4 +166,4 @@ On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter t
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md** (create it if absent), ISO 8601 UTC for `ts`:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
-On `-1`: self-anneal — identify and fix the root cause in this SKILL.md so the same failure cannot recur.
+On `-1`: self-anneal — diagnose the root cause and **propose** the SKILL.md edit to the user; apply it only after they approve. Never silently modify this file mid-session.

@@ -233,9 +233,14 @@ total/concurrent caps prevent further spawns this cycle:
 - [ ] `docs/loops/loop_<date>-<slug>/summary.md` exists with Completed / Blocked / Deferred / needs-triage / manual QA sections, and was presented in chat.
 - [ ] If nothing remains to spawn, the final message ends with `<promise>AFK CYCLE COMPLETE</promise>`.
 
-## Feedback
+## Step 8 — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — do not begin this step until the deliverable is already visible in chat.** The
+message that delivers this skill's output (report, saved paths, handoff block, summary)
+must END with that output — no tool call after it. Ask for feedback in your NEXT message,
+never in the same message as the deliverable and never before it.
+
+Then use `AskUserQuestion`:
 
 > "How did this AFK dev cycle go?" — Header "Feedback"
 > - "+1 — worked well"
@@ -247,5 +252,5 @@ Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
 On `-1`: self-anneal — identify whether the fix belongs in this SKILL.md,
-CONVENTIONS.md, or `templates/worker-prompt.md`, and fix the root cause there so
-the same failure cannot recur.
+CONVENTIONS.md, or `templates/worker-prompt.md`, then **propose** that edit to the user;
+apply it only after they approve. Never silently modify these files mid-session.

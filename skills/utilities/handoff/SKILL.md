@@ -121,7 +121,9 @@ Then, in prose outside the block:
 2. **Full only:** the absolute temp-file path plus a 2-sentence summary of its contents.
 3. **Quick only:** one sentence on what the block contains.
 
-Only after the block (and Full-mode path summary) is displayed, proceed to Feedback.
+Output the fenced block and these prose notes, then **END YOUR RESPONSE** — do not call
+any tool (including `AskUserQuestion`) in the same message as the block. Feedback (Step 4)
+happens in your NEXT message, only after the block is visible in chat.
 
 ## Common Rationalizations
 
@@ -152,9 +154,14 @@ Only after the block (and Full-mode path summary) is displayed, proceed to Feedb
 - [ ] No handoff content was written to `docs/` or the repo.
 - [ ] Feedback was requested only after the block was displayed.
 
-## Feedback
+## Step 4 — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — do not begin this step until the handoff block from Step 3 is already visible in
+chat.** The message that shows the block must END with the block (and its prose notes) —
+no tool call after it. Ask for feedback in your NEXT message, never in the same message as
+the block and never before it.
+
+Then use `AskUserQuestion`:
 
 > "How did this skill perform?" — Header "Feedback"
 > - "+1 — worked well"
@@ -165,5 +172,5 @@ On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter t
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
-On `-1`: self-anneal — identify and fix the root cause in this SKILL.md so the same
-failure cannot recur.
+On `-1`: self-anneal — diagnose the root cause and **propose** the SKILL.md edit to the
+user; apply it only after they approve. Never silently modify this file mid-session.

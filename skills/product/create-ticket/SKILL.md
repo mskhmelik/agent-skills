@@ -230,9 +230,14 @@ above. Confirm no intended issue was silently dropped.
 - [ ] Each issue title matches GitHub number (`BUG-284` on `/issues/284`).
 - [ ] `finalize-issue.sh` ran for each created issue.
 
-## Feedback
+## Step 8 — Feedback (always run last)
 
-Use `AskUserQuestion`:
+**Gate — do not begin this step until the deliverable is already visible in chat.** The
+message that delivers this skill's output (report, saved paths, handoff block, summary)
+must END with that output — no tool call after it. Ask for feedback in your NEXT message,
+never in the same message as the deliverable and never before it.
+
+Then use `AskUserQuestion`:
 
 > "How did this skill perform?" — Header "Feedback"
 > - "+1 — worked well"
@@ -243,8 +248,9 @@ On `-1`, ask a follow-up text question: "What went wrong?" (optional — Enter t
 Append one line to `feedback.jsonl` **in the same directory as this SKILL.md**:
 `{"ts":"<ISO8601>","rating":<-1|1>,"comment":<string|null>}`
 
-On `-1`: self-anneal — fix the root cause in this SKILL.md or CONVENTIONS.md so the
-same failure cannot recur.
+On `-1`: self-anneal — diagnose the root cause and **propose** the edit to this SKILL.md
+or CONVENTIONS.md to the user; apply it only after they approve. Never silently modify
+these files mid-session.
 
 ---
 

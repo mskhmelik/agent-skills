@@ -6,7 +6,7 @@
 
 ## Problem statement
 
-_See [problem_summary.md](problem_summary.md)._
+_See [problem-summary.md](problem-summary.md)._
 
 ---
 
@@ -30,7 +30,7 @@ _Add modules and stories via `/get-prd`._
 
 ## Out of scope
 
-_See [solution_overview.md](solution_overview.md)._
+_See [solution-overview.md](solution-overview.md)._
 
 ---
 
@@ -42,5 +42,5 @@ _Canonical terms in [CONTEXT.md](CONTEXT.md). `/get-prd` copies terms used here.
 
 ## Architecture pointers
 
-- Module deep dives: `docs/modules/module_*.md`
-- Hard decisions: `docs/adr/`
+- Module deep dives: `docs/engineering/modules/*.md`
+- Hard decisions: `docs/reviews/adr/`

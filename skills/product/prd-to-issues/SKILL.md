@@ -149,6 +149,7 @@ HITL issues (need supervision): [list]
 | Proposed (~) stories become separate discussion issues, not slices. | They aren't confirmed scope. |
 | Run `gh repo view` first and require it to succeed; log a `gh create` failure and continue. | No/failed repo check → wrong target; aborting mid-batch strands approved slices. |
 | Map `agent:hitl|afk` from Step 3; never `needs-triage`; never turn PRD out-of-scope items into issues. | Wrong labels / scope creep. |
+| **Docs write-scope.** Create or write docs only at the canonical paths in the docs layout contract (`docs/README.md`): `foundation/`, `reviews/` (+`adr/`), `engineering/{loops,modules,security,ops}`, `agents/`. Never create a new top-level doc folder, a loose file at `docs/` root, or a `-vN` filename variant. Findings and backlog go to GitHub issues via `/create-ticket`, never to a new doc. If nothing fits, ask — do not invent a path. | Scattered doc files break the closed-layout contract other skills and agents rely on. |
 
 ## Verification
 

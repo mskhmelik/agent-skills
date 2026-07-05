@@ -7,7 +7,7 @@
 #
 # Each iteration:
 #   - resets context to a fresh agent process (no shared memory between runs)
-#   - feeds it /afk-dev plus the on-disk state (docs/loops/loop_<date>-<slug>/{plan,log}.md, issues)
+#   - feeds it /afk-dev plus the on-disk state (docs/engineering/loops/loop_<date>-<slug>/{plan,log}.md, issues)
 #   - the coordinator itself enforces the caps in CONVENTIONS.md
 #
 # Run this from the repo root, inside a sandboxed checkout/worktree — each
@@ -24,8 +24,8 @@ if [ -z "$MAX_ITER" ]; then
 fi
 
 DONE_MARKER="<promise>AFK CYCLE COMPLETE</promise>"
-LOG_FILE="docs/loops/loop_<date>-<slug>/log.md"
-mkdir -p docs/loops
+LOG_FILE="docs/engineering/loops/loop_<date>-<slug>/log.md"
+mkdir -p "$(dirname "$LOG_FILE")"
 touch "$LOG_FILE"
 
 for ((i=1; i<=MAX_ITER; i++)); do
@@ -47,7 +47,7 @@ for ((i=1; i<=MAX_ITER; i++)); do
   echo "$result"
 
   # Tail the shared log so you can watch progress without re-reading the whole file
-  echo "--- docs/loops/loop_<date>-<slug>/log.md (last 5 lines) ---"
+  echo "--- docs/engineering/loops/loop_<date>-<slug>/log.md (last 5 lines) ---"
   tail -n 5 "$LOG_FILE" 2>/dev/null || true
 
   if [[ "$result" == *"$DONE_MARKER"* ]]; then
@@ -56,4 +56,4 @@ for ((i=1; i<=MAX_ITER; i++)); do
   fi
 done
 
-echo "Reached max iterations ($MAX_ITER) without a completion signal — review docs/loops/loop_<date>-<slug>/{plan,log}.md."
+echo "Reached max iterations ($MAX_ITER) without a completion signal — review docs/engineering/loops/loop_<date>-<slug>/{plan,log}.md."

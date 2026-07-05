@@ -34,7 +34,7 @@ report, optionally after `/diagnose`) and ends by opening a PR.
   fixing a bug/regression with a guard test (bug-fix mode, Step 0); the user says
   "red-green-refactor", "test-first", or wants integration tests.
 - **Best after:** `/prd-to-issues` (issue exists) or `/diagnose` (feedback loop built
-  for a bug). Read `docs/prd.md` and `docs/README.md` when present to stay in scope.
+  for a bug). Read `docs/foundation/prd.md` and `docs/README.md` when present to stay in scope.
 - **Do NOT use when:** the work has no observable behavior to test (pure config,
   docs); the user wants exploratory spikes; or no acceptance criteria exist and the
   user can't describe behaviors — gather those first.
@@ -222,6 +222,7 @@ fix it before continuing.
 | Never refactor while any test is RED. | It mixes behavior change with restructuring and hides regressions — get to GREEN first. |
 | Don't `gh pr create` until every behavior is GREEN, the dead-code check ran, and format/lint pass on changed files only. | "Looks done" isn't a green run; a repo-wide `dart format .`/analyzer that touches files your change didn't is out of scope. |
 | The Step 2 plan must be user-approved before any code. | Writing code first skips the interface/behavior agreement. |
+| **Docs write-scope.** Create or write docs only at the canonical paths in the docs layout contract (`docs/README.md`): `foundation/`, `reviews/` (+`adr/`), `engineering/{loops,modules,security,ops}`, `agents/`. Never create a new top-level doc folder, a loose file at `docs/` root, or a `-vN` filename variant. Findings and backlog go to GitHub issues via `/create-ticket`, never to a new doc. If nothing fits, ask — do not invent a path. | Scattered doc files break the closed-layout contract other skills and agents rely on. |
 
 ## Verification
 

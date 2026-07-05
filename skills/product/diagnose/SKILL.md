@@ -29,8 +29,8 @@ Sits at the start of bug work and hands off to `/tdd` for the RED→GREEN regres
 
 - **Use when:** the user types `/diagnose`, says "debug this" / "diagnose this",
   reports a bug, or something is broken/failing.
-- **Best after:** you can read `docs/README.md`, `docs/prd.md` scope, and any
-  `docs/adr/` for the affected module (read these before exploring code).
+- **Best after:** you can read `docs/README.md`, `docs/foundation/prd.md` scope, and any
+  `docs/reviews/adr/` for the affected module (read these before exploring code).
 - **Do NOT use when:** you are implementing a known-good change from an issue (use
   `/tdd`), or the task is a refactor/feature with no failure to reproduce.
 
@@ -39,8 +39,8 @@ Sits at the start of bug work and hands off to `/tdd` for the RED→GREEN regres
 `$ARGUMENTS` may be a symptom description, an area/module, or empty. If empty, ask the
 user for the symptom and how to reproduce it before starting Phase 1.
 
-Before exploring code, read `docs/README.md` (if present), the `docs/prd.md` scope for
-the area, and any `docs/adr/` touching the module. Do not expand scope beyond the PRD
+Before exploring code, read `docs/README.md` (if present), the `docs/foundation/prd.md` scope for
+the area, and any `docs/reviews/adr/` touching the module. Do not expand scope beyond the PRD
 without asking. See also central rule: `rules/debugging.md`.
 
 ---
@@ -62,7 +62,7 @@ Without one, do not guess.
 2. **Failing unit test** on pure logic (parsers, mappers, keyboard handlers) — only if
    the bug is not focus/gesture/layout.
 3. **`flutter test path/to/test.dart`** with minimal repro.
-4. **Structured manual QA script** — `docs/manual_qa*.md` checklist; user runs steps,
+4. **Structured manual QA script** — `docs/engineering/ops/manual-qa-*.md` checklist; user runs steps,
    reports pass/fail per line.
 5. **Replay** — captured log, HAR, or DB row through an isolated harness.
 
@@ -112,7 +112,7 @@ One variable at a time. Each probe maps to one hypothesis.
 
 **Regression test before fix** when a **correct seam** exists (test exercises the real
 bug pattern at the call site). If no correct seam: document that as the finding; consider
-`docs/adr/`.
+`docs/reviews/adr/`.
 
 1. Failing test at seam → RED.
 2. Minimal fix → GREEN.
@@ -142,14 +142,15 @@ drift from PRD).
 | Every fix gets a regression test, RED before GREEN. | "Obvious one-line fix" still recurs if `flutter test` can reach it and no test guards it. |
 | Change one variable per probe. | Multiple changes at once hide which one mattered. |
 | Remove every `[DEBUG-...]` line and session log file in Phase 6. | Tagged debug lines and `.cursor/debug-*.log` / `agent_debug_log.dart` are diff noise. |
-| Don't expand scope beyond `docs/prd.md` without asking. | Fixing an extra module "while here" is silent scope creep. |
+| Don't expand scope beyond `docs/foundation/prd.md` without asking. | Fixing an extra module "while here" is silent scope creep. |
+| **Docs write-scope.** Create or write docs only at the canonical paths in the docs layout contract (`docs/README.md`): `foundation/`, `reviews/` (+`adr/`), `engineering/{loops,modules,security,ops}`, `agents/`. Never create a new top-level doc folder, a loose file at `docs/` root, or a `-vN` filename variant. Findings and backlog go to GitHub issues via `/create-ticket`, never to a new doc. If nothing fits, ask — do not invent a path. | Scattered doc files break the closed-layout contract other skills and agents rely on. |
 
 ## Verification
 
 - [ ] Phase 1 loop is deterministic and agent-runnable (command / test path recorded).
 - [ ] Reproduction confirmed: matched the user's failure mode (Phase 2 output captured).
 - [ ] Regression test added at the correct seam, observed failing THEN passing
-      (RED→GREEN test output) — or the seam gap is documented in `docs/adr/`.
+      (RED→GREEN test output) — or the seam gap is documented in `docs/reviews/adr/`.
 - [ ] Original repro no longer fires when the loop is re-run on the full scenario.
 - [ ] Cleanup done: no `[DEBUG-...]` lines and no session log files remain (grep clean).
 - [ ] Correct hypothesis + prevention note recorded in commit/PR message.

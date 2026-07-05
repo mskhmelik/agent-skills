@@ -86,7 +86,7 @@ EOF
 | Tracer bullet / new feature slice | Default model (`sonnet-4.5`) | plan-mode pass → execute |
 | Polish, quick win, mechanical refactor | Faster/cheaper model | execute only (skip plan pass) |
 
-The coordinator records the actual assignment per task in `docs/loops/loop_<date>-<slug>/plan.md` — this
+The coordinator records the actual assignment per task in `docs/engineering/loops/loop_<date>-<slug>/plan.md` — this
 table is guidance, not a rigid rule.
 
 ## Merge policy
@@ -121,7 +121,35 @@ decision):
 2. Add a comment to the issue: what was tried, what's blocking it, what decision
    or input is needed.
 3. Apply the `agent:blocked` label (remove `agent:hitl`/`agent:afk` while blocked).
-4. Append a status line to `docs/loops/loop_<date>-<slug>/log.md` (see template) and stop.
+4. Append a status line to `docs/engineering/loops/loop_<date>-<slug>/log.md` (see template) and stop.
 
 A worker must **never** silently stop with no trace — that's the #1 failure mode
 observed in real overnight multi-agent runs (see SKILL.md references).
+
+## Loop directory contract
+
+Every cycle owns exactly one directory: `docs/engineering/loops/loop_<YYYY-MM-DD>-<slug>/`.
+That directory holds exactly these files — no others:
+
+- `plan.md` — written once in Step 3, **overwritten in place** if the plan needs revision
+- `log.md` — append-only worker status lines
+- `summary.md` — written once in Step 7
+- `worktrees.json` — optional, tracking active worktree paths
+
+**Forbidden:** `-vN` suffixes (`plan-v2.md`) or `followup-*` files (`followup-plan-v2.md`,
+`followup-plan-v3.md`). A revised plan overwrites `plan.md` — it does not spawn a sibling
+file. This is not a style preference: the 2026-06-21 loop's `followup-plan-v2`/`v3` sprawl
+left three competing plans in one directory with no way to tell which was authoritative.
+If a plan needs revising mid-cycle, edit `plan.md` directly (git history preserves the old
+version) and note the revision in the plan's own text.
+
+## Docs write-scope
+
+Create or write docs only at the canonical paths in the docs layout contract
+(`docs/README.md`): `foundation/`, `reviews/` (+`adr/`), `engineering/{loops,modules,security,ops}`,
+`agents/`. Never create a new top-level doc folder, a loose file at `docs/` root, or a
+`-vN` filename variant. Findings and backlog go to GitHub issues via `/create-ticket`,
+never to a new doc. If nothing fits, ask — do not invent a path.
+
+For `/afk-dev` specifically, this means: all cycle output stays inside
+`docs/engineering/loops/loop_<date>-<slug>/` using only the fixed file set above.

@@ -56,4 +56,4 @@ Reuse project test helpers (`test/test_helpers.dart`): `createTestContainer`, `p
 
 ## When widget tests won't stabilize
 
-Document in `docs/adr/` or `docs/manual_qa_*.md`. Do not delete the test without a replacement loop.
+Document in `docs/reviews/adr/` or `docs/engineering/ops/manual-qa-*.md`. Do not delete the test without a replacement loop.

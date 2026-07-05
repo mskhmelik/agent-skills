@@ -9,8 +9,8 @@ Optional repo-specific pointers. Generic skills and rules are installed per-mach
 
 - **Issue tracker:** _GitHub Issues / other — fill in when known_
 - **Launch / env:** _e.g. `env/dev.json`, `.vscode/launch.json`_
-- **Manual QA:** _link `docs/manual_qa_*.md` if present_
-- **Domain docs:** [`docs/README.md`](../README.md), [`docs/prd.md`](../prd.md)
+- **Manual QA:** _link `docs/engineering/ops/manual-qa-*.md` if present_
+- **Domain docs:** [`docs/README.md`](../README.md), [`docs/foundation/prd.md`](../foundation/prd.md)
 
 ## When to invoke skills
 

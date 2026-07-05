@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Create module GitHub Projects v2 and write docs/projects.json.
+# Create module GitHub Projects v2 and write docs/engineering/projects.json.
 # Usage: REPO_ROOT=/path/to/repo GITHUB_REPO=owner/repo bash ensure-projects.sh
 set -euo pipefail
 
@@ -27,7 +27,7 @@ if [[ -z "$REPO_ROOT" ]]; then
   REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 fi
 
-OUTPUT="${REPO_ROOT}/docs/projects.json"
+OUTPUT="${REPO_ROOT}/docs/engineering/projects.json"
 mkdir -p "$(dirname "$OUTPUT")"
 
 # title:key pairs

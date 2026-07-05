@@ -88,7 +88,7 @@ EOF
 
 ## GitHub Projects (module boards)
 
-Each filed issue is added to the module Project (Status = Backlog). See repo `docs/projects/README.md` and `docs/projects.json`.
+Each filed issue is added to the module Project (Status = Backlog). See repo `docs/agents/README.md` and `docs/engineering/projects.json`.
 
 | Project | `module:*` label(s) |
 |---------|---------------------|
@@ -161,7 +161,7 @@ Issues should still make sense after major refactors.
 
 - Describe **end-to-end behaviors**, not layer-by-layer tasks
 - **No file paths or line numbers** (exception: prototype snippets encoding a decision — state machine, schema shape)
-- Use project domain language (`docs/CONTEXT.md` if present)
+- Use project domain language (`docs/foundation/CONTEXT.md` if present)
 - **Reproduction steps** mandatory for bugs; ask if unknown
 - **30-second readability** — concise acceptance criteria
 - **Honest Blocked by** — `None — can start immediately` when true
@@ -211,7 +211,7 @@ Issues should still make sense after major refactors.
 ## Ref
 - [source doc path]
 - [backlog row if applicable]
-- [docs/modules/module_*.md or ADR if from /unslop-repo]
+- [docs/engineering/modules/*.md or ADR if from /unslop-repo]
 
 ## Notes
 - **Mode:** HITL | AFK
@@ -264,7 +264,7 @@ GITHUB_REPO=owner/repo bash …/ensure-labels.sh
 GITHUB_REPO=owner/repo REPO_ROOT=/path/to/repo bash …/scripts/ensure-projects.sh
 ```
 
-Writes `docs/projects.json` in the repo.
+Writes `docs/engineering/projects.json` in the repo.
 
 ### Idempotency
 
@@ -300,9 +300,9 @@ bash scripts/finalize-issue.sh "$N" BUG "Filter bar mirrors visible column order
 
 | Path | Use |
 |------|-----|
-| `docs/reviews/README.md` | Review prefix table, shipped-arch skip list |
-| `docs/CONTEXT.md` | Domain glossary for titles and bodies |
-| `docs/projects.json` | Module Project numbers for finalize script |
-| `docs/projects/README.md` | Project board workflow |
+| `docs/reviews/README.md` | Shipped-architecture skip list (do not re-file) |
+| `docs/foundation/CONTEXT.md` | Domain glossary for titles and bodies |
+| `docs/engineering/projects.json` | Module Project numbers for finalize script |
+| `docs/agents/README.md` | Project board workflow |
 
 If repo override conflicts with this file, **repo wins** for numbering and skip rules; labels and agent modes still follow this file unless repo doc explicitly differs.

@@ -56,8 +56,8 @@ All paths below are under `REPO_ROOT`.
 
 ### Step 1 — Explore existing docs
 
-List what already exists under `docs/` and at repo root (`problem_summary.md`,
-`docs/prd.md`, etc.). If `docs/README.md` already exists and describes this workflow,
+List what already exists under `docs/` and at repo root (`docs/foundation/problem-summary.md`,
+`docs/foundation/prd.md`, etc.). If `docs/README.md` already exists and describes this workflow,
 ask whether to **skip**, **merge**, or **overwrite templates only**.
 
 ### Step 2 — Confirm with user
@@ -67,8 +67,8 @@ Ask once (unless the user said "just scaffold"):
 > "I'll create the standard docs/ layout (problem → solution → PRD → ADRs). Overwrite
 > empty templates only, or also refresh README?"
 
-Default: create missing files; **do not overwrite** non-empty `problem_summary.md`,
-`solution_overview.md`, `CONTEXT.md`, or `prd.md`.
+Default: create missing files; **do not overwrite** non-empty `foundation/problem-summary.md`,
+`foundation/solution-overview.md`, `foundation/CONTEXT.md`, or `foundation/prd.md`.
 
 ### Step 3 — Scaffold
 
@@ -76,35 +76,41 @@ Create directories if missing, then copy from this skill's `templates/` director
 
 ```
 docs/
-├── README.md              ← workflow hub (templates/docs-README.md)
-├── problem_summary.md     ← /problematize output (templates/problem_summary.md)
-├── solution_overview.md   ← /solutionize output (templates/solution_overview.md)
-├── CONTEXT.md             ← /solutionize domain glossary (templates/CONTEXT.md)
-├── prd.md                 ← /get-prd output (templates/prd-stub.md)
-├── adr/
-│   └── README.md          ← when to write ADRs (templates/adr-README.md)
+├── README.md                     ← workflow hub + closed-layout contract (templates/template-readme.md)
+├── foundation/
+│   ├── problem-summary.md        ← /problematize output (templates/template-problem-summary.md)
+│   ├── solution-overview.md      ← /solutionize output (templates/template-solution-overview.md)
+│   ├── CONTEXT.md                ← /solutionize domain glossary (templates/template-context.md)
+│   └── prd.md                    ← /get-prd output (templates/template-prd.md)
+├── reviews/
+│   └── adr/
+│       └── README.md             ← when to write ADRs (templates/template-adr-readme.md)
 └── agents/
-    └── README.md          ← optional per-repo agent pointers (templates/agents-README.md)
+    └── README.md                 ← optional per-repo agent pointers (templates/template-agents-readme.md)
 ```
+
+`engineering/{loops,modules,security,ops}` are homes agents may extend into later
+(module deep dives, `/afk-dev` loop logs, security notes, build/tooling docs) — not
+scaffolded up front since they start empty.
 
 | Output | Template file |
 |--------|---------------|
-| `docs/README.md` | `docs-README.md` |
-| `docs/problem_summary.md` | `problem_summary.md` |
-| `docs/solution_overview.md` | `solution_overview.md` |
-| `docs/CONTEXT.md` | `CONTEXT.md` |
-| `docs/prd.md` | `prd-stub.md` |
-| `docs/adr/README.md` | `adr-README.md` |
-| `docs/agents/README.md` | `agents-README.md` |
-| `AGENTS.md` (optional, repo root) | `AGENTS.md` |
+| `docs/README.md` | `template-readme.md` |
+| `docs/foundation/problem-summary.md` | `template-problem-summary.md` |
+| `docs/foundation/solution-overview.md` | `template-solution-overview.md` |
+| `docs/foundation/CONTEXT.md` | `template-context.md` |
+| `docs/foundation/prd.md` | `template-prd.md` |
+| `docs/reviews/adr/README.md` | `template-adr-readme.md` |
+| `docs/agents/README.md` | `template-agents-readme.md` |
+| `AGENTS.md` (optional, repo root) | `template-agents.md` |
 
 Replace `{{PROJECT_NAME}}` with the repo folder name or user-provided title. The domain
-glossary lives in **`docs/CONTEXT.md`** (filled later by `/solutionize`).
+glossary lives in **`docs/foundation/CONTEXT.md`** (filled later by `/solutionize`).
 
 ### Step 4 — Repo pointer (optional)
 
 If **`AGENTS.md`** is missing at repo root, offer to create a minimal stub from
-`templates/AGENTS.md` pointing to `docs/README.md` (product workflow), the shared skills
+`templates/template-agents.md` pointing to `docs/README.md` (product workflow), the shared skills
 directory (slash commands), and the shared rules directory (debugging/docs rules).
 
 ### Step 5 — Report
@@ -125,15 +131,16 @@ Tell the user:
 | Never write under a directory you haven't confirmed as `REPO_ROOT` (Step 0). | Guessing scatters `docs/` into the wrong folder — ask the user. |
 | Copy from `templates/`; never improvise structure or type content by hand. | The layout must match what downstream skills expect. |
 | Templates are placeholders — never fill them with real product content. | That content is owned by `/problematize` and `/solutionize`; inventing it corrupts their inputs. |
-| Never overwrite a non-empty `problem_summary.md`, `solution_overview.md`, `CONTEXT.md`, or `prd.md` without explicit consent (Step 2). | Silent overwrite destroys prior work; clobbering a customized README needs the Step 1 skip/merge/overwrite ask. |
+| Never overwrite a non-empty `foundation/problem-summary.md`, `foundation/solution-overview.md`, `foundation/CONTEXT.md`, or `foundation/prd.md` without explicit consent (Step 2). | Silent overwrite destroys prior work; clobbering a customized README needs the Step 1 skip/merge/overwrite ask. |
 | Replace every `{{PROJECT_NAME}}` in created files. | A leftover placeholder ships broken docs. |
+| **Docs write-scope.** Create or write docs only at the canonical paths in the docs layout contract (`docs/README.md`): `foundation/`, `reviews/` (+`adr/`), `engineering/{loops,modules,security,ops}`, `agents/`. Never create a new top-level doc folder, a loose file at `docs/` root, or a `-vN` filename variant. Findings and backlog go to GitHub issues via `/create-ticket`, never to a new doc. If nothing fits, ask — do not invent a path. | Scattering files outside the closed layout breaks every downstream skill that reads from fixed paths. |
 
 ## Verification
 
 - [ ] `REPO_ROOT` was resolved (a `.git` directory found, or confirmed by the user).
-- [ ] `docs/README.md`, `docs/problem_summary.md`, `docs/solution_overview.md`,
-  `docs/CONTEXT.md`, and `docs/prd.md` exist (created or pre-existing and preserved).
-- [ ] `docs/adr/README.md` and `docs/agents/README.md` exist.
+- [ ] `docs/README.md`, `docs/foundation/problem-summary.md`, `docs/foundation/solution-overview.md`,
+  `docs/foundation/CONTEXT.md`, and `docs/foundation/prd.md` exist (created or pre-existing and preserved).
+- [ ] `docs/reviews/adr/README.md` and `docs/agents/README.md` exist.
 - [ ] No `{{PROJECT_NAME}}` placeholder remains in any newly written file
   (e.g. `grep -r '{{PROJECT_NAME}}' docs/` returns nothing).
 - [ ] No pre-existing non-empty file was overwritten without consent.

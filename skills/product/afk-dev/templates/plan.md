@@ -1,6 +1,6 @@
 # AFK dev plan template
 
-The coordinator writes one of these to `docs/loops/loop_<YYYY-MM-DD>-<slug>/plan.md` in Step 3,
+The coordinator writes one of these to `docs/engineering/loops/loop_<YYYY-MM-DD>-<slug>/plan.md` in Step 3,
 presents it for approval, and only spawns workers after the user confirms.
 
 ---

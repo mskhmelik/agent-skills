@@ -1,6 +1,6 @@
 # CONTEXT.md Format
 
-Repo output: **`docs/CONTEXT.md`**. Produced by `/solutionize`. Consumed by `/get-prd`, `/unslop-repo`, and dev agents.
+Repo output: **`docs/foundation/CONTEXT.md`**. Produced by `/solutionize`. Consumed by `/get-prd`, `/unslop-repo`, and dev agents.
 
 This is **domain / product vocabulary** — not the architectural lexicon in `unslop-repo/LANGUAGE.md` (module, seam, adapter, depth, etc.).
 
@@ -34,11 +34,11 @@ _Avoid_: bill, payment request
 
 ## During `/solutionize`
 
-- Sharpen terms inline as the conversation crystallizes — update `docs/CONTEXT.md` when saving outputs.
+- Sharpen terms inline as the conversation crystallizes — update `docs/foundation/CONTEXT.md` when saving outputs.
 - Do not duplicate the full glossary inside `solution_overview.md`; link to `CONTEXT.md` instead.
 
 ## Single vs multi-area repos
 
-**Most repos:** one `docs/CONTEXT.md`.
+**Most repos:** one `docs/foundation/CONTEXT.md`.
 
 **Multiple bounded areas:** optional `docs/CONTEXT-MAP.md` listing per-area context files and relationships. Only split when terms genuinely conflict across areas.

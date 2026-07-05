@@ -1,6 +1,6 @@
 # {{PROJECT_NAME}} — Context
 
-*Run `/solutionize` to replace this template. Canonical product terms live here — not in `solution_overview.md`.*
+*Run `/solutionize` to replace this template. Canonical product terms live here — not in `solution-overview.md`.*
 
 ---
 

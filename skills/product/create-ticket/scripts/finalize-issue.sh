@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Rename issue to PREFIX-N:title and add to module GitHub Project.
 # Usage: finalize-issue.sh ISSUE_NUM PREFIX "Short title" module:label
-# Env: GITHUB_REPO, REPO_ROOT (git repo with docs/projects.json)
+# Env: GITHUB_REPO, REPO_ROOT (git repo with docs/engineering/projects.json)
 set -euo pipefail
 
 if ! command -v gh >/dev/null 2>&1; then
@@ -37,9 +37,9 @@ if [[ -z "$REPO_ROOT" ]]; then
   REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
 fi
 
-PROJECTS_JSON="${PROJECTS_JSON:-${REPO_ROOT}/docs/projects.json}"
+PROJECTS_JSON="${PROJECTS_JSON:-${REPO_ROOT}/docs/engineering/projects.json}"
 if [[ ! -f "$PROJECTS_JSON" ]]; then
-  echo "No docs/projects.json at $PROJECTS_JSON — skip project add (run ensure-projects.sh)." >&2
+  echo "No docs/engineering/projects.json at $PROJECTS_JSON — skip project add (run ensure-projects.sh)." >&2
   exit 0
 fi
 

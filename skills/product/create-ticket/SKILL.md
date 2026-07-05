@@ -57,8 +57,8 @@ with GitHub remote or `gh auth login`. Stop.
 
 Read if present (do not invent):
 
-- `docs/reviews/README.md` — review prefix table, shipped-arch skip list (GitHub is tracker; no backlog markdown)
-- `docs/CONTEXT.md` — domain language
+- `docs/reviews/README.md` — shipped-architecture skip list, do not re-file (prefix taxonomy lives in this CONVENTIONS.md; repo tracker facts in `docs/agents/README.md`)
+- `docs/foundation/CONTEXT.md` — domain language
 - Conversation context or `$ARGUMENTS` — source doc, backlog row, QA notes
 
 ### Step 2 — Classify track and prefix
@@ -207,6 +207,7 @@ above. Confirm no intended issue was silently dropped.
 | Run `ensure-labels.sh` every time. | Missing labels make `gh issue create` fail mid-batch. |
 | Use the canonical `priority:*` set; never `area:*`, `priority:critical/high/med/low`, or `needs-triage` on an agent-ready issue. | Wrong labels break the taxonomy. |
 | Don't close/modify parent issues while filing children; don't re-file an arch item marked shipped in `docs/reviews/README.md`. | Out of scope for filing. |
+| **Docs write-scope.** Create or write docs only at the canonical paths in the docs layout contract (`docs/README.md`): `foundation/`, `reviews/` (+`adr/`), `engineering/{loops,modules,security,ops}`, `agents/`. Never create a new top-level doc folder, a loose file at `docs/` root, or a `-vN` filename variant. Findings and backlog go to GitHub issues via `/create-ticket`, never to a new doc. If nothing fits, ask — do not invent a path. | Prevents doc scatter; this skill's whole purpose is filing findings as issues, not docs. |
 
 ## Verification
 
@@ -253,8 +254,8 @@ Delegate all `gh issue create` mechanics here.
 **`/unslop-repo` Step 4:** After user approves deepening candidates from the architecture
 review, invoke this skill. Use **Review track** with `DEBT-`/`ARCH-`/`TEST-`/`SPIKE-`
 per candidate type. Bodies describe behaviors and seams (domain language from
-`docs/CONTEXT.md`) — no file paths. Ref: `docs/modules/module_*.md` or ADR if written
-in design loop.
+`docs/foundation/CONTEXT.md`) — no file paths. Ref: `docs/engineering/modules/*.md` or ADR
+if written in design loop.
 
 **`/diagnose`:** After fix plan is ready, hand off with **Bug triage** template if user
 wants a tracked issue.

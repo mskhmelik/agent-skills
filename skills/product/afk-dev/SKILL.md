@@ -189,7 +189,8 @@ total/concurrent caps prevent further spawns this cycle:
      what to look for, not "run the tests" (the worker already did that)
 2. Present this summary to the user directly in chat (not just the file).
    **Stop here for merge.** Per CONVENTIONS.md merge policy, do not merge until
-   the user confirms manual QA passed and explicitly says merge is OK.
+   the user confirms manual QA passed and explicitly says merge is OK. Suggest
+   running `/review-code` on each completed PR before the manual QA pass.
 3. If every in-scope issue for this cycle is now completed, blocked, or
    deferred (i.e., nothing left to spawn), end your final message with the
    literal string `<promise>AFK CYCLE COMPLETE</promise>` — this is the

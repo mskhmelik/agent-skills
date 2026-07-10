@@ -1,10 +1,10 @@
 ---
 name: create-ticket
 description: >
-  File one or more GitHub issues with unified prefix taxonomy, PRD-aligned labels,
+  File one or more GitHub issues with unified prefix taxonomy, spec-aligned labels,
   durable bodies, and HITL/AFK agent mode. Use for /create-ticket, filing review
   backlogs, QA findings, /unslop-repo architecture candidates, /diagnose bug filings,
-  or when /prd-to-issues delegates issue creation. Never batch-create without approval.
+  or when /to-tickets delegates issue creation. Never batch-create without approval.
 argument-hint: "[source doc path, backlog row, or issue draft]"
 user-invocable: true
 allowed-tools: [Bash, Read, Write, AskUserQuestion]
@@ -23,7 +23,7 @@ Canonical GitHub **issue** filing layer: naming, labels, durable bodies, `gh` cr
 idempotency. It turns approved drafts (slices, deepening candidates, QA findings, bug
 fix plans) into well-formed, deduplicated GitHub issues with consistent taxonomy.
 
-**Does not own:** PRD slicing (`/prd-to-issues`), architecture review (`/unslop-repo`),
+**Does not own:** spec slicing (`/to-tickets`), architecture review (`/unslop-repo`),
 bug investigation (`/diagnose`). Those skills hand off here for filing.
 
 **Conventions:** [CONVENTIONS.md](CONVENTIONS.md) is the filing-rules source of truth —
@@ -32,11 +32,11 @@ read before drafting any issue.
 ## When to Use
 
 - **Use when:** `/create-ticket`; filing a review/QA backlog; an approved `/unslop-repo`
-  deepening candidate; a post-`/diagnose` bug needs a tracked issue; `/prd-to-issues`
+  deepening candidate; a post-`/diagnose` bug needs a tracked issue; `/to-tickets`
   delegates `gh issue create` mechanics.
 - **Best after:** the upstream skill has produced an approved draft (slice, candidate,
   fix plan) or you have a concrete backlog row / source doc.
-- **Do NOT use when:** you still need PRD slicing (→ `/prd-to-issues`), architecture
+- **Do NOT use when:** you still need spec slicing (→ `/to-tickets`), architecture
   review (→ `/unslop-repo`), or bug root-causing (→ `/diagnose`). Do not use to close
   or modify existing parent issues.
 
@@ -58,7 +58,7 @@ with GitHub remote or `gh auth login`. Stop.
 Read if present (do not invent):
 
 - `docs/reviews/README.md` — shipped-architecture skip list, do not re-file (prefix taxonomy lives in this CONVENTIONS.md; repo tracker facts in `docs/agents/README.md`)
-- `docs/foundation/CONTEXT.md` — domain language
+- `docs/foundation/DICTIONARY.md` — domain language
 - Conversation context or `$ARGUMENTS` — source doc, backlog row, QA notes
 
 ### Step 2 — Classify track and prefix
@@ -67,7 +67,7 @@ Draft **short title** and **prefix** only — the number `N` comes from GitHub a
 
 | Source | Track | Prefix | Final title (after finalize) |
 |--------|-------|--------|------------------------------|
-| `/prd-to-issues` approved slice | **Feature** | `SLICE` | `SLICE-{N}: {short title}` |
+| `/to-tickets` approved slice | **Feature** | `SLICE` | `SLICE-{N}: {short title}` |
 | `/unslop-repo` approved deepening | **Review** | see map | `{PREFIX}-{N}: {short title}` |
 | E2E review / backlog markdown | **Review** | see map | `{PREFIX}-{N}: {short title}` |
 | Manual QA / single triage | **Review** | see map | `{PREFIX}-{N}: {short title}` |
@@ -80,7 +80,7 @@ Draft **short title** and **prefix** only — the number `N` comes from GitHub a
 | Seam / module refactor | `DEBT` or `ARCH` | `type:refactor`, `module:*`, `priority:should`, `agent:hitl` |
 | Testability gap | `TEST` | `type:test`, `module:*`, `priority:should`, `agent:hitl` |
 | Decision / spike before refactor | `SPIKE` | `type:spike`, `module:*`, `priority:should`, `agent:hitl` |
-| New user-facing capability (PRD scope) | — | Hand back to `/prd-to-issues` (Feature track), not Review |
+| New user-facing capability (never built) | — | Hand back to the feature lane (`/to-spec` → `/to-tickets`), not Review |
 
 Do **not** scan for max `NN` per prefix — `N` is always the GitHub issue number.
 
@@ -199,7 +199,7 @@ above. Confirm no intended issue was silently dropped.
 | Rule | Why / violation looks like |
 |---|---|
 | Never batch-create (2+ issues) without an approved plan (Step 4). | Filing before approval bypasses the human gate. |
-| A never-built capability is a feature (`SLICE-`, `type:slice`), not a `BUG-`. | `BUG-` is only for shipped behavior that regressed; "it should work" or "violates the promise" is still missing scope. A new unslop capability hands back to `/prd-to-issues`, not Review. |
+| A never-built capability is a feature (`SLICE-`, `type:slice`), not a `BUG-`. | `BUG-` is only for shipped behavior that regressed; "it should work" or "violates the promise" is still missing scope. A new unslop capability hands back to `/to-tickets`, not Review. |
 | Idempotency is exact-title match (Step 5). | Near-matches still file; only skip the exact matches you logged. |
 | Bodies use behaviors/seams, never file paths or line numbers. | Paths rot (allowed only in decision-encoding snippets). |
 | Acceptance criteria must trace to a source doc or investigation. | Never fabricate criteria to fill the template. |
@@ -248,13 +248,13 @@ these files mid-session.
 
 ## Called by other skills
 
-**`/prd-to-issues` Step 5:** Use **Feature track** + label mapping from CONVENTIONS.md.
+**`/to-tickets` Step 4:** Use **Feature track** + label mapping from CONVENTIONS.md.
 Delegate all `gh issue create` mechanics here.
 
 **`/unslop-repo` Step 4:** After user approves deepening candidates from the architecture
 review, invoke this skill. Use **Review track** with `DEBT-`/`ARCH-`/`TEST-`/`SPIKE-`
 per candidate type. Bodies describe behaviors and seams (domain language from
-`docs/foundation/CONTEXT.md`) — no file paths. Ref: `docs/engineering/modules/*.md` or ADR
+`docs/foundation/DICTIONARY.md`) — no file paths. Ref: `docs/engineering/modules/*.md` or ADR
 if written in design loop.
 
 **`/diagnose`:** After fix plan is ready, hand off with **Bug triage** template if user

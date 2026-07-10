@@ -1,7 +1,7 @@
 # create-ticket conventions — single source of truth
 
 Naming, labels, body templates, PR conventions, and filing rules for GitHub issues.
-Referenced by `/create-ticket`, `/prd-to-issues` (Step 5), `/unslop-repo` (Step 4), and repo docs.
+Referenced by `/create-ticket`, `/to-tickets` (Step 4), `/unslop-repo` (Step 4), and repo docs.
 
 **Terminology:** Call the artifact an **issue** in titles and bodies. The skill name `/create-ticket` is the command only.
 
@@ -25,10 +25,10 @@ Do **not** scan titles for max `NN` per prefix — the number is always the GitH
 
 | Track | When | Title format | Example |
 |-------|------|--------------|---------|
-| **Feature** | PRD vertical slices (`/prd-to-issues`) | `{SLICE}-{N}: {short title}` | `SLICE-290: CSV import` |
+| **Feature** | Spec vertical slices (`/to-tickets`) | `{SLICE}-{N}: {short title}` | `SLICE-290: CSV import` |
 | **Review** | E2E review, QA, security, debt, tests, triage, **`/unslop-repo`** | `{PREFIX}-{N}: {short title}` | `DEBT-285: Scrollbar fade styling` |
 
-PRD slice order (`Slice 11`, etc.) belongs in the issue body **Context** only — not in the title.
+Spec slice order (`Slice 11`, etc.) belongs in the issue body **Context** only — not in the title.
 
 ---
 
@@ -112,7 +112,7 @@ Aligns with `/afk-dev` — it reads **labels**, not body text.
 | `type:security` | Security hardening |
 | `type:refactor` | DEBT / structural quality |
 | `type:test` | Test / coverage |
-| `type:slice` | PRD vertical slice |
+| `type:slice` | Spec vertical slice |
 | `type:spike` | Spike / decision-only |
 | `module:foundation` | Sync, auth, core, security |
 | `module:money` | Money module |
@@ -138,7 +138,7 @@ Do **not** use parallel schemes (`area:*`, `priority:critical|high|med|low`).
 | Security (should) | `type:security`, `module:foundation`, `priority:should`, `agent:hitl` |
 | DEBT | `type:refactor`, `module:money` or `module:foundation`, `priority:should`, `agent:hitl` |
 | TEST | `type:test`, `module:*`, `priority:should`, `agent:hitl` |
-| PRD slice | `type:slice`, `module:*`, `priority:must` or `priority:should`, `agent:hitl` or `agent:afk` |
+| Spec slice | `type:slice`, `module:*`, `priority:must` or `priority:should`, `agent:hitl` or `agent:afk` |
 
 ---
 
@@ -161,7 +161,7 @@ Issues should still make sense after major refactors.
 
 - Describe **end-to-end behaviors**, not layer-by-layer tasks
 - **No file paths or line numbers** (exception: prototype snippets encoding a decision — state machine, schema shape)
-- Use project domain language (`docs/foundation/CONTEXT.md` if present)
+- Use project domain language (`docs/foundation/DICTIONARY.md` if present)
 - **Reproduction steps** mandatory for bugs; ask if unknown
 - **30-second readability** — concise acceptance criteria
 - **Honest Blocked by** — `None — can start immediately` when true
@@ -173,11 +173,11 @@ Issues should still make sense after major refactors.
 
 ## Body templates
 
-### Feature track (PRD slices)
+### Feature track (spec slices)
 
 ```markdown
 ## Context
-> From PRD — [relevant user story or section; include PRD slice number if applicable]
+> From spec — [relevant user story ID; link the parent spec issue if applicable]
 
 ## Acceptance Criteria
 - [ ] …
@@ -301,7 +301,7 @@ bash scripts/finalize-issue.sh "$N" BUG "Filter bar mirrors visible column order
 | Path | Use |
 |------|-----|
 | `docs/reviews/README.md` | Shipped-architecture skip list (do not re-file) |
-| `docs/foundation/CONTEXT.md` | Domain glossary for titles and bodies |
+| `docs/foundation/DICTIONARY.md` | Domain glossary for titles and bodies |
 | `docs/engineering/projects.json` | Module Project numbers for finalize script |
 | `docs/agents/README.md` | Project board workflow |
 

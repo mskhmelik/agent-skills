@@ -25,7 +25,7 @@ Implements one unit of work — a GitHub issue or a described bug — using a st
 red-green-refactor TDD loop. Each behavior gets a test that fails first (RED), then
 minimal code to pass (GREEN), then refactoring while staying green. The issue's
 acceptance criteria are the test specification, so there is no planning from scratch.
-Sits at the implementation stage: it consumes issues from `/prd-to-issues` (or a bug
+Sits at the implementation stage: it consumes issues from `/to-tickets` (or a bug
 report, optionally after `/diagnose`) and ends by opening a PR.
 
 ## When to Use
@@ -33,8 +33,9 @@ report, optionally after `/diagnose`) and ends by opening a PR.
 - **Use when:** invoked as `/tdd` or `/tdd <N>`; implementing a GitHub issue test-first;
   fixing a bug/regression with a guard test (bug-fix mode, Step 0); the user says
   "red-green-refactor", "test-first", or wants integration tests.
-- **Best after:** `/prd-to-issues` (issue exists) or `/diagnose` (feedback loop built
-  for a bug). Read `docs/foundation/prd.md` and `docs/README.md` when present to stay in scope.
+- **Best after:** `/to-tickets` (issue exists) or `/diagnose` (feedback loop built
+  for a bug). Read `docs/foundation/OVERVIEW.md` and the issue's parent spec (linked
+  `spec`-labeled issue) when present to stay in scope.
 - **Do NOT use when:** the work has no observable behavior to test (pure config,
   docs); the user wants exploratory spikes; or no acceptance criteria exist and the
   user can't describe behaviors — gather those first.
@@ -203,7 +204,7 @@ EOF
 )"
 ```
 
-Report the PR URL to the user.
+Report the PR URL to the user and suggest `/review-code` on the PR before merge.
 
 ---
 

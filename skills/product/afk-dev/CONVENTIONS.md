@@ -7,7 +7,7 @@ change, change it once, here.
 
 ## Label taxonomy
 
-Aligns with the `Mode: HITL | AFK` notes that `/prd-to-issues` already writes into
+Aligns with the `Mode: HITL | AFK` notes that `/to-tickets` already writes into
 issue bodies. `/afk-dev` reads **labels**, not body text, so issues must carry one of:
 
 | Label | Meaning |

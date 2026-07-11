@@ -6,8 +6,8 @@ description: >
   docs/foundation/OVERVIEW.md, the single human-readable product doc. Use when the user
   types /ask-about-problems, says "understand the problem before building", "let's
   investigate the problem first", or describes a problem and jumps straight to solutions
-  (pause and suggest this first). Formerly /problematize. Raw domain terms surfaced here
-  seed /ask-about-solutions → docs/foundation/DICTIONARY.md.
+  (pause and suggest this first). Raw domain terms surfaced here seed
+  /ask-about-solutions → docs/foundation/DICTIONARY.md.
 argument-hint: "[topic, optional]"
 user-invocable: true
 allowed-tools: [Glob, Read, Write, AskUserQuestion]

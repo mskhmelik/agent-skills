@@ -6,7 +6,7 @@ description: >
   round with the user (granularity, blocking edges, merge/split), never files without
   approval. Handles wide mechanical refactors via expand–contract instead of forcing
   vertical slices. Use when the user types /to-tickets [spec-issue-number], says "turn
-  the spec into tickets", or "break this into issues". Formerly /prd-to-issues.
+  the spec into tickets", or "break this into issues".
 argument-hint: "[spec-issue-number]"
 user-invocable: true
 allowed-tools: [Bash, Read, AskUserQuestion]

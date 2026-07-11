@@ -7,7 +7,7 @@ description: >
   re-interview: at most 3 gap questions plus one seams checkpoint. The user never
   reviews the spec; it exists for /to-tickets. Use when the user types /to-spec, says
   "write the spec", "generate the PRD", or is ready to commit scope after
-  /ask-about-solutions. Formerly /get-prd (which wrote docs/foundation/prd.md — retired).
+  /ask-about-solutions. Specs are GitHub issues, never a repo prd.md.
 user-invocable: true
 allowed-tools: [Bash, Glob, Read, Write, AskUserQuestion]
 ---

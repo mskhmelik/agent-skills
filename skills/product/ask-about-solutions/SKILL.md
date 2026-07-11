@@ -7,7 +7,7 @@ description: >
   workflows, decisions) plus docs/foundation/DICTIONARY.md (canonical domain terms) and
   sparing ADRs. Use when the user types /ask-about-solutions, says "let's find
   solutions", "now let's solve it", or wants to move from problem to solution design.
-  Formerly /solutionize. Best after /ask-about-problems; /to-spec consumes the output.
+  Best after /ask-about-problems; /to-spec consumes the output.
 argument-hint: "[topic, optional]"
 user-invocable: true
 allowed-tools: [Glob, Read, Write, AskUserQuestion]

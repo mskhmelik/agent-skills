@@ -1,6 +1,6 @@
 # Debugging (all repos)
 
-Companion to the **`/diagnose`** skill. Repo-specific seams belong in `docs/agents/` or module docs.
+Companion to the **`/diagnose`** skill. Repo-specific seams belong in root `AGENTS.md` or `docs/engineering/modules/`.
 
 ## Mandatory order for bugs
 

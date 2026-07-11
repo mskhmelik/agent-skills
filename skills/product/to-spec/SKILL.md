@@ -135,7 +135,7 @@ Report: spec issue URL, the 3-line digest, and that `/to-tickets <issue-number>`
 | Rule | Why / violation looks like |
 |---|---|
 | Synthesis only: max 3 gap questions + 1 seams checkpoint. | A 5th question means you're re-interviewing — that depth belongs in /ask-about-solutions. |
-| The spec is never shown for review. | The user reads OVERVIEW.md; the spec is for agents. Presenting a draft for sign-off is the retired /get-prd behavior. |
+| The spec is never shown for review. | The user reads OVERVIEW.md; the spec is for agents. Presenting a draft for sign-off is the wrong model — the spec is not a doc the user approves. |
 | Every substantive line traces to an input or an answer. | Inventing a "sensible" story or requirement breaks traceability — weak executors will build it. |
 | The spec carries no open questions. | Unresolved items live in OVERVIEW.md's Open questions; a spec with open questions produces undecidable tickets. |
 | DICTIONARY.md terms only; respect ADRs. | Synonyms and re-litigated decisions poison every downstream ticket. |

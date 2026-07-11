@@ -1,41 +1,61 @@
 # Documentation workflow (all repos)
 
-Keeps agents and humans aligned. **Problem → solution → PRD → issues → code.**
+Keeps agents and humans aligned. **Two lanes, one gateway** — the lane is chosen by one
+question: *was this capability ever built?*
+
+- **Never built → Feature lane:** interview → spec → tickets.
+- **Built and now broken/lacking → Maintenance lane:** straight to a ticket (history
+  already made the decisions).
 
 ## Standard layout
 
-Created by **`/init-docs`**:
+Created by **`/init-docs`**. Repo docs are **human-readable only** — specs and tickets
+live on GitHub, never as repo files:
 
 ```
 docs/
-├── README.md              ← start here
-├── problem_summary.md     ← /problematize
-├── solution_overview.md   ← /solutionize
-├── prd.md                 ← /get-prd (committed scope)
-├── adr/
-├── agents/                ← repo-specific agent notes
-└── manual_qa_*.md         ← HITL checklists when needed
+├── README.md                     ← the flow + closed-layout contract; start here
+├── foundation/
+│   ├── OVERVIEW.md               ← THE human doc: problem → system idea & components → workflows → decisions
+│   └── DICTIONARY.md             ← canonical domain terms
+├── reviews/
+│   └── adr/                      ← one-paragraph decision records (agent-facing)
+├── engineering/{loops,modules,security,ops}   ← extended into lazily
+└── agents/README.md              ← repo-specific agent notes (tracker, launch config)
 ```
 
 ## Rules during development
 
-1. **Read `docs/prd.md`** before non-trivial changes. If the work isn't traceable to PRD or an issue, stop — update docs or file an issue first.
-2. **Open questions stay out of the PRD** — they belong in problem or solution docs (`/get-prd` enforces this).
-3. **Do not re-interview** problem space during implementation — read the frozen docs.
-4. **Module deep dives** go in `docs/modules/`; link from PRD, don't duplicate scope.
-5. **ADRs** only for hard-to-reverse, surprising, trade-off decisions (see `docs/adr/README.md`).
+1. **Read `docs/foundation/OVERVIEW.md`** (and the issue's parent `spec` issue) before
+   non-trivial changes. If the work isn't traceable to OVERVIEW.md or a spec/ticket,
+   stop — route through the correct lane first.
+2. **Specs are agent-facing GitHub issues** (label `spec`), produced by `/to-spec`. The
+   user reads OVERVIEW.md, not the spec.
+3. **Open questions** live in OVERVIEW.md, never in a spec.
+4. **Do not re-interview** the problem/solution during implementation — read the docs.
+5. **Module deep dives** go in `docs/engineering/modules/`; link, don't duplicate scope.
+6. **ADRs** only for hard-to-reverse, surprising, real-trade-off decisions
+   (`docs/reviews/adr/`); the human-readable line lives in OVERVIEW.md Decisions.
 
-## Skill chain
+## Skill chains
 
 ```
-/init-docs  →  /problematize  →  /solutionize  →  /get-prd  →  /prd-to-issues  →  /tdd
-                                                                              ↘
-                                                                    /diagnose (bugs)
+Feature lane:
+  /init-docs → /ask-about-problems → /ask-about-solutions → /to-spec → /to-tickets
+             → /create-ticket → /tdd | /afk-dev → /review-code → manual QA → merge
+
+Maintenance lane:
+  /diagnose (bug)  ┐
+  manual QA finding ├→ /create-ticket → /tdd → /review-code → merge
+  /unslop-repo      ┘
 ```
+
+`/create-ticket` is the **only** skill that runs `gh issue create` — both lanes converge
+on it.
 
 ## New repo checklist
 
 - [ ] Run `/init-docs`
-- [ ] Fill problem → solution → PRD before large builds
+- [ ] Fill OVERVIEW.md (problem → solution) via the interviews before large builds
 - [ ] Add `docs/agents/README.md` with issue tracker and launch notes
 - [ ] Wire Cursor: symlink from `5_projects/ai/` — [README Setup](https://github.com/mskhmelik/agent-skills#setup-once-per-machine) (one-liner loop)

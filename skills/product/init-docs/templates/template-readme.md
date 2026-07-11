@@ -3,47 +3,52 @@
 This folder keeps product intent and dev agents aligned. **Read before expanding scope.**
 The layout below is **closed** — see the rule at the bottom.
 
-## The flow — two lanes, one gateway
+## The flow — Plan, Implement, Review, Merge (+ Debug loop)
 
-Every piece of work enters through one of two lanes, decided by a single question:
-**was this capability ever built?**
-
-- **Never built → Feature lane.** Decisions still need making: interview → spec → tickets.
-- **Built and now broken/lacking → Maintenance lane.** History already made the decisions
-  ("it used to do X, now does Y" *is* the spec) → straight to a ticket.
-
-Both lanes converge on `/create-ticket` — the **only** skill that runs `gh issue create` —
-and on the same dev loop.
+Work moves through five stages. Everything files through `/create-ticket` — the **only**
+skill that runs `gh issue create` — with a ticket prefix (`SLICE-` for feature slices,
+`DEBT-`/`ARCH-`/`TEST-` for refactors, `BUG-` for defects). Manual QA and `/diagnose` form
+an iterative **Debug** loop; a diagnosed defect files a `BUG-` ticket back into Plan.
 
 ```mermaid
-flowchart TD
-    subgraph FL ["FEATURE LANE — never-built capability"]
-        AAP["/ask-about-problems"] --> AAS["/ask-about-solutions"]
-        AAS -- writes --> OV["OVERVIEW.md + DICTIONARY.md<br/>(the docs you read)"]
-        AAS --> TS["/to-spec<br/>(≤3 gap Qs + seams checkpoint)"]
-        TS -- publishes --> SPEC["Spec issue (label: spec)<br/>agent-facing — never reviewed"]
-        SPEC --> TT["/to-tickets<br/>(one quiz: granularity + edges)"]
-    end
-
-    subgraph ML ["MAINTENANCE LANE — shipped behavior"]
-        QA["Manual QA finding"]
-        DG["/diagnose — bug root-caused"]
-        UR["/unslop-repo — approved deepening"]
-    end
-
-    QA -- "regressed / defect" --> CT
-    QA -- "never built? → feature lane" --> AAS
-    DG --> CT
-    UR --> CT
-    TT --> CT["/create-ticket<br/>sole gh gateway"]
-
-    CT --> ISS["GitHub issues<br/>SLICE / BUG / DEBT / TEST / SPIKE<br/>blocked-by wired · agent:hitl|afk"]
-    ISS --> TDD["/tdd — one issue"]
-    ISS --> AFK["/afk-dev — cycle"]
-    TDD --> RC["/review-code<br/>standards + spec fidelity"]
-    AFK --> RC
-    RC --> HM["your manual QA → merge"]
+flowchart TB
+  subgraph plan [Plan]
+    aap["/ask-about-problems"] --> aas["/ask-about-solutions"]
+    aas --> spec["/to-spec"]
+    spec --> tix["/to-tickets"]
+    unslop["/unslop-repo"]
+    ct["/create-ticket"]
+    tix -->|"SLICE-"| ct
+    unslop -->|"DEBT- ARCH- TEST-"| ct
+  end
+  issues["GitHub Issues"]
+  subgraph implement [Implement]
+    tdd["/tdd"]
+    afk["/afk-dev"]
+  end
+  subgraph review [Review]
+    rc["/review-code"]
+  end
+  subgraph debug [Debug]
+    dg["/diagnose"]
+  end
+  subgraph merge [Merge]
+    qa["Manual QA"] --> mg["merged"]
+  end
+  ct --> issues
+  issues --> tdd
+  issues --> afk
+  tdd --> rc
+  afk --> rc
+  rc --> qa
+  qa <--> dg
+  dg -->|"BUG-"| ct
 ```
+
+**Two entry points into Plan**, decided by one question — *was this capability ever built?*
+The *feature lane* (never built) makes decisions via interview → spec → tickets; the
+*maintenance lane* (shipped behavior) goes straight to a ticket, since history already made
+the decisions ("it used to do X, now does Y" *is* the spec).
 
 ## Workflow (in order)
 

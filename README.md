@@ -10,7 +10,6 @@ Inspired and adopted from [mattpocock/skills](https://github.com/mattpocock/skil
 agent-skills/
 ├── README.md
 ├── LICENSE                       ← MIT
-├── .claude/CLAUDE.md             ← security rules for skill development (no PII, private-skill checklist)
 ├── .github/workflows/            ← CI: validates skills against the anatomy on push/PR
 ├── docs/
 │   ├── skill-anatomy.md          ← the SKILL.md contract every skill follows
@@ -49,72 +48,57 @@ Private skills live under `skills/private/` but are listed in `.git/info/exclude
 
 ## Product workflow (any repo)
 
-Run **`/init-docs`** once to scaffold `docs/`. Then:
+**Two lanes, one gateway** — the lane is decided by one question: *was this capability ever built?* Run **`/init-docs`** once to scaffold `docs/`, then:
 
 ```mermaid
 flowchart TB
-  subgraph greenfield [Greenfield product path]
-    initDocs["/init-docs"]
-    problematize["/problematize"]
-    solutionize["/solutionize"]
-    getPrd["/get-prd"]
-    prdToIssues["/prd-to-issues"]
-    initDocs --> problematize --> solutionize --> getPrd --> prdToIssues
+  subgraph feature [Feature lane: never-built capability]
+    aap["/ask-about-problems"] --> aas["/ask-about-solutions"]
+    aas --> toSpec["/to-spec<br/>spec issue"]
+    toSpec --> toTickets["/to-tickets"]
   end
 
-  subgraph filing [Issue filing hub]
-    createTicket["/create-ticket"]
-  end
-
-  subgraph build [Build and ship]
-    tdd["/tdd"]
-    afkDev["/afk-dev"]
-  end
-
-  prdToIssues -->|"Feature track: SLICE-N"| createTicket
-
-  subgraph intake [Other intake paths]
-    unslop["/unslop-repo"]
+  subgraph maint [Maintenance lane: shipped behavior]
     diagnose["/diagnose"]
-    reviewQA["Review / QA / backlog"]
+    unslop["/unslop-repo"]
+    qa["Manual QA finding"]
   end
 
+  toTickets --> createTicket["/create-ticket<br/>sole gh gateway"]
+  diagnose -->|"BUG-"| createTicket
   unslop -->|"DEBT- ARCH- TEST-"| createTicket
-  diagnose -->|"BUG- triage"| createTicket
-  reviewQA -->|"BUG- SEC- DEBT-"| createTicket
+  qa -->|"BUG-"| createTicket
+  qa -.->|"never built? → feature lane"| aas
 
   createTicket --> ghIssues["GitHub Issues"]
-  ghIssues --> tdd
-  ghIssues --> afkDev
-
-  unslop -.->|"new PRD feature"| prdToIssues
+  ghIssues --> tdd["/tdd"]
+  ghIssues --> afkDev["/afk-dev"]
+  tdd --> review["/review-code"]
+  afkDev --> review
+  review --> merge["manual QA → merge"]
 ```
 
-**Reading the diagram**
+The docs the user reads are **`docs/foundation/OVERVIEW.md`** (problem → system idea & key components → key user workflows → decisions) and **`docs/foundation/DICTIONARY.md`** (canonical terms). Specs and tickets are GitHub issues, never repo files.
 
-| Path | Skills | Issue style |
-|------|--------|-------------|
-| New product | `/init-docs` → … → `/prd-to-issues` → `/create-ticket` | Feature track (`SLICE-{N}: …`) |
-| Architecture review | `/unslop-repo` → `/create-ticket` | Review track (`DEBT-`, `ARCH-`, `TEST-`) |
-| Bugs | `/diagnose` → `/create-ticket` (optional) | `BUG-` + triage body |
-| Review / QA | `/create-ticket` | `BUG-`, `SEC-`, `DEBT-`, … |
-| Execute | `/tdd` (one issue) or `/afk-dev` (batch `agent:hitl`) | — |
-
-Filing rules: [create-ticket/CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)
+| Lane | Trigger | Skills |
+|------|---------|--------|
+| **Feature** | New capability, never built | `/ask-about-problems` → `/ask-about-solutions` → `/to-spec` → `/to-tickets` → `/create-ticket` |
+| **Maintenance** | Shipped behavior broken / regressed | `/diagnose` or a QA finding → `/create-ticket` (`BUG-`) |
+| **Architecture** | Periodic hygiene | `/unslop-repo` → `/create-ticket` (`DEBT-`/`ARCH-`/`TEST-`) |
+| **Build** | Any filed issue | `/tdd` (one) or `/afk-dev` (batch `agent:hitl`) → `/review-code` → merge |
 
 | Step | Skill | Output |
 |------|-------|--------|
-| 1 | `/problematize` | `docs/problem_summary.md` (+ raw terms) |
-| 2 | `/solutionize` | `docs/solution_overview.md` + **`docs/CONTEXT.md`** |
-| 3 | `/get-prd` | `docs/prd.md` (Glossary from CONTEXT) |
-| 4 | `/prd-to-issues` | GitHub issues (vertical slices) — filing via `/create-ticket` |
-| 4b | `/create-ticket` | Canonical issue filing (prefixes, labels, HITL/AFK) — review backlog, QA, triage, **unslop candidates** |
-| 5 | `/tdd` | Code + tests |
-| 6 | `/afk-dev` | Coordinated multi-agent cycle on `agent:hitl` issues — plan, spawn worker agents on branches, summary + manual QA |
+| 1 | `/ask-about-problems` | `docs/foundation/OVERVIEW.md` → Problem section |
+| 2 | `/ask-about-solutions` | OVERVIEW.md solution sections + **`docs/foundation/DICTIONARY.md`** (+ sparing ADRs) |
+| 3 | `/to-spec` | Spec issue on GitHub (label `spec`) — agent-facing, not reviewed by you |
+| 4 | `/to-tickets` | SLICE tickets, blocked-by wired, filed via `/create-ticket` |
+| 5 | `/tdd` / `/afk-dev` | Code + tests → PR |
+| 6 | `/review-code` | Two-axis review (standards + spec fidelity) before merge |
 | — | `/diagnose` | Bugs — feedback loop first, regression test |
-| — | `/unslop-repo` | Architecture hygiene (periodic) |
+| — | `/unslop-repo` | Architecture hygiene (periodic) → `/create-ticket` |
 
-After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT + PRD, proposes deepenings, may write `docs/modules/` and ADRs, then files approved candidates via **`/create-ticket`** (`DEBT-`/`ARCH-`/…) → **`/tdd`** or **`/afk-dev`**. New PRD-scope features go through **`/prd-to-issues`** instead.
+`/create-ticket` is the **only** skill that runs `gh issue create` — both lanes converge on it. Filing rules: [create-ticket/CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)
 
 ---
 
@@ -124,13 +108,14 @@ After shipping, run **`/unslop-repo`** when entropy builds up. It reads CONTEXT 
 
 | Skill | Role |
 |-------|------|
-| [init-docs](skills/product/init-docs/SKILL.md) | Scaffold the `docs/` layout |
-| [problematize](skills/product/problematize/SKILL.md) | (1/4) Mom Test problem investigation |
-| [solutionize](skills/product/solutionize/SKILL.md) | (2/4) Solution stress-test → `CONTEXT.md` (update-safe) |
-| [get-prd](skills/product/get-prd/SKILL.md) | (3/4) Synthesize `docs/prd.md` |
-| [prd-to-issues](skills/product/prd-to-issues/SKILL.md) | (4/4) Vertical-slice GitHub issues |
-| [create-ticket](skills/product/create-ticket/SKILL.md) | Canonical issue filing — prefixes, labels, HITL/AFK ([CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)) |
+| [init-docs](skills/product/init-docs/SKILL.md) | Scaffold the `docs/` layout (OVERVIEW + DICTIONARY + two-lane README) |
+| [ask-about-problems](skills/product/ask-about-problems/SKILL.md) | (feature 1) Mom Test problem interview → OVERVIEW.md Problem |
+| [ask-about-solutions](skills/product/ask-about-solutions/SKILL.md) | (feature 2) Solution stress-test → OVERVIEW.md + `DICTIONARY.md` |
+| [to-spec](skills/product/to-spec/SKILL.md) | (feature 3) Synthesize the spec → GitHub issue (`spec`) |
+| [to-tickets](skills/product/to-tickets/SKILL.md) | (feature 4) Slice the spec into vertical-slice tickets |
+| [create-ticket](skills/product/create-ticket/SKILL.md) | Canonical issue filing — sole `gh` gateway ([CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)) |
 | [tdd](skills/product/tdd/SKILL.md) | Red-green-refactor from an issue or bug |
+| [review-code](skills/product/review-code/SKILL.md) | Two-axis PR review (standards + spec fidelity) after `/tdd` or `/afk-dev` |
 | [afk-dev](skills/product/afk-dev/SKILL.md) | Triage `agent:*` issues → spawn worker agents → manual QA ([CONVENTIONS.md](skills/product/afk-dev/CONVENTIONS.md)) |
 | [diagnose](skills/product/diagnose/SKILL.md) | Disciplined debug loop |
 | [unslop-repo](skills/product/unslop-repo/SKILL.md) | Shallow → deep module reviews; files candidates via `/create-ticket` |

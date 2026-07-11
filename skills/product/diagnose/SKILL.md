@@ -29,7 +29,7 @@ Sits at the start of bug work and hands off to `/tdd` for the RED→GREEN regres
 
 - **Use when:** the user types `/diagnose`, says "debug this" / "diagnose this",
   reports a bug, or something is broken/failing.
-- **Best after:** you can read `docs/README.md`, `docs/foundation/prd.md` scope, and any
+- **Best after:** you can read `docs/README.md`, `docs/foundation/OVERVIEW.md` scope, and any
   `docs/reviews/adr/` for the affected module (read these before exploring code).
 - **Do NOT use when:** you are implementing a known-good change from an issue (use
   `/tdd`), or the task is a refactor/feature with no failure to reproduce.
@@ -39,8 +39,8 @@ Sits at the start of bug work and hands off to `/tdd` for the RED→GREEN regres
 `$ARGUMENTS` may be a symptom description, an area/module, or empty. If empty, ask the
 user for the symptom and how to reproduce it before starting Phase 1.
 
-Before exploring code, read `docs/README.md` (if present), the `docs/foundation/prd.md` scope for
-the area, and any `docs/reviews/adr/` touching the module. Do not expand scope beyond the PRD
+Before exploring code, read `docs/README.md` (if present), the `docs/foundation/OVERVIEW.md` scope for
+the area, and any `docs/reviews/adr/` touching the module. Do not expand scope beyond OVERVIEW.md
 without asking. See also central rule: `rules/debugging.md`.
 
 ---
@@ -128,7 +128,7 @@ Hand off to **`/tdd`** for the RED→GREEN loop when appropriate.
 - [ ] Correct hypothesis noted in commit/PR message.
 
 Ask: **What would have prevented this?** (missing test, missing doc, wrong seam, scope
-drift from PRD).
+drift from OVERVIEW.md scope).
 
 ---
 
@@ -142,7 +142,7 @@ drift from PRD).
 | Every fix gets a regression test, RED before GREEN. | "Obvious one-line fix" still recurs if `flutter test` can reach it and no test guards it. |
 | Change one variable per probe. | Multiple changes at once hide which one mattered. |
 | Remove every `[DEBUG-...]` line and session log file in Phase 6. | Tagged debug lines and `.cursor/debug-*.log` / `agent_debug_log.dart` are diff noise. |
-| Don't expand scope beyond `docs/foundation/prd.md` without asking. | Fixing an extra module "while here" is silent scope creep. |
+| Don't expand scope beyond `docs/foundation/OVERVIEW.md` without asking. | Fixing an extra module "while here" is silent scope creep. |
 | **Docs write-scope.** Create or write docs only at the canonical paths in the docs layout contract (`docs/README.md`): `foundation/`, `reviews/` (+`adr/`), `engineering/{loops,modules,security,ops}`, `agents/`. Never create a new top-level doc folder, a loose file at `docs/` root, or a `-vN` filename variant. Findings and backlog go to GitHub issues via `/create-ticket`, never to a new doc. If nothing fits, ask — do not invent a path. | Scattered doc files break the closed-layout contract other skills and agents rely on. |
 
 ## Verification

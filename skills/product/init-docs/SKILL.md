@@ -1,10 +1,11 @@
 ---
 name: init-docs
 description: >
-  Scaffold a repo docs/ folder (problem, solution, PRD, ADR, workflow README) from
-  bundled templates so product skills and dev agents stay aligned. Use when the user
-  types /init-docs, "init docs", "set up docs folder", or starts a new repo and needs
-  the standard documentation layout before /problematize, /solutionize, or /get-prd.
+  Scaffold a repo docs/ folder (OVERVIEW, DICTIONARY, ADR, workflow README with the
+  two-lane flow) from bundled templates so product skills and dev agents stay aligned.
+  Use when the user types /init-docs, "init docs", "set up docs folder", or starts a
+  new repo and needs the standard documentation layout before /ask-about-problems,
+  /ask-about-solutions, or /to-spec.
 user-invocable: true
 allowed-tools: [Bash, Read, Write, AskUserQuestion]
 argument-hint: "[project-title]"
@@ -19,14 +20,15 @@ argument-hint: "[project-title]"
 
 ## Overview
 
-Scaffolds the **standard `docs/` layout** for a repo — workflow README, problem/solution/PRD
-stubs, a domain glossary, and ADR/agents folders — copied from this skill's bundled
-`templates/`. It exists so the exploration → PRD → issues → TDD pipeline shares one
-predictable file layout and does not derail mid-dev. Run it **first**, before
-`/problematize`, `/solutionize`, or `/get-prd` (which write into the files it creates).
+Scaffolds the **standard `docs/` layout** for a repo — the workflow README (two-lane
+flow + mermaid), the OVERVIEW.md and DICTIONARY.md stubs (the only human-readable
+product docs), and ADR/agents folders — copied from this skill's bundled `templates/`.
+It exists so the interview → spec → tickets → TDD pipeline shares one predictable file
+layout. Run it **first**, before `/ask-about-problems` or `/ask-about-solutions` (which
+write into the files it creates). Specs and tickets live on GitHub, not in docs/.
 
-Downstream consumers of this layout: `/problematize`, `/solutionize`, `/get-prd`,
-`/prd-to-issues`, `/tdd`, `/diagnose`, `/unslop-repo`.
+Downstream consumers of this layout: `/ask-about-problems`, `/ask-about-solutions`,
+`/to-spec`, `/to-tickets`, `/tdd`, `/review-code`, `/diagnose`, `/unslop-repo`.
 
 ## When to Use
 
@@ -34,8 +36,8 @@ Downstream consumers of this layout: `/problematize`, `/solutionize`, `/get-prd`
   starts a new repo and needs the standard documentation layout.
 - **Best after:** nothing — this is the first step in the product workflow.
 - **Do NOT use when:** `docs/README.md` already describes this workflow (offer skip/merge
-  instead), or the user wants to *fill in* content — that is `/problematize` and
-  `/solutionize`, not this skill (templates are placeholders only).
+  instead), or the user wants to *fill in* content — that is `/ask-about-problems` and
+  `/ask-about-solutions`, not this skill (templates are placeholders only).
 
 ## Input
 
@@ -56,19 +58,21 @@ All paths below are under `REPO_ROOT`.
 
 ### Step 1 — Explore existing docs
 
-List what already exists under `docs/` and at repo root (`docs/foundation/problem-summary.md`,
-`docs/foundation/prd.md`, etc.). If `docs/README.md` already exists and describes this workflow,
-ask whether to **skip**, **merge**, or **overwrite templates only**.
+List what already exists under `docs/` (`docs/foundation/OVERVIEW.md`, legacy
+`problem-summary.md`/`solution-overview.md`/`prd.md`/`CONTEXT.md`, etc.). If
+`docs/README.md` already exists and describes this workflow, ask whether to **skip**,
+**merge**, or **overwrite templates only**. If legacy files exist, offer to note them as
+superseded — never delete them yourself.
 
 ### Step 2 — Confirm with user
 
 Ask once (unless the user said "just scaffold"):
 
-> "I'll create the standard docs/ layout (problem → solution → PRD → ADRs). Overwrite
-> empty templates only, or also refresh README?"
+> "I'll create the standard docs/ layout (OVERVIEW + DICTIONARY + ADRs + workflow
+> README). Overwrite empty templates only, or also refresh README?"
 
-Default: create missing files; **do not overwrite** non-empty `foundation/problem-summary.md`,
-`foundation/solution-overview.md`, `foundation/CONTEXT.md`, or `foundation/prd.md`.
+Default: create missing files; **do not overwrite** a non-empty
+`foundation/OVERVIEW.md` or `foundation/DICTIONARY.md`.
 
 ### Step 3 — Scaffold
 
@@ -76,12 +80,10 @@ Create directories if missing, then copy from this skill's `templates/` director
 
 ```
 docs/
-├── README.md                     ← workflow hub + closed-layout contract (templates/template-readme.md)
+├── README.md                     ← workflow hub: two-lane flow + mermaid + closed-layout contract (templates/template-readme.md)
 ├── foundation/
-│   ├── problem-summary.md        ← /problematize output (templates/template-problem-summary.md)
-│   ├── solution-overview.md      ← /solutionize output (templates/template-solution-overview.md)
-│   ├── CONTEXT.md                ← /solutionize domain glossary (templates/template-context.md)
-│   └── prd.md                    ← /get-prd output (templates/template-prd.md)
+│   ├── OVERVIEW.md               ← THE human-readable doc: problem → system idea & components → workflows → decisions (templates/template-overview.md)
+│   └── DICTIONARY.md             ← canonical domain terms (templates/template-dictionary.md)
 ├── reviews/
 │   └── adr/
 │       └── README.md             ← when to write ADRs (templates/template-adr-readme.md)
@@ -91,21 +93,21 @@ docs/
 
 `engineering/{loops,modules,security,ops}` are homes agents may extend into later
 (module deep dives, `/afk-dev` loop logs, security notes, build/tooling docs) — not
-scaffolded up front since they start empty.
+scaffolded up front since they start empty. **Specs and tickets are GitHub issues**
+(`/to-spec`, `/to-tickets`) — they never get repo files.
 
 | Output | Template file |
 |--------|---------------|
 | `docs/README.md` | `template-readme.md` |
-| `docs/foundation/problem-summary.md` | `template-problem-summary.md` |
-| `docs/foundation/solution-overview.md` | `template-solution-overview.md` |
-| `docs/foundation/CONTEXT.md` | `template-context.md` |
-| `docs/foundation/prd.md` | `template-prd.md` |
+| `docs/foundation/OVERVIEW.md` | `template-overview.md` |
+| `docs/foundation/DICTIONARY.md` | `template-dictionary.md` |
 | `docs/reviews/adr/README.md` | `template-adr-readme.md` |
 | `docs/agents/README.md` | `template-agents-readme.md` |
 | `AGENTS.md` (optional, repo root) | `template-agents.md` |
 
-Replace `{{PROJECT_NAME}}` with the repo folder name or user-provided title. The domain
-glossary lives in **`docs/foundation/CONTEXT.md`** (filled later by `/solutionize`).
+Replace `{{PROJECT_NAME}}` with the repo folder name or user-provided title. OVERVIEW.md
+is filled by `/ask-about-problems` (Problem) and `/ask-about-solutions` (the rest);
+DICTIONARY.md by `/ask-about-solutions`.
 
 ### Step 4 — Repo pointer (optional)
 
@@ -118,9 +120,10 @@ directory (slash commands), and the shared rules directory (debugging/docs rules
 Tell the user:
 
 1. What was created vs skipped (already existed).
-2. **Next steps:** `/problematize` → `/solutionize` (writes `CONTEXT.md`) → `/get-prd` →
-   `/prd-to-issues` → `/tdd`.
-3. For bugs during dev: `/diagnose` (not ad-hoc debug logs).
+2. **Next steps (feature lane):** `/ask-about-problems` → `/ask-about-solutions` (writes
+   `DICTIONARY.md`) → `/to-spec` (spec issue) → `/to-tickets` → `/tdd` → `/review-code`.
+3. **Maintenance lane** (bugs, QA findings on shipped behavior): `/diagnose` →
+   `/create-ticket` — no spec ceremony.
 
 ---
 
@@ -130,16 +133,16 @@ Tell the user:
 |---|---|
 | Never write under a directory you haven't confirmed as `REPO_ROOT` (Step 0). | Guessing scatters `docs/` into the wrong folder — ask the user. |
 | Copy from `templates/`; never improvise structure or type content by hand. | The layout must match what downstream skills expect. |
-| Templates are placeholders — never fill them with real product content. | That content is owned by `/problematize` and `/solutionize`; inventing it corrupts their inputs. |
-| Never overwrite a non-empty `foundation/problem-summary.md`, `foundation/solution-overview.md`, `foundation/CONTEXT.md`, or `foundation/prd.md` without explicit consent (Step 2). | Silent overwrite destroys prior work; clobbering a customized README needs the Step 1 skip/merge/overwrite ask. |
+| Templates are placeholders — never fill them with real product content. | That content is owned by `/ask-about-problems` and `/ask-about-solutions`; inventing it corrupts their inputs. |
+| Never overwrite a non-empty `foundation/OVERVIEW.md` or `foundation/DICTIONARY.md` without explicit consent (Step 2); never delete legacy docs yourself. | Silent overwrite destroys prior work; clobbering a customized README needs the Step 1 skip/merge/overwrite ask. |
 | Replace every `{{PROJECT_NAME}}` in created files. | A leftover placeholder ships broken docs. |
 | **Docs write-scope.** Create or write docs only at the canonical paths in the docs layout contract (`docs/README.md`): `foundation/`, `reviews/` (+`adr/`), `engineering/{loops,modules,security,ops}`, `agents/`. Never create a new top-level doc folder, a loose file at `docs/` root, or a `-vN` filename variant. Findings and backlog go to GitHub issues via `/create-ticket`, never to a new doc. If nothing fits, ask — do not invent a path. | Scattering files outside the closed layout breaks every downstream skill that reads from fixed paths. |
 
 ## Verification
 
 - [ ] `REPO_ROOT` was resolved (a `.git` directory found, or confirmed by the user).
-- [ ] `docs/README.md`, `docs/foundation/problem-summary.md`, `docs/foundation/solution-overview.md`,
-  `docs/foundation/CONTEXT.md`, and `docs/foundation/prd.md` exist (created or pre-existing and preserved).
+- [ ] `docs/README.md`, `docs/foundation/OVERVIEW.md`, and `docs/foundation/DICTIONARY.md`
+  exist (created or pre-existing and preserved).
 - [ ] `docs/reviews/adr/README.md` and `docs/agents/README.md` exist.
 - [ ] No `{{PROJECT_NAME}}` placeholder remains in any newly written file
   (e.g. `grep -r '{{PROJECT_NAME}}' docs/` returns nothing).

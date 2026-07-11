@@ -37,7 +37,7 @@ Repo name, date, and a compact legend: solid box = module, dashed line = seam, r
 
 ## Candidate card
 
-The diagrams carry the weight. Prose is sparse, plain, and uses the glossary terms ([LANGUAGE.md](LANGUAGE.md)) without ceremony. **Domain module names** come from **`docs/foundation/CONTEXT.md`**.
+The diagrams carry the weight. Prose is sparse, plain, and uses the glossary terms ([LANGUAGE.md](LANGUAGE.md)) without ceremony. **Domain module names** come from **`docs/foundation/DICTIONARY.md`**.
 
 Each candidate is one card:
 
@@ -89,7 +89,7 @@ One larger card. Candidate name, one sentence on why, anchor link to its card.
 
 ## Tone
 
-Architectural nouns and verbs from [LANGUAGE.md](LANGUAGE.md). Domain nouns from **`docs/foundation/CONTEXT.md`**.
+Architectural nouns and verbs from [LANGUAGE.md](LANGUAGE.md). Domain nouns from **`docs/foundation/DICTIONARY.md`**.
 
 **Use exactly:** module, interface, implementation, depth, deep, shallow, seam, adapter, leverage, locality.
 

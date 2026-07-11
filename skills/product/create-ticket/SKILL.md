@@ -57,7 +57,7 @@ with GitHub remote or `gh auth login`. Stop.
 
 Read if present (do not invent):
 
-- `docs/reviews/README.md` — shipped-architecture skip list, do not re-file (prefix taxonomy lives in this CONVENTIONS.md; repo tracker facts in `docs/agents/README.md`)
+- `docs/reviews/README.md` — shipped-architecture skip list, do not re-file (prefix taxonomy lives in this CONVENTIONS.md; repo tracker facts in `AGENTS.md`)
 - `docs/foundation/DICTIONARY.md` — domain language
 - Conversation context or `$ARGUMENTS` — source doc, backlog row, QA notes
 

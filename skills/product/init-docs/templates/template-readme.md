@@ -77,14 +77,14 @@ flowchart TD
 | Problem, system idea, components, workflows, decisions (human-readable) | `foundation/OVERVIEW.md` |
 | Canonical domain vocabulary | `foundation/DICTIONARY.md` |
 | Committed scope + user stories + seams (agent-facing) | **Spec issue on GitHub**, label `spec` — never a repo doc |
-| Hard-to-reverse technical decisions (agent memory) | `reviews/adr/NNN-short-title.md` |
-| Shipped-architecture record | `reviews/README.md` |
+| Hard-to-reverse technical decisions (agent memory) | `reviews/adr/NNN-slug.md` (created lazily) |
+| Shipped-architecture skip-list (optional) | `reviews/README.md` |
 | One-off analysis / review write-ups | `reviews/<date>-<topic>.md` |
 | `/afk-dev` cycle plans, logs, summaries | `engineering/loops/` |
 | Module deep dives | `engineering/modules/<name>.md` |
 | Security-relevant docs | `engineering/security/` |
 | Build, dev, tooling docs | `engineering/ops/` |
-| Repo-specific notes for AI agents (issue tracker, launch configs) | `agents/README.md` |
+| Repo-specific notes for AI agents (tracker, launch, board) | `AGENTS.md` (repo root) |
 | Findings / backlog items | a GitHub issue via `/create-ticket` — never a new doc |
 
 ## File roles
@@ -93,10 +93,12 @@ flowchart TD
   components → key user workflows → decisions → out of scope. 5-minute read, always current.
 - **`foundation/DICTIONARY.md`** — canonical terms; OVERVIEW component names and all
   tickets use these exactly.
-- **`reviews/adr/`** — one-paragraph decision records, written by agents when a decision
-  is hard-to-reverse + surprising + a real trade-off. Agents read them to avoid
-  re-litigating; humans get the one-line version in OVERVIEW.md Decisions.
-- **`agents/README.md`** — repo-specific notes for AI agents.
+- **`reviews/adr/`** — one-paragraph decision records (`NNN-slug.md`, created lazily),
+  written by agents when a decision is hard-to-reverse + surprising + a real trade-off.
+  Agents read them to avoid re-litigating; humans get the one-line version in OVERVIEW.md
+  Decisions.
+- **`AGENTS.md`** (repo root) — repo-specific notes for AI agents: tracker, launch/env,
+  project board, skill quick-reference.
 - **`engineering/loops/`** — `/afk-dev` cycle artifacts. Worker sandboxes: `.worktrees/` (gitignored).
 
 ## During development

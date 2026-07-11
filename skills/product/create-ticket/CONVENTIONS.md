@@ -88,7 +88,7 @@ EOF
 
 ## GitHub Projects (module boards)
 
-Each filed issue is added to the module Project (Status = Backlog). See repo `docs/agents/README.md` and `docs/engineering/projects.json`.
+Each filed issue is added to the module Project (Status = Backlog). See repo `AGENTS.md` and `docs/engineering/projects.json`.
 
 | Project | `module:*` label(s) |
 |---------|---------------------|
@@ -303,6 +303,6 @@ bash scripts/finalize-issue.sh "$N" BUG "Filter bar mirrors visible column order
 | `docs/reviews/README.md` | Shipped-architecture skip list (do not re-file) |
 | `docs/foundation/DICTIONARY.md` | Domain glossary for titles and bodies |
 | `docs/engineering/projects.json` | Module Project numbers for finalize script |
-| `docs/agents/README.md` | Project board workflow |
+| `AGENTS.md` (repo root) | Repo agent notes: tracker, board, launch |
 
 If repo override conflicts with this file, **repo wins** for numbering and skip rules; labels and agent modes still follow this file unless repo doc explicitly differs.

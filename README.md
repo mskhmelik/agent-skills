@@ -1,128 +1,101 @@
 # agent-skills
 
-Personal **skills** and **rules** for Cursor and Claude Code. One `skills/` folder, identical `SKILL.md` format, symlinked on each machine. Syncs via OneDrive; version history on GitHub.
+Personal **skills** and **rules** for Cursor and Claude Code. One `skills/` folder, one `SKILL.md` format, symlinked into `~/.claude/skills/` and `~/.cursor/skills/` on each machine. Versioned on GitHub.
 
-Inspired and adopted from [mattpocock/skills](https://github.com/mattpocock/skills)
+**What's inside** — four kinds of skills:
 
-## Layout
+| Group | Purpose |
+|-------|---------|
+| **product/** | The end-to-end development workflow — plan → implement → review → merge |
+| **vault/** | Knowledge tools — ingest sources into an Obsidian vault |
+| **utilities/** | Session helpers — handoff, compression, security audits |
+| **private/** | Personal skills, never pushed (listed in `.git/info/exclude`) |
+
+Inspired by and adapted from [mattpocock/skills](https://github.com/mattpocock/skills).
+
+### Layout
 
 ```
 agent-skills/
 ├── README.md
-├── LICENSE                       ← MIT
-├── .github/workflows/            ← CI: validates skills against the anatomy on push/PR
+├── LICENSE               ← MIT
+├── .github/workflows/    ← CI: skill validation
 ├── docs/
-│   ├── skill-anatomy.md          ← the SKILL.md contract every skill follows
-│   └── SKILL-template.md         ← starter for new skills
-├── scripts/validate-skills.js    ← structure validator (run locally or in CI)
-├── rules/                        ← Cursor rules (loaded via ~/.cursor/rules symlink; Cursor only)
+│   ├── skill-anatomy.md  ← the SKILL.md contract
+│   ├── SKILL-template.md ← new-skill starter
+│   └── assets/           ← workflow diagram
+├── scripts/              ← structure validator
+├── rules/                ← Cursor rules
 └── skills/
-    ├── product/                  ← product workflow chain (public)
-    ├── vault/                    ← knowledge/Obsidian tools (public)
-    ├── utilities/                ← session + dev utilities (public)
-    └── private/                  ← private skills (.git/info/exclude, never pushed)
+    ├── product/          ← the development workflow
+    ├── vault/            ← knowledge / Obsidian tools
+    ├── utilities/        ← session + dev helpers
+    └── private/          ← never pushed (excluded)
 ```
-
-## Setup (once per machine)
-
-Claude and Cursor read skills from a flat `~/.claude/skills/` and `~/.cursor/skills/`, so each skill is symlinked individually out of the grouped `skills/<group>/<name>/` layout. There's no setup script — wire it once, or just **ask Claude to do it for you**.
-
-**macOS / Linux** — from the repo root:
-
-```bash
-mkdir -p ~/.claude/skills ~/.cursor/skills
-for d in skills/*/*/; do
-  ln -sfn "$PWD/$d" ~/.claude/skills/"$(basename "$d")"
-  ln -sfn "$PWD/$d" ~/.cursor/skills/"$(basename "$d")"
-done
-ln -sfn "$PWD/rules" ~/.cursor/rules   # Cursor rules (Cursor only)
-```
-
-**Windows:** ask Claude to create the equivalent links, or use `New-Item -ItemType SymbolicLink`.
-
-Restart Cursor / Claude after wiring.
-
-Private skills live under `skills/private/` but are listed in `.git/info/exclude` — they sync on your devices but never reach GitHub.
 
 ---
 
-## Product workflow (any repo)
+## product/ — the development workflow
 
-Three stages — **Plan → Implement → Review** — around **`/create-ticket`**, the hub every ticket flows through (the only skill that runs `gh issue create`). **Plan** files new work as `SLICE-`; **Review** files `DEBT-`/`ARCH-`/`TEST-` (from `/unslop-repo`) and `BUG-` (from `/review-code` and Manual QA). Manual QA ⇄ `/diagnose` is the iterative debug loop; passing QA ships to `merged`. Run **`/init-docs`** once to scaffold `docs/`, then:
+The core of this repo: a chain that carries a repo from **an empty folder to continuous development**. Run **`/init-docs`** once to scaffold `docs/`, then every change funnels through **`/create-ticket`** — the *only* skill that runs `gh issue create` — and out to a merge. Bugs and hygiene loop straight back to it, so the same flow that ships the first feature also runs forever after.
 
 ![Product workflow — Plan (green) → /create-ticket (hub) → GitHub issues → Implement (orange) → Review (pink) → Merge; feedback labelled SLICE / BUG / DEBT-ARCH-TEST](docs/assets/dev-workflow.png)
 
 > Editable source: [`docs/assets/dev-workflow.excalidraw`](docs/assets/dev-workflow.excalidraw) — open at [excalidraw.com](https://excalidraw.com).
 
-**Two entry points**, decided by one question — *was this capability ever built?* The *feature lane* (never built) plans through the interview → spec → tickets chain; the *maintenance lane* (shipped behavior — a QA/`/diagnose` bug or an `/unslop-repo` refactor) files straight to `/create-ticket`.
+**Two entry points**, chosen by one question — *was this capability ever built?*
 
-The docs the user reads are **`docs/foundation/OVERVIEW.md`** (problem → system idea & key components → key user workflows → decisions) and **`docs/foundation/DICTIONARY.md`** (canonical terms). Specs and tickets are GitHub issues, never repo files.
+1. **Feature lane** (never built) — interview → spec → tickets: `/ask-about-problems` → `/ask-about-solutions` → `/to-spec` → `/to-tickets`.
+2. **Maintenance lane** (shipped behavior, now broken or lacking) — straight to `/create-ticket`; history already made the decisions.
 
-| Lane | Trigger | Skills |
-|------|---------|--------|
-| **Feature** | New capability, never built | `/ask-about-problems` → `/ask-about-solutions` → `/to-spec` → `/to-tickets` → `/create-ticket` |
-| **Maintenance** | Shipped behavior broken / regressed | `/diagnose` or a QA finding → `/create-ticket` (`BUG-`) |
-| **Architecture** | Periodic hygiene | `/unslop-repo` → `/create-ticket` (`DEBT-`/`ARCH-`/`TEST-`) |
-| **Build** | Any filed issue | `/tdd` (one) or `/afk-dev` (batch `agent:hitl`) → `/review-code` → merge |
+Both lanes converge on `/create-ticket`, then `/tdd` or `/afk-dev` implements, `/review-code` gates the PR, and manual QA merges. The docs a human reads are **`docs/foundation/OVERVIEW.md`** (problem → system → workflows → decisions) and **`docs/foundation/DICTIONARY.md`** (canonical terms); specs and tickets live on GitHub, never as repo files.
 
-| Step | Skill | Output |
-|------|-------|--------|
-| 1 | `/ask-about-problems` | `docs/foundation/OVERVIEW.md` → Problem section |
-| 2 | `/ask-about-solutions` | OVERVIEW.md solution sections + **`docs/foundation/DICTIONARY.md`** (+ sparing ADRs) |
-| 3 | `/to-spec` | Spec issue on GitHub (label `spec`) — agent-facing, not reviewed by you |
-| 4 | `/to-tickets` | SLICE tickets, blocked-by wired, filed via `/create-ticket` |
-| 5 | `/tdd` / `/afk-dev` | Code + tests → PR |
-| 6 | `/review-code` | Two-axis review (standards + spec fidelity) before merge |
-| — | `/diagnose` | Bugs — feedback loop first, regression test |
-| — | `/unslop-repo` | Architecture hygiene (periodic) → `/create-ticket` |
-
-`/create-ticket` is the **only** skill that runs `gh issue create` — both lanes converge on it. Filing rules: [create-ticket/CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)
+| Stage | Skill | What it does |
+|-------|-------|--------------|
+| Setup | `/init-docs` | Scaffold the `docs/` layout (OVERVIEW + DICTIONARY + two-lane README) — once per repo |
+| Plan | `/ask-about-problems` | Mom-Test problem interview → `OVERVIEW.md` Problem |
+| Plan | `/ask-about-solutions` | Stress-test the solution → `OVERVIEW.md` + `DICTIONARY.md` |
+| Plan | `/to-spec` | Synthesize an agent-facing spec issue on GitHub (label `spec`) |
+| Plan | `/to-tickets` | Slice the spec into vertical-slice `SLICE` tickets |
+| Gateway | `/create-ticket` | The **only** `gh issue create` gateway — every ticket funnels here |
+| Implement | `/tdd` | Red-green-refactor a single issue |
+| Implement | `/afk-dev` | Batch-run `agent:*` issues via worker agents → QA |
+| Review | `/review-code` | Two-axis PR review — standards + spec fidelity |
+| Review | `/diagnose` | Disciplined debug loop → `BUG` ticket |
+| Review | `/unslop-repo` | Periodic architecture hygiene → `DEBT`/`ARCH`/`TEST` tickets |
 
 ---
 
-## Skill index
+## vault/ — knowledge & notes
 
-### product/
+Tools for building a personal knowledge base in Obsidian — capture sources, then distil them into a linked wiki.
 
-| Skill | Role |
-|-------|------|
-| [init-docs](skills/product/init-docs/SKILL.md) | Scaffold the `docs/` layout (OVERVIEW + DICTIONARY + two-lane README) |
-| [ask-about-problems](skills/product/ask-about-problems/SKILL.md) | (feature 1) Mom Test problem interview → OVERVIEW.md Problem |
-| [ask-about-solutions](skills/product/ask-about-solutions/SKILL.md) | (feature 2) Solution stress-test → OVERVIEW.md + `DICTIONARY.md` |
-| [to-spec](skills/product/to-spec/SKILL.md) | (feature 3) Synthesize the spec → GitHub issue (`spec`) |
-| [to-tickets](skills/product/to-tickets/SKILL.md) | (feature 4) Slice the spec into vertical-slice tickets |
-| [create-ticket](skills/product/create-ticket/SKILL.md) | Canonical issue filing — sole `gh` gateway ([CONVENTIONS.md](skills/product/create-ticket/CONVENTIONS.md)) |
-| [tdd](skills/product/tdd/SKILL.md) | Red-green-refactor from an issue or bug |
-| [review-code](skills/product/review-code/SKILL.md) | Two-axis PR review (standards + spec fidelity) after `/tdd` or `/afk-dev` |
-| [afk-dev](skills/product/afk-dev/SKILL.md) | Triage `agent:*` issues → spawn worker agents → manual QA ([CONVENTIONS.md](skills/product/afk-dev/CONVENTIONS.md)) |
-| [diagnose](skills/product/diagnose/SKILL.md) | Disciplined debug loop |
-| [unslop-repo](skills/product/unslop-repo/SKILL.md) | Shallow → deep module reviews; files candidates via `/create-ticket` |
-
-### vault/
-
-| Skill | Role |
-|-------|------|
-| [contemplate](skills/vault/contemplate/SKILL.md) | Ingest Obsidian `sources/` → wiki |
-| [remember](skills/vault/remember/SKILL.md) | Save content to vault sources |
-| [get-yt-transcript](skills/vault/get-yt-transcript/SKILL.md) | YouTube transcript download |
-
-### utilities/
-
-| Skill | Role |
-|-------|------|
-| [handoff](skills/utilities/handoff/SKILL.md) | Hand off to the next agent — **Quick** (paste block) or **Full** (temp doc + pointer) |
-| [caveman](skills/utilities/caveman/SKILL.md) | Ultra-compressed replies |
-| [make-secure](skills/utilities/make-secure/SKILL.md) | Audit skills for security risks |
+| Skill | What it does |
+|-------|--------------|
+| `/contemplate` | Ingest Obsidian `sources/` → a linked wiki |
+| `/remember` | Save content to vault sources |
+| `/get-yt-transcript` | Download a YouTube transcript |
 
 ---
 
-## Adding a skill
+## utilities/ — session helpers
 
-1. Copy [`docs/SKILL-template.md`](docs/SKILL-template.md) → `skills/<group>/<name>/SKILL.md`, following the contract in [`docs/skill-anatomy.md`](docs/skill-anatomy.md)
-   - `<group>` = `product`, `vault`, `utilities`, or `private`
-2. Fill frontmatter + instructions (`name` must match the directory)
-3. Symlink it into `~/.claude/skills/` (and `~/.cursor/skills/`) — see [Setup](#setup-once-per-machine), or just ask Claude to wire it
-4. Run `node scripts/validate-skills.js` until it passes
-5. Add a row to the index above (omit private skills)
-6. For private skills: place under `skills/private/` — already covered by `.git/info/exclude`
+Cross-cutting helpers that aren't part of any one workflow.
 
+| Skill | What it does |
+|-------|--------------|
+| `/handoff` | Hand off to the next agent — **Quick** (paste block) or **Full** (temp doc + pointer) |
+| `/caveman` | Ultra-compressed replies |
+| `/make-secure` | Audit skills for security risks |
+
+---
+
+## Installation
+
+Skills are read from a flat `~/.claude/skills/` and `~/.cursor/skills/`, symlinked out of the grouped `skills/<group>/<name>/` layout. **Just ask your clanker to wire it up** — something like *"symlink every skill in this repo into my Claude and Cursor skills folders, and point `~/.cursor/rules` at `rules/`."* Restart Cursor / Claude afterwards.
+
+---
+
+## License
+
+[MIT](LICENSE).

@@ -50,40 +50,9 @@ Private skills live under `skills/private/` but are listed in `.git/info/exclude
 
 Three stages — **Plan → Implement → Review** — around **`/create-ticket`**, the hub every ticket flows through (the only skill that runs `gh issue create`). **Plan** files new work as `SLICE-`; **Review** files `DEBT-`/`ARCH-`/`TEST-` (from `/unslop-repo`) and `BUG-` (from `/review-code` and Manual QA). Manual QA ⇄ `/diagnose` is the iterative debug loop; passing QA ships to `merged`. Run **`/init-docs`** once to scaffold `docs/`, then:
 
-```mermaid
-flowchart TB
-  subgraph plan [Plan]
-    aap["/ask-about-problems"] --> aas["/ask-about-solutions"]
-    aas --> spec["/to-spec"]
-    spec --> tix["/to-tickets"]
-  end
-  ct["/create-ticket"]
-  issues["GitHub Issues"]
-  subgraph implement [Implement]
-    afk["/afk-dev"] --> tdd["/tdd"]
-  end
-  subgraph review [Review]
-    rc["/review-code"] --> qa["Manual QA"]
-    qa ~~~ unslop["/unslop-repo"]
-    qa <--> dg["/diagnose"]
-  end
-  merged["merged"]
+![Product workflow — Plan (green) → /create-ticket (hub) → GitHub issues → Implement (orange) → Review (pink) → Merge; feedback labelled SLICE / BUG / DEBT-ARCH-TEST](docs/assets/dev-workflow.png)
 
-  tix -->|"SLICE-"| ct
-  ct --> issues
-  issues --> afk
-  issues --> tdd
-  tdd --> rc
-  qa --> merged
-  unslop -->|"DEBT- ARCH- TEST-"| ct
-  rc -->|"BUG-"| ct
-  qa -->|"BUG-"| ct
-
-  classDef hub fill:#7c3aed,stroke:#5b21b6,color:#fff,font-weight:bold
-  classDef artifact fill:#d1d5db,stroke:#9ca3af,color:#111
-  class ct hub
-  class issues,merged artifact
-```
+> Editable source: [`docs/assets/dev-workflow.excalidraw`](docs/assets/dev-workflow.excalidraw) — open at [excalidraw.com](https://excalidraw.com).
 
 **Two entry points**, decided by one question — *was this capability ever built?* The *feature lane* (never built) plans through the interview → spec → tickets chain; the *maintenance lane* (shipped behavior — a QA/`/diagnose` bug or an `/unslop-repo` refactor) files straight to `/create-ticket`.
 

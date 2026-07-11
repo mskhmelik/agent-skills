@@ -66,7 +66,7 @@ flowchart TB
   subgraph review [Review]
     rc["/review-code"] --> qa["Manual QA"]
     qa <--> dg["/diagnose"]
-    unslop["/unslop-repo"]
+    dg ~~~ unslop["/unslop-repo"]
   end
   merged["merged"]
 
@@ -76,10 +76,10 @@ flowchart TB
   issues --> afk
   tdd --> rc
   afk --> rc
-  unslop -->|"DEBT- ARCH- TEST-"| ct
+  qa --> merged
   rc -->|"BUG-"| ct
   qa -->|"BUG-"| ct
-  qa --> merged
+  unslop -->|"DEBT- ARCH- TEST-"| ct
 
   classDef hub fill:#7c3aed,stroke:#5b21b6,color:#fff,font-weight:bold
   classDef artifact fill:#d1d5db,stroke:#9ca3af,color:#111

@@ -118,5 +118,5 @@ never new docs. If nothing fits, ask — do not invent a path.
 
 ## Naming rule
 
-All filenames are **kebab-case**, except `README.md`, `OVERVIEW.md`, and `DICTIONARY.md`
-which keep their conventional all-caps names.
+All filenames are **kebab-case**, except `README.md`, `OVERVIEW.md`, `DICTIONARY.md`, and
+the root `AGENTS.md`, which keep their conventional all-caps names.

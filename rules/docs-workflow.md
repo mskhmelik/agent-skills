@@ -13,15 +13,15 @@ Created by **`/init-docs`**. Repo docs are **human-readable only** — specs and
 live on GitHub, never as repo files:
 
 ```
+AGENTS.md                         ← repo agent notes: tracker, launch, board, skill map (repo root)
 docs/
 ├── README.md                     ← the flow + closed-layout contract; start here
 ├── foundation/
 │   ├── OVERVIEW.md               ← THE human doc: problem → system idea & components → workflows → decisions
 │   └── DICTIONARY.md             ← canonical domain terms
 ├── reviews/
-│   └── adr/                      ← one-paragraph decision records (agent-facing)
-├── engineering/{loops,modules,security,ops}   ← extended into lazily
-└── agents/README.md              ← repo-specific agent notes (tracker, launch config)
+│   └── adr/                      ← one-paragraph decision records (agent-facing, created lazily)
+└── engineering/{loops,modules,security,ops}   ← extended into lazily
 ```
 
 ## Rules during development
@@ -57,5 +57,5 @@ on it.
 
 - [ ] Run `/init-docs`
 - [ ] Fill OVERVIEW.md (problem → solution) via the interviews before large builds
-- [ ] Add `docs/agents/README.md` with issue tracker and launch notes
+- [ ] Fill root `AGENTS.md` with issue tracker and launch notes
 - [ ] Wire Cursor: symlink from `5_projects/ai/` — [README Setup](https://github.com/mskhmelik/agent-skills#setup-once-per-machine) (one-liner loop)

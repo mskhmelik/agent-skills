@@ -6,7 +6,7 @@ description: >
   stories, implementation decisions, test seams, testing decisions, out of scope. No
   re-interview: at most 3 gap questions plus one seams checkpoint. The user never
   reviews the spec; it exists for /to-tickets. Use when the user types /to-spec, says
-  "write the spec", "generate the PRD", or is ready to commit scope after
+  "write the spec", "commit the scope", or is ready to hand off after
   /ask-about-solutions. Specs are GitHub issues, never a repo prd.md.
 user-invocable: true
 allowed-tools: [Bash, Glob, Read, Write, Edit, AskUserQuestion]
@@ -32,8 +32,8 @@ there, never new prose documents. Feature lane, step 3: `/ask-about-problems` �
 
 ## When to Use
 
-- **Use when:** `/to-spec`, "write the spec", "generate the PRD", or scope is ready to
-  commit after `/ask-about-solutions`.
+- **Use when:** `/to-spec`, "write the spec", "commit the scope", or scope is ready to
+  hand off after `/ask-about-solutions`.
 - **Do NOT use when:** the problem or solution is still being explored (run the
   interviews first); for a bug or regression in shipped behavior (maintenance lane →
   `/create-ticket` directly — a regression's spec is the shipped behavior itself).

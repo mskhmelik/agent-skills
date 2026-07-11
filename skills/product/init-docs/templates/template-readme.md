@@ -3,12 +3,12 @@
 This folder keeps product intent and dev agents aligned. **Read before expanding scope.**
 The layout below is **closed** — see the rule at the bottom.
 
-## The flow — Plan, Implement, Review, Merge (+ Debug loop)
+## The flow — Plan, Implement, Review
 
-Work moves through five stages. Everything files through `/create-ticket` — the **only**
-skill that runs `gh issue create` — with a ticket prefix (`SLICE-` for feature slices,
-`DEBT-`/`ARCH-`/`TEST-` for refactors, `BUG-` for defects). Manual QA and `/diagnose` form
-an iterative **Debug** loop; a diagnosed defect files a `BUG-` ticket back into Plan.
+Three stages around `/create-ticket` — the **only** skill that runs `gh issue create`, the
+hub every ticket flows through. **Plan** files new work as `SLICE-`; **Review** files
+`DEBT-`/`ARCH-`/`TEST-` (from `/unslop-repo`) and `BUG-` (from `/review-code` and Manual
+QA). Manual QA ⇄ `/diagnose` is the iterative debug loop; passing QA ships to `merged`.
 
 ```mermaid
 flowchart TB
@@ -16,39 +16,41 @@ flowchart TB
     aap["/ask-about-problems"] --> aas["/ask-about-solutions"]
     aas --> spec["/to-spec"]
     spec --> tix["/to-tickets"]
-    unslop["/unslop-repo"]
-    ct["/create-ticket"]
-    tix -->|"SLICE-"| ct
-    unslop -->|"DEBT- ARCH- TEST-"| ct
   end
+  ct["/create-ticket"]
   issues["GitHub Issues"]
   subgraph implement [Implement]
     tdd["/tdd"]
     afk["/afk-dev"]
   end
   subgraph review [Review]
-    rc["/review-code"]
+    rc["/review-code"] --> qa["Manual QA"]
+    qa <--> dg["/diagnose"]
+    unslop["/unslop-repo"]
   end
-  subgraph debug [Debug]
-    dg["/diagnose"]
-  end
-  subgraph merge [Merge]
-    qa["Manual QA"] --> mg["merged"]
-  end
+  merged["merged"]
+
+  tix -->|"SLICE-"| ct
   ct --> issues
   issues --> tdd
   issues --> afk
   tdd --> rc
   afk --> rc
-  rc --> qa
-  qa <--> dg
-  dg -->|"BUG-"| ct
+  unslop -->|"DEBT- ARCH- TEST-"| ct
+  rc -->|"BUG-"| ct
+  qa -->|"BUG-"| ct
+  qa --> merged
+
+  classDef hub fill:#7c3aed,stroke:#5b21b6,color:#fff,font-weight:bold
+  classDef artifact fill:#d1d5db,stroke:#9ca3af,color:#111
+  class ct hub
+  class issues,merged artifact
 ```
 
-**Two entry points into Plan**, decided by one question — *was this capability ever built?*
-The *feature lane* (never built) makes decisions via interview → spec → tickets; the
-*maintenance lane* (shipped behavior) goes straight to a ticket, since history already made
-the decisions ("it used to do X, now does Y" *is* the spec).
+**Two entry points**, decided by one question — *was this capability ever built?* The
+*feature lane* (never built) plans through interview → spec → tickets; the *maintenance
+lane* (shipped behavior) files straight to `/create-ticket`, since history already made the
+decisions ("it used to do X, now does Y" *is* the spec).
 
 ## Workflow (in order)
 

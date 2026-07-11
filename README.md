@@ -48,7 +48,7 @@ Private skills live under `skills/private/` but are listed in `.git/info/exclude
 
 ## Product workflow (any repo)
 
-The pipeline runs **Plan → Implement → Review → Merge**, with a **Debug** loop off Manual QA. Everything files through **`/create-ticket`** — the only skill that runs `gh issue create` — with a ticket prefix (`SLICE-` for feature slices, `DEBT-`/`ARCH-`/`TEST-` for refactors, `BUG-` for defects). Run **`/init-docs`** once to scaffold `docs/`, then:
+Three stages — **Plan → Implement → Review** — around **`/create-ticket`**, the hub every ticket flows through (the only skill that runs `gh issue create`). **Plan** files new work as `SLICE-`; **Review** files `DEBT-`/`ARCH-`/`TEST-` (from `/unslop-repo`) and `BUG-` (from `/review-code` and Manual QA). Manual QA ⇄ `/diagnose` is the iterative debug loop; passing QA ships to `merged`. Run **`/init-docs`** once to scaffold `docs/`, then:
 
 ```mermaid
 flowchart TB
@@ -56,36 +56,38 @@ flowchart TB
     aap["/ask-about-problems"] --> aas["/ask-about-solutions"]
     aas --> spec["/to-spec"]
     spec --> tix["/to-tickets"]
-    unslop["/unslop-repo"]
-    ct["/create-ticket"]
-    tix -->|"SLICE-"| ct
-    unslop -->|"DEBT- ARCH- TEST-"| ct
   end
+  ct["/create-ticket"]
   issues["GitHub Issues"]
   subgraph implement [Implement]
     tdd["/tdd"]
     afk["/afk-dev"]
   end
   subgraph review [Review]
-    rc["/review-code"]
+    rc["/review-code"] --> qa["Manual QA"]
+    qa <--> dg["/diagnose"]
+    unslop["/unslop-repo"]
   end
-  subgraph debug [Debug]
-    dg["/diagnose"]
-  end
-  subgraph merge [Merge]
-    qa["Manual QA"] --> mg["merged"]
-  end
+  merged["merged"]
+
+  tix -->|"SLICE-"| ct
   ct --> issues
   issues --> tdd
   issues --> afk
   tdd --> rc
   afk --> rc
-  rc --> qa
-  qa <--> dg
-  dg -->|"BUG-"| ct
+  unslop -->|"DEBT- ARCH- TEST-"| ct
+  rc -->|"BUG-"| ct
+  qa -->|"BUG-"| ct
+  qa --> merged
+
+  classDef hub fill:#7c3aed,stroke:#5b21b6,color:#fff,font-weight:bold
+  classDef artifact fill:#d1d5db,stroke:#9ca3af,color:#111
+  class ct hub
+  class issues,merged artifact
 ```
 
-**Two entry points into Plan:** the *feature lane* (never-built capability — `/ask-about-problems` → `/ask-about-solutions` → `/to-spec` → `/to-tickets`) and the *maintenance lane* (shipped behavior — `/diagnose` or `/unslop-repo` straight to a ticket). The lane is decided by one question: *was this capability ever built?*
+**Two entry points**, decided by one question — *was this capability ever built?* The *feature lane* (never built) plans through the interview → spec → tickets chain; the *maintenance lane* (shipped behavior — a QA/`/diagnose` bug or an `/unslop-repo` refactor) files straight to `/create-ticket`.
 
 The docs the user reads are **`docs/foundation/OVERVIEW.md`** (problem → system idea & key components → key user workflows → decisions) and **`docs/foundation/DICTIONARY.md`** (canonical terms). Specs and tickets are GitHub issues, never repo files.
 

@@ -10,7 +10,7 @@ description: >
   Best after /ask-about-problems; /to-spec consumes the output.
 argument-hint: "[topic, optional]"
 user-invocable: true
-allowed-tools: [Glob, Read, Write, AskUserQuestion]
+allowed-tools: [Glob, Read, Write, Edit, AskUserQuestion]
 ---
 
 <!-- Trust boundaries: untrusted inputs are user chat, $ARGUMENTS, and any docs/ files

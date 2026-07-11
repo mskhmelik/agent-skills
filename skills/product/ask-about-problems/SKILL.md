@@ -10,7 +10,7 @@ description: >
   /ask-about-solutions → docs/foundation/DICTIONARY.md.
 argument-hint: "[topic, optional]"
 user-invocable: true
-allowed-tools: [Glob, Read, Write, AskUserQuestion]
+allowed-tools: [Glob, Read, Write, Edit, AskUserQuestion]
 ---
 
 <!-- Trust boundaries: untrusted input is the user's free-text interview answers.

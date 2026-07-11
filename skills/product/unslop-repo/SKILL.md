@@ -103,7 +103,7 @@ Once the user picks a candidate, walk the design tree — constraints, seam plac
 | Decision | Write to |
 |----------|----------|
 | New or sharpened domain term | **`docs/foundation/DICTIONARY.md`** (see [../ask-about-solutions/DICTIONARY-FORMAT.md](../ask-about-solutions/DICTIONARY-FORMAT.md)) |
-| Load-bearing rejection | Offer ADR in `docs/reviews/adr/` ([init-docs ADR format](../init-docs/templates/template-adr-readme.md)) |
+| Load-bearing rejection | Offer ADR in `docs/reviews/adr/` — one paragraph (title + 1–3 sentences: context, decision, why); see `/ask-about-solutions` Step 7 |
 | Deep module structure | `docs/engineering/modules/<name>.md` |
 | Ready to implement — **architecture deepening** | Hand off to **`/create-ticket`** → **`/tdd`** or **`/afk-dev`** |
 | Ready to implement — **new capability (feature lane)** | Flag the scope impact on `docs/foundation/OVERVIEW.md`; hand off to **`/ask-about-solutions`** → **`/to-spec`** → **`/to-tickets`** |

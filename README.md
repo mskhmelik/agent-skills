@@ -48,35 +48,44 @@ Private skills live under `skills/private/` but are listed in `.git/info/exclude
 
 ## Product workflow (any repo)
 
-**Two lanes, one gateway** — the lane is decided by one question: *was this capability ever built?* Run **`/init-docs`** once to scaffold `docs/`, then:
+The pipeline runs **Plan → Implement → Review → Merge**, with a **Debug** loop off Manual QA. Everything files through **`/create-ticket`** — the only skill that runs `gh issue create` — with a ticket prefix (`SLICE-` for feature slices, `DEBT-`/`ARCH-`/`TEST-` for refactors, `BUG-` for defects). Run **`/init-docs`** once to scaffold `docs/`, then:
 
 ```mermaid
 flowchart TB
-  subgraph feature [Feature lane: never-built capability]
+  subgraph plan [Plan]
     aap["/ask-about-problems"] --> aas["/ask-about-solutions"]
-    aas --> toSpec["/to-spec<br/>spec issue"]
-    toSpec --> toTickets["/to-tickets"]
-  end
-
-  subgraph maint [Maintenance lane: shipped behavior]
-    diagnose["/diagnose"]
+    aas --> spec["/to-spec"]
+    spec --> tix["/to-tickets"]
     unslop["/unslop-repo"]
-    qa["Manual QA finding"]
+    ct["/create-ticket"]
+    tix -->|"SLICE-"| ct
+    unslop -->|"DEBT- ARCH- TEST-"| ct
   end
-
-  toTickets --> createTicket["/create-ticket<br/>sole gh gateway"]
-  diagnose -->|"BUG-"| createTicket
-  unslop -->|"DEBT- ARCH- TEST-"| createTicket
-  qa -->|"BUG-"| createTicket
-  qa -.->|"never built? → feature lane"| aas
-
-  createTicket --> ghIssues["GitHub Issues"]
-  ghIssues --> tdd["/tdd"]
-  ghIssues --> afkDev["/afk-dev"]
-  tdd --> review["/review-code"]
-  afkDev --> review
-  review --> merge["manual QA → merge"]
+  issues["GitHub Issues"]
+  subgraph implement [Implement]
+    tdd["/tdd"]
+    afk["/afk-dev"]
+  end
+  subgraph review [Review]
+    rc["/review-code"]
+  end
+  subgraph debug [Debug]
+    dg["/diagnose"]
+  end
+  subgraph merge [Merge]
+    qa["Manual QA"] --> mg["merged"]
+  end
+  ct --> issues
+  issues --> tdd
+  issues --> afk
+  tdd --> rc
+  afk --> rc
+  rc --> qa
+  qa <--> dg
+  dg -->|"BUG-"| ct
 ```
+
+**Two entry points into Plan:** the *feature lane* (never-built capability — `/ask-about-problems` → `/ask-about-solutions` → `/to-spec` → `/to-tickets`) and the *maintenance lane* (shipped behavior — `/diagnose` or `/unslop-repo` straight to a ticket). The lane is decided by one question: *was this capability ever built?*
 
 The docs the user reads are **`docs/foundation/OVERVIEW.md`** (problem → system idea & key components → key user workflows → decisions) and **`docs/foundation/DICTIONARY.md`** (canonical terms). Specs and tickets are GitHub issues, never repo files.
 

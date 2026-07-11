@@ -60,26 +60,24 @@ flowchart TB
   ct["/create-ticket"]
   issues["GitHub Issues"]
   subgraph implement [Implement]
-    tdd["/tdd"]
-    afk["/afk-dev"]
+    afk["/afk-dev"] --> tdd["/tdd"]
   end
   subgraph review [Review]
     rc["/review-code"] --> qa["Manual QA"]
+    qa ~~~ unslop["/unslop-repo"]
     qa <--> dg["/diagnose"]
-    dg ~~~ unslop["/unslop-repo"]
   end
   merged["merged"]
 
   tix -->|"SLICE-"| ct
   ct --> issues
-  issues --> tdd
   issues --> afk
+  issues --> tdd
   tdd --> rc
-  afk --> rc
   qa --> merged
+  unslop -->|"DEBT- ARCH- TEST-"| ct
   rc -->|"BUG-"| ct
   qa -->|"BUG-"| ct
-  unslop -->|"DEBT- ARCH- TEST-"| ct
 
   classDef hub fill:#7c3aed,stroke:#5b21b6,color:#fff,font-weight:bold
   classDef artifact fill:#d1d5db,stroke:#9ca3af,color:#111

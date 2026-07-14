@@ -27,6 +27,45 @@ opt-in per project (note it in the plan if the user wants it included).
 **Ticket ID:** issue title `{PREFIX}-{N}` where **N = GitHub issue number** (same as `#N`).
 Branch uses that same `N`.
 
+## Worktree path contract
+
+Every worker worktree is **contained inside the repo** — never a sibling directory:
+
+```
+REPO_ROOT/.worktrees/loop_<YYYY-MM-DD>-<slug>/issue-<issue-number>/
+```
+
+Same `<date>-<slug>` as the paired `docs/engineering/loops/loop_<date>-<slug>/`
+directory, so the two are easy to correlate. `REPO_ROOT/.worktrees/` must be
+gitignored (SKILL.md Step 4 checks this before creating anything).
+
+**Forbidden:** `git worktree add ../afk-dev-<N>`, `../worktree-<slug>`, or any
+path outside `REPO_ROOT/.worktrees/`. Sibling directories are invisible to
+`.gitignore`, scatter across the user's filesystem, and are never cleaned up.
+
+**Registry (`worktrees.json`):** written to
+`docs/engineering/loops/loop_<date>-<slug>/worktrees.json`, a flat JSON object
+mapping issue number to the worktree path relative to `REPO_ROOT`:
+
+```json
+{
+  "284": ".worktrees/loop_2026-07-14-filters/issue-284",
+  "290": ".worktrees/loop_2026-07-14-filters/issue-290"
+}
+```
+
+The coordinator writes an entry when it creates a worktree (Step 4) and
+removes the entry when it removes the worktree at cycle end (Step 7). Tooling
+outside the coordinator (e.g. `scripts/run_macos_dev.sh` in the target repo)
+may read this file, or fall back to `git worktree list`, to locate an issue's
+checkout — never assume `../afk-dev-<N>`.
+
+**Cleanup at cycle end (Step 7):** remove only worktrees that are clean
+(`git status --porcelain` empty) and fully pushed (no commits ahead of
+`@{u}`). A dirty or unpushed worktree is **retained**, its `worktrees.json`
+entry kept, and it is listed in `summary.md` with the reason — never
+`git worktree remove --force`, and never delete the branch.
+
 ## PR conventions
 
 Aligns with [create-ticket CONVENTIONS](../create-ticket/CONVENTIONS.md).
@@ -98,8 +137,12 @@ table is guidance, not a rigid rule.
    a plan todo says "merge", and not when the user said "implement the plan"
    unless they also explicitly approved merge **after** manual QA in that cycle.
 2. Coordinator presents `summary.md` with the **manual QA checklist** (Step 7).
-3. Human runs QA (checkout branch/worktree or test build) and replies with an
-   explicit merge OK, e.g. "OK to merge", "merge the PRs", or "merge #232–#235".
+3. Human runs QA — either the worker's own worktree (path from `worktrees.json`,
+   while it's retained) or the project's PR-checkout tooling (e.g.
+   `scripts/run_macos_dev.sh <PR#>` in this repo, which reuses a single
+   contained review checkout rather than creating another sibling directory)
+   — and replies with an explicit merge OK, e.g. "OK to merge", "merge the
+   PRs", or "merge #232–#235".
 4. Only then may the coordinator (or human) merge. If QA fails, fix or close —
    do not merge.
 
@@ -134,7 +177,8 @@ That directory holds exactly these files — no others:
 - `plan.md` — written once in Step 3, **overwritten in place** if the plan needs revision
 - `log.md` — append-only worker status lines
 - `summary.md` — written once in Step 7
-- `worktrees.json` — optional, tracking active worktree paths
+- `worktrees.json` — written in Step 4 as soon as the first worktree is created;
+  tracks active worker worktree paths (see "Worktree path contract" above)
 
 **Forbidden:** `-vN` suffixes (`plan-v2.md`) or `followup-*` files (`followup-plan-v2.md`,
 `followup-plan-v3.md`). A revised plan overwrites `plan.md` — it does not spawn a sibling

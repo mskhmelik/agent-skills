@@ -14,7 +14,8 @@ QA). Manual QA ⇄ `/diagnose` is the iterative debug loop; passing QA ships to 
 flowchart TB
   subgraph plan [Plan]
     aap["/ask-about-problems"] --> aas["/ask-about-solutions"]
-    aas --> spec["/to-spec"]
+    aas --> aad["/ask-about-design"]
+    aad --> spec["/to-spec"]
     spec --> tix["/to-tickets"]
   end
   ct["/create-ticket"]
@@ -57,11 +58,12 @@ decisions ("it used to do X, now does Y" *is* the spec).
 | 0 | `/init-docs` | This layout (once per repo) |
 | 1 | `/ask-about-problems` | [`foundation/OVERVIEW.md`](foundation/OVERVIEW.md) → Problem section |
 | 2 | `/ask-about-solutions` | OVERVIEW.md solution sections + [`foundation/DICTIONARY.md`](foundation/DICTIONARY.md) (+ sparing ADRs) |
-| 3 | `/to-spec` | **Spec issue on GitHub** (label `spec`) — agent-facing, not reviewed |
-| 4 | `/to-tickets` | SLICE tickets, blocked-by wired, children of the spec |
-| 5 | `/tdd` or `/afk-dev` | Implementation with tests → PR(s) |
-| 6 | `/review-code` | Two-axis review per PR (standards + spec fidelity) |
-| 7 | you | Manual QA → merge |
+| 3 | `/ask-about-design` | [`foundation/DESIGN.md`](foundation/DESIGN.md) + generated `DESIGN.html` (front-end design system; once per app, before UI work) |
+| 4 | `/to-spec` | **Spec issue on GitHub** (label `spec`) — agent-facing, not reviewed |
+| 5 | `/to-tickets` | SLICE tickets, blocked-by wired, children of the spec |
+| 6 | `/tdd` or `/afk-dev` | Implementation with tests → PR(s) |
+| 7 | `/review-code` | Two-axis review per PR (standards + spec fidelity) |
+| 8 | you | Manual QA → merge |
 | — | `/diagnose` → `/create-ticket` | Maintenance lane: bugs, regressions |
 | — | `/unslop-repo` → `/create-ticket` | Architecture hygiene (periodic) |
 
@@ -81,6 +83,7 @@ decisions ("it used to do X, now does Y" *is* the spec).
 |---------|------|
 | Problem, system idea, components, workflows, decisions (human-readable) | `foundation/OVERVIEW.md` |
 | Canonical domain vocabulary | `foundation/DICTIONARY.md` |
+| Front-end design system: tokens, type, components, anti-slop rules (agent-facing) | `foundation/DESIGN.md` (+ generated `foundation/DESIGN.html` preview) |
 | Committed scope + user stories + seams (agent-facing) | **Spec issue on GitHub**, label `spec` — never a repo doc |
 | Hard-to-reverse technical decisions (agent memory) | `reviews/adr/NNN-slug.md` (created lazily) |
 | Shipped-architecture skip-list (optional) | `reviews/README.md` |
@@ -98,13 +101,19 @@ decisions ("it used to do X, now does Y" *is* the spec).
   components → key user workflows → decisions → out of scope. 5-minute read, always current.
 - **`foundation/DICTIONARY.md`** — canonical terms; OVERVIEW component names and all
   tickets use these exactly.
+- **`foundation/DESIGN.md`** — the prescriptive front-end design system (tokens, typography,
+  components, anti-slop Do's & Don'ts). Written by `/ask-about-design`; loaded alongside every
+  UI build. `foundation/DESIGN.html` is a generated visual preview — never hand-edited.
 - **`reviews/adr/`** — one-paragraph decision records (`NNN-slug.md`, created lazily),
   written by agents when a decision is hard-to-reverse + surprising + a real trade-off.
   Agents read them to avoid re-litigating; humans get the one-line version in OVERVIEW.md
   Decisions.
 - **`AGENTS.md`** (repo root) — repo-specific notes for AI agents: tracker, launch/env,
   project board, skill quick-reference.
-- **`engineering/loops/`** — `/afk-dev` cycle artifacts. Worker sandboxes: `.worktrees/` (gitignored).
+- **`engineering/loops/`** — `/afk-dev` cycle artifacts. Worker sandboxes live inside the
+  repo at `.worktrees/loop_<date>-<slug>/issue-<N>/` (gitignored) — never a sibling
+  directory outside the repo. Manual PR QA reuses one contained `.worktrees/review/`
+  checkout instead of creating one per PR.
 
 ## During development
 
@@ -123,5 +132,5 @@ never new docs. If nothing fits, ask — do not invent a path.
 
 ## Naming rule
 
-All filenames are **kebab-case**, except `README.md`, `OVERVIEW.md`, `DICTIONARY.md`, and
-the root `AGENTS.md`, which keep their conventional all-caps names.
+All filenames are **kebab-case**, except `README.md`, `OVERVIEW.md`, `DICTIONARY.md`,
+`DESIGN.md` / `DESIGN.html`, and the root `AGENTS.md`, which keep their conventional all-caps names.

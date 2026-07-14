@@ -37,6 +37,11 @@ Scope: agent:hitl issues (agent:afk: <included | excluded — note if included>)
 - Workers this cycle: 4 / 8 (cap)
 - Concurrent cap: 3
 
+## Worktrees
+- Sandbox root: `.worktrees/loop_<date>-<slug>/` (contained inside the repo; see
+  CONVENTIONS.md "Worktree path contract" — never a sibling `../afk-dev-<N>` path)
+- Registry: `docs/engineering/loops/loop_<date>-<slug>/worktrees.json`
+
 ## Open questions for the human before spawning
 - <e.g. "Confirm #18 should branch from main post-#15-merge rather than stack on #15's branch — will add ~1 cycle of latency.">
 
